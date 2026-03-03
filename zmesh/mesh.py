@@ -433,7 +433,8 @@ end_header
       else:
         f.write(self.to_obj())
 
-  def load(self, filename:str) -> "Mesh":
+  @classmethod
+  def load(kls, filename:str) -> "Mesh":
     """
     Save supported file formats. 
     By default assumes the file is a Wavefront OBJ 
@@ -443,9 +444,9 @@ end_header
     """
     with open(filename, "rb") as f:
       if filename.endswith(".ply"):
-        return Mesh.from_ply(f.read())
+        return kls.from_ply(f.read())
       else:
-        return Mesh.from_obj(f.read())
+        return kls.from_obj(f.read())
 
 def _create_vtk_mesh(vertices, faces):
   import vtk
