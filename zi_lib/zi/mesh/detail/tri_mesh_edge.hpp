@@ -68,15 +68,8 @@ public:
         return !( *this == o );
     }
 
-    uint32_t face() const
-    {
-        return face_;
-    }
-
-    uint32_t vertex() const
-    {
-        return vertex_;
-    }
+    uint32_t face() const   { return face_; }
+    uint32_t vertex() const { return vertex_; }
 };
 
 struct tri_mesh_edge_container
@@ -93,7 +86,7 @@ protected:
 
 public:
 
-    template< bool IsConst, bool IsReverse >
+    template< bool IsConst >
     struct iterator_base
     {
     private:
@@ -112,12 +105,11 @@ public:
             return ( e >> 32 ) | ( e << 32 );
         }
 
-
     public:
-        typedef iterator_base< IsConst, IsReverse > iterator_type;
-        typedef std::ptrdiff_t                      difference_type;
-        typedef std::bidirectional_iterator_tag     iterator_category;
-        typedef tri_mesh_edge_impl                  value_type;
+        typedef iterator_base< IsConst > iterator_type;
+        typedef std::ptrdiff_t           difference_type;
+        typedef std::forward_iterator_tag iterator_category;
+        typedef tri_mesh_edge_impl       value_type;
         typedef typename if_< IsConst,
                               const tri_mesh_edge_impl*,
                               tri_mesh_edge_impl* >::type pointer;
@@ -125,21 +117,10 @@ public:
                               const tri_mesh_edge_impl&,
                               tri_mesh_edge_impl& >::type reference;
 
+        inline iterator_base() : i_() {}
 
-        inline iterator_base()
-            : i_()
-        {
-        }
-
-        inline reference operator*() const
-        {
-            return i_->second;
-        }
-
-        inline pointer operator->() const
-        {
-            return &i_->second;
-        }
+        inline reference operator*() const  { return i_->second; }
+        inline pointer operator->() const   { return &i_->second; }
 
         inline iterator_type& operator++()
         {
@@ -154,80 +135,29 @@ public:
             return tmp;
         }
 
-        inline iterator_type& operator--()
-        {
-            --i_;
-            return *this;
-        }
-
-        inline iterator_type operator--( int )
-        {
-            iterator_type tmp = *this;
-            --i_;
-            return tmp;
-        }
-
         template< bool B >
-        inline bool operator==( const iterator_base< B, IsReverse >& o )
+        inline bool operator==( const iterator_base< B >& o ) const
         {
             return i_ == o.i_;
         }
 
         template< bool B >
-        inline bool operator!=( const iterator_base< B, IsReverse >& o )
+        inline bool operator!=( const iterator_base< B >& o ) const
         {
             return i_ != o.i_;
         }
 
-        inline uint64_t id() const
-        {
-            return i_->first;
-        }
+        inline uint64_t id() const       { return i_->first; }
+        inline operator uint64_t() const { return i_->first; }
 
-        inline operator uint64_t() const
-        {
-            return i_->first;
-        }
-
-        inline uint32_t face() const
-        {
-            return i_->second.face();
-        }
-
-        inline uint32_t v2() const
-        {
-            return i_->second.vertex();
-        }
-
-        inline uint32_t vertex() const
-        {
-            return i_->second.vertex();
-        }
-
-        inline uint32_t source() const
-        {
-            return edge_source( i_->first );
-        }
-
-        inline uint32_t sink() const
-        {
-            return edge_sink( i_->first );
-        }
-
-        inline uint32_t v0() const
-        {
-            return edge_source( i_->first );
-        }
-
-        inline uint32_t v1() const
-        {
-            return edge_sink( i_->first );
-        }
-
-        inline uint64_t pair() const
-        {
-            return edge_inverse( i_->first );
-        }
+        inline uint32_t face() const     { return i_->second.face(); }
+        inline uint32_t v2() const       { return i_->second.vertex(); }
+        inline uint32_t vertex() const   { return i_->second.vertex(); }
+        inline uint32_t source() const   { return edge_source( i_->first ); }
+        inline uint32_t sink() const     { return edge_sink( i_->first ); }
+        inline uint32_t v0() const       { return edge_source( i_->first ); }
+        inline uint32_t v1() const       { return edge_sink( i_->first ); }
+        inline uint64_t pair() const     { return edge_inverse( i_->first ); }
 
         friend struct tri_mesh_edge_container;
 
@@ -235,75 +165,23 @@ public:
         typedef typename if_< IsConst,
                               robin_hood::unordered_flat_map< uint64_t, tri_mesh_edge_impl >::const_iterator,
                               robin_hood::unordered_flat_map< uint64_t, tri_mesh_edge_impl >::iterator
-                              >::type base_forward_type;
-
-        typedef std::reverse_iterator< base_forward_type > base_backward_type;
-
-        typedef typename if_< IsReverse, base_backward_type, base_forward_type >::type base_type;
+                              >::type base_type;
 
         base_type i_;
 
-        explicit iterator_base( const base_forward_type& i )
-            : i_( i )
-        {
-        }
+        explicit iterator_base( const base_type& i ) : i_( i ) {}
     };
 
-    typedef iterator_base< false, false >::iterator_type  iterator;
-    typedef iterator_base< true , false >::iterator_type  const_iterator;
-    typedef iterator_base< false, true  >::iterator_type  reverse_iterator;
-    typedef iterator_base< true , true  >::iterator_type  const_reverse_iterator;
+    typedef iterator_base< false >::iterator_type  iterator;
+    typedef iterator_base< true  >::iterator_type  const_iterator;
 
-    inline iterator find( uint64_t id )
-    {
-        return iterator( edges_.get().find( id ) );
-    }
+    inline iterator find( uint64_t id )             { return iterator( edges_.get().find( id ) ); }
+    inline const_iterator find( uint64_t id ) const { return const_iterator( edges_.get().find( id ) ); }
 
-    inline const_iterator find( uint64_t id ) const
-    {
-        return const_iterator( edges_.get().find( id ) );
-    }
-
-    inline iterator begin()
-    {
-        return iterator( edges_.get().begin() );
-    }
-
-    inline iterator end()
-    {
-        return iterator( edges_.get().end() );
-    }
-
-    inline const_iterator begin() const
-    {
-        return const_iterator( edges_.get().begin() );
-    }
-
-    inline const_iterator end() const
-    {
-        return const_iterator( edges_.get().end() );
-    }
-
-    inline reverse_iterator rbegin()
-    {
-        return reverse_iterator( edges_.get().end() );
-    }
-
-    inline reverse_iterator rend()
-    {
-        return reverse_iterator( edges_.get().begin() );
-    }
-
-    inline const_reverse_iterator rbegin() const
-    {
-        return const_reverse_iterator( edges_.get().end() );
-    }
-
-    inline const_reverse_iterator rend() const
-    {
-        return const_reverse_iterator( edges_.get().begin() );
-    }
-
+    inline iterator begin()             { return iterator( edges_.get().begin() ); }
+    inline iterator end()               { return iterator( edges_.get().end() ); }
+    inline const_iterator begin() const { return const_iterator( edges_.get().begin() ); }
+    inline const_iterator end() const   { return const_iterator( edges_.get().end() ); }
 };
 
 } // namespace detail
