@@ -47,6 +47,15 @@ mesh = mesher.simplify(
   compute_normals=False, # whether to also compute face normals
 ) # apply simplifier to a pre-existing mesh
 
+# use an fqmr derived non-topology preserving algorithm
+# this useful particularly for multi-resolution meshes
+# where visual appearence is more important than connectivity
+# This function has many parameters, see help(zmesh.simplify_fqmr)
+mesh = zmesh.simplify_fqmr(
+  mesh, 
+  triangle_count=(mesh.faces.shape[0] // 10),
+)
+
 # compute normals on a pre-existing mesh
 mesh = zmesh.compute_normals(mesh) 
 
@@ -110,6 +119,8 @@ of the 32-bit format.
 Thanks to Aleks Zlateski for creating and sharing this beautiful mesher.  
 
 Later changes by Will Silversmith, Nico Kemnitz, and Jingpeng Wu. 
+
+Thank you to Sven Forstmann, Kristof S., Br&eacute;nainn Woodsend, and others for pyfqmr which we have adapted here for non-topology preserving simplification and fast OBJ reading. See https://github.com/Kramer84/pyfqmr-Fast-Quadric-Mesh-Reduction/
 
 ## References  
 

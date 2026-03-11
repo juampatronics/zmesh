@@ -2,6 +2,7 @@ from typing import Optional, Iterator, Union, Literal
 
 import numpy as np
 import numpy.typing as npt
+import gzip
 import re
 import struct
 
@@ -442,11 +443,24 @@ end_header
 
     Supported: obj, ply
     """
-    with open(filename, "rb") as f:
-      if filename.endswith(".ply"):
-        return kls.from_ply(f.read())
-      else:
-        return kls.from_obj(f.read())
+    if filename.endswith(".obj"):
+      import zmesh
+      return zmesh.load_obj(filename)
+
+    if filename.endswith(".gz"):
+      with gzip.open(filename, 'rb') as f:
+        binary = f.read()
+      filename, _  = filename.rsplit(".", 1)
+    else:
+      with open(filelike, 'rb') as f:
+        binary = f.read()
+  
+    if filename.endswith(".ply"):
+      return kls.from_ply(binary)
+    elif filename.endswith(".obj"):
+      return kls.from_obj(binary)
+    else:
+      raise ValueError(f"File format not supported: {filename}")
 
 def _create_vtk_mesh(vertices, faces):
   import vtk
