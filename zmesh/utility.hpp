@@ -404,11 +404,11 @@ struct MeshObject {
       return;
     }
 
-    for (size_t i = 0; i < points.size() / 3; i += 3) {
+    for (size_t i = 0; i < points.size(); i += 3) {
       fprintf(file, "v %.5f %.5f %.5f\n", points[i], points[i+1], points[i+2]);
     }
 
-    for (size_t i = 0; i < faces.size() / 3; i += 3) {
+    for (size_t i = 0; i < faces.size(); i += 3) {
       fprintf(file, "f %u %u %u\n", faces[i]+1, faces[i+1]+1, faces[i+2]+1);
     }
 
