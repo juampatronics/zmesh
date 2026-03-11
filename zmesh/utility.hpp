@@ -271,6 +271,12 @@ struct MeshObject {
       : -1;
   }
 
+  void clear() {
+    points = std::vector<float>();
+    faces = std::vector<uint32_t>();
+    normals = std::vector<float>();
+  }
+
   // Adapted from fqmr.hpp
   // https://github.com/Kramer84/pyfqmr-Fast-Quadric-Mesh-Reduction
   // MIT Licensed

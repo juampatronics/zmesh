@@ -237,6 +237,11 @@ struct FqmrMesh {
 		triangles = std::vector<Triangle>();
 		vertices = std::vector<Vertex>();
 	}
+
+	FqmrMesh() {}
+	FqmrMesh(const MeshObject& mobj) {
+		set(mobj.points, mobj.faces);	
+	}
 };
 
 // Error between vertex and Quadric
