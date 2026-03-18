@@ -5,6 +5,9 @@ from zmesh._zmesh import *
 
 import numpy as np
 
+def load(filename:str) -> Mesh:
+  return Mesh.load(filename)
+
 def dust(
   mesh:Mesh,
   threshold:float,
