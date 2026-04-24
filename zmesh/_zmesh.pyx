@@ -29,7 +29,7 @@ cdef extern from "fqmr.hpp" namespace "zmesh::fqmr":
     vector[float] getVertices()
     vector[uint32_t] getFaces()
 
-  cdef void simplify_to_triangle_count(
+  cdef int simplify_to_triangle_count(
     FqmrMesh& mesh,
     int64_t target_count, 
     int update_rate,
