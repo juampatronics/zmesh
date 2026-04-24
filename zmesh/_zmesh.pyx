@@ -40,7 +40,7 @@ cdef extern from "fqmr.hpp" namespace "zmesh::fqmr":
     bool lossless,
     double threshold_lossless,
     bool preserve_border
-  )
+  ) nogil
 
 cdef extern from "utility.hpp" namespace "zmesh::utility":
   cdef struct MeshObject:
@@ -56,20 +56,20 @@ cdef extern from "chunk_mesh.hpp" namespace "zmesh::chunk_mesh":
     unsigned int* faces, uint64_t num_faces,
     float cx, float cy, float cz,
     float ox, float oy, float oz
-  ) except +
+  ) nogil except +
 
   cdef vector[float] compute_vertex_normals_from_faces(
     float* vertices, uint64_t Nv,
     uint32_t* faces, uint64_t Nf
-  )
+  ) nogil
 
 cdef extern from "ccl.hpp" namespace "zmesh::ccl":
   cdef vector[vector[uint64_t]] vertex_connected_components_mask(
     uint64_t* faces, uint64_t num_verts, uint64_t num_faces
-  )
+  ) nogil
   cdef vector[vector[uint64_t]] face_connected_components_mask(
     uint64_t* faces, uint64_t num_faces
-  )
+  ) nogil
 
 cdef extern from "cMesher.hpp" namespace "zmesh":
   cdef cppclass CMesher[P,L,S]:
@@ -80,8 +80,8 @@ cdef extern from "cMesher.hpp" namespace "zmesh":
       unsigned int sy, 
       unsigned int sz, 
       bool c_order
-    )
-    vector[L] ids()
+    ) nogil
+    vector[L] ids() nogil
     MeshObject get_mesh(
       L segid, 
       bool normals,
@@ -89,7 +89,7 @@ cdef extern from "cMesher.hpp" namespace "zmesh":
       float max_simplification_error, 
       float min_simplification_error,
       bool transpose
-    )
+    ) nogil
     # NOTE: need to define triangle_t
     MeshObject simplify_points(
       uint64_t* points, 
@@ -98,10 +98,10 @@ cdef extern from "cMesher.hpp" namespace "zmesh":
       int simplification_factor, 
       float max_simplification_error,
       float min_simplification_error,
-    )
-    bool erase(L segid)
-    void clear()
-    P pack_coords(P x, P y, P z)
+    ) nogil
+    bool erase(L segid) nogil
+    void clear() nogil
+    P pack_coords(P x, P y, P z) nogil
 
 
 cdef object cpp_meshobj_to_mesh(MeshObject mobj):
