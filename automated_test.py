@@ -701,13 +701,15 @@ def test_fqmr_simplification(target_count):
   for filename in os.listdir(path)[:10]:
     filepath = os.path.join(path, filename)
     mesh = zmesh.Mesh.load(filepath)
-    simplified_mesh = zmesh.simplify_fqmr(
+    simplified_mesh, niter = zmesh.simplify_fqmr(
       mesh,
       target_count=target_count,
       max_iterations=999,
+      return_iterations=True,
     )
     assert simplified_mesh.vertices.shape[0] <= target_count
     assert simplified_mesh.vertices.shape[0] > 10
+    assert 0 <= niter <= 999
 
 
 
