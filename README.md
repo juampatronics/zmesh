@@ -114,6 +114,27 @@ of the 32-bit format.
 - [zi_lib](https://github.com/zlateski/zi_lib) - zmesh makes heavy use of Aleks' C++ library.
 - [Igneous](https://github.com/seung-lab/igneous) - Visualization of connectomics data using cloud computing.
 
+## Example Performance 
+
+ This was a limited experiment conducted on a Macbook Pro M3 comparing Zmesh 1.12.0 
+ and scikit-image==0.26.0. The volume is a 512^3 uint32 segmentation of a mouse visual cortex containing 2523 shapes of various sizes including parts of dendrites, a nucleus, and a glia.  
+
+ This is `mesher.mesh(image)`.
+
+| Marching Cubes Data     | ZMESH Time (s) | ZMESH MVx/sec | SKIMAGE Time (s) | SKIMAGE MVx/sec |  N  |
+|-------------------------|----------------|---------------|------------------|-----------------|-----|
+| Black                   | 0.891          | 451.35        | NOT HANDLED      | —               | 3   |
+| Filled                  | 0.961          | 418.12        | NOT HANDLED      | —               | 3   |
+| connectomics.npy        | 4.107          | 97.89         | 9.861            | 40.77           | 3   |
+| random                  | 6.950          | 12.81         | 40.509           | 2.20            | 1   |
+
+The meshes can then be extracted (`mesher.get`):
+
+| Simplification Factor | Max Error | Labels per Second | N  |
+|-----------------------|-----------|-------------------|----|
+| 0                     | N/A       | 478.2             | 3  |
+| 100                   | 40        |  14.7             | 3  |
+
 ## Credits
 
 Thanks to Aleks Zlateski for creating and sharing this beautiful mesher.  
