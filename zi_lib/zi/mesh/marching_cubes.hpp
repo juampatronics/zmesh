@@ -164,7 +164,7 @@ public:
     std::unordered_map<LabelType, std::vector<triangle_t>> meshes_;
 
 public:
-    const std::unordered_map<LabelType, std::vector<triangle_t>>& meshes() const
+    const auto& meshes() const
     {
         return meshes_;
     }
