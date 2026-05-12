@@ -119,6 +119,8 @@ of the 32-bit format.
  This was a limited experiment conducted on a Macbook Pro M3 comparing Zmesh 1.12.0 
  and scikit-image==0.26.0. The volume is a 512^3 uint32 segmentation of a mouse visual cortex containing 2523 shapes of various sizes including parts of dendrites, a nucleus, and a glia.  
 
+ Note that this is not really an apples-to-apples comparison because scikit-image is specialized for continuous value images like CT scans not segmentation, and so the resulting meshes are very different.
+
  This is `mesher.mesh(image)`.
 
 | Marching Cubes Data     | ZMESH Time (s) | ZMESH MVx/sec | SKIMAGE Time (s) | SKIMAGE MVx/sec |  N  |
