@@ -84,11 +84,11 @@ class CMesher {
   // This is only for converting triangles
   // into a vertex and face triangle soup object
   // with no simplification or normal calculation.
-  MeshObject triangles2mesh(
+  zmesh::utility::MeshObject triangles2mesh(
     const std::vector< zi::vl::vec< PositionType, 3> >& triangles,
     const bool transpose
   ) {
-    MeshObject obj;
+    zmesh::utility::MeshObject obj;
     
     uint32_t idx = 0;
     robin_hood::unordered_flat_map<PositionType, uint32_t> pts;
@@ -156,7 +156,7 @@ class CMesher {
     return obj;
   }
 
-  MeshObject simplify(      
+  zmesh::utility::MeshObject simplify(      
       const std::vector< zi::vl::vec< PositionType, 3> >& triangles,
       bool generate_normals,
       int simplification_factor,
