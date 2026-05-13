@@ -21,12 +21,13 @@ def fanc_label():
 @pytest.mark.parametrize("dtype", DTYPE)
 @pytest.mark.parametrize("close", [ False, True ])
 @pytest.mark.parametrize("order", [ 'C', 'F' ])
-def test_executes_legacy(dtype, close, order):
+@pytest.mark.parametrize("preserve_order", [ True, False ])
+def test_executes_legacy(dtype, close, order, preserve_order):
   labels = np.zeros( (11,17,19), dtype=dtype, order=order)
   labels[1:-1, 1:-1, 1:-1] = 1
 
   mesher = zmesh.Mesher( (4,4,40) )
-  mesher.mesh(labels, close=close)
+  mesher.mesh(labels, close=close, preserve_order=preserve_order)
 
   mesh = mesher.get_mesh(1, normals=False)
   assert len(mesh.vertices) > 0
@@ -42,12 +43,13 @@ def test_executes_legacy(dtype, close, order):
 @pytest.mark.parametrize("dtype", DTYPE)
 @pytest.mark.parametrize("close", [ False, True ])
 @pytest.mark.parametrize("order", [ 'C', 'F' ])
-def test_executes(dtype, close, order):
+@pytest.mark.parametrize("preserve_order", [ True, False ])
+def test_executes(dtype, close, order, preserve_order):
   labels = np.zeros( (11,17,19), dtype=dtype, order=order)
   labels[1:-1, 1:-1, 1:-1] = 1
 
   mesher = zmesh.Mesher( (4,4,40) )
-  mesher.mesh(labels, close=close)
+  mesher.mesh(labels, close=close, preserve_order=preserve_order)
 
   mesh = mesher.get(1, normals=False)
   assert len(mesh.vertices) > 0
@@ -61,12 +63,13 @@ def test_executes(dtype, close, order):
 
 @pytest.mark.parametrize("dtype", DTYPE)
 @pytest.mark.parametrize("order", [ 'C', 'F' ])
-def test_simplify(dtype, order):
+@pytest.mark.parametrize("preserve_order", [ True, False ])
+def test_simplify(dtype, order, preserve_order):
   labels = np.zeros( (11,17,19), dtype=dtype, order=order)
   labels[1:-1, 1:-1, 1:-1] = 1
 
   mesher = zmesh.Mesher( (4,4,40) )
-  mesher.mesh(labels)
+  mesher.mesh(labels, preserve_order=preserve_order)
 
   mesh = mesher.get_mesh(1, normals=False)
   Nv = len(mesh.vertices)
@@ -85,7 +88,7 @@ def test_simplify(dtype, order):
   assert mesh.normals.size > 0
 
   mesher.voxel_res = (1,1,1)
-  mesh = mesher.get_mesh(1, normals=False)
+  mesh = mesher.get(1, normals=False)
 
   # ensure negative vertices work
   mesh.vertices -= 10000
@@ -105,12 +108,13 @@ def test_simplify(dtype, order):
     pass
 
 @pytest.mark.parametrize("dtype", DTYPE)
-def test_precomputed_legacy(dtype):
+@pytest.mark.parametrize("preserve_order", [ True, False ])
+def test_precomputed_legacy(dtype, preserve_order):
   labels = np.zeros( (11,17,19), dtype=dtype)
   labels[1:-1, 1:-1, 1:-1] = 1
 
   mesher = zmesh.Mesher( (4,4,40) )
-  mesher.mesh(labels)
+  mesher.mesh(labels, preserve_order=preserve_order)
   mesh = mesher.get_mesh(1, normals=False)
 
   precomputed_mesh = mesh.to_precomputed()
@@ -192,17 +196,18 @@ def test_C_F_meshes_same_legacy(connectomics_labels):
     assert np.isclose(c_mesh.vertices.mean(), f_mesh.vertices.mean())
 
 @pytest.mark.parametrize("transpose", [True,False])
-def test_fanc_bug(fanc_label, transpose):
+@pytest.mark.parametrize("preserve_order", [ True, False ])
+def test_fanc_bug(fanc_label, transpose, preserve_order):
   if transpose:
     fanc_label = fanc_label.T
   fdata = np.asfortranarray(fanc_label)
   cdata = np.ascontiguousarray(fanc_label)
 
   f_mesher = zmesh.Mesher((1,1,1))
-  f_mesher.mesh(fdata)
+  f_mesher.mesh(fdata ,preserve_order=preserve_order)
 
   c_mesher = zmesh.Mesher((1,1,1))
-  c_mesher.mesh(cdata)
+  c_mesher.mesh(cdata, preserve_order=preserve_order)
 
   assert c_mesher.ids() == f_mesher.ids()
 
