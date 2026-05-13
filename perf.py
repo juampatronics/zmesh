@@ -23,13 +23,13 @@ def result(label, dt, data, N):
     mvx = voxels // (10 ** 6)
     print(f"{label}: {dt:02.3f}s, {N * mvx / dt:.2f} MVx/sec, N={N}")
 
-def test_zmesh_marching_cubes():
+def test_zmesh_marching_cubes(preserve_order=False):
     labels = np.zeros((512,512,512), dtype=np.uint8, order="C")
     mesher = zmesh.Mesher((1,1,1))
     N = 1
     start = time.time()
     for _ in range(N):
-        mesher.mesh(labels)
+        mesher.mesh(labels, preserve_order=preserve_order)
     end = time.time()
     result("marching cubes (blank)", end - start, labels, N=N)
 
@@ -38,7 +38,7 @@ def test_zmesh_marching_cubes():
     N = 1
     start = time.time()
     for _ in range(N):
-        mesher.mesh(labels, close=True)
+        mesher.mesh(labels, close=True, preserve_order=preserve_order)
     end = time.time()
     result("marching cubes (filled)", end - start, labels, N=N)
 
@@ -46,10 +46,10 @@ def test_zmesh_marching_cubes():
     labels = np.ascontiguousarray(labels)
     mesher = zmesh.Mesher((1,1,1))
 
-    N = 1
+    N = 3
     start = time.time()
     for _ in range(N):
-        mesher.mesh(labels)
+        mesher.mesh(labels, preserve_order=preserve_order)
     end = time.time()
     result("marching cubes (connectomics.npy)", end - start, labels, N=N)
 
@@ -60,7 +60,7 @@ def test_zmesh_marching_cubes():
     N = 1
     start = time.time()
     for _ in range(N):
-        mesher.mesh(labels)
+        mesher.mesh(labels, preserve_order=preserve_order)
     end = time.time()
     result("marching cubes (random)", end - start, labels, N=N)
 
@@ -105,11 +105,10 @@ def test_zmesh_simplification():
     N = 1
     start = time.time()
     for label in tqdm(mesher.ids()):
-        mesher.get_mesh(label, 
-            simplification_factor=100, 
-
+        mesher.get(label, 
+            reduction_factor=100, 
             # Max tolerable error in physical distance
-            max_simplification_error=1,
+            max_error=1,
         )
     end = time.time()
     result("simplification (connectomics.npy)", end - start, labels, N=N)

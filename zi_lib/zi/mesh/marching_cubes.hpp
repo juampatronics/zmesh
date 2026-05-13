@@ -27,6 +27,7 @@
 #include "detail/mc_tables.hpp"
 
 #include <zi/mesh/network_sort.hpp>
+#include <zi/utility/builtins.hpp>
 #include <zi/vl/vec.hpp>
 
 #include <algorithm>
@@ -161,7 +162,7 @@ public:
     using triangle_t = vl::vec<PositionType, 3>;
 
     std::size_t                                            num_faces_;
-    std::unordered_map<LabelType, std::vector<triangle_t>> meshes_;
+    std::unordered_map<LabelType, std::deque<triangle_t>> meshes_;
 
 public:
     const auto& meshes() const
@@ -284,18 +285,22 @@ private:
     }
 
     template <class Tag>
-    void marche(const LabelType* data, std::size_t const sx,
-                std::size_t const sy, std::size_t const sz,
-                Tag const& order_tag)
-    {
+    [[gnu::flatten]] // needed to get add_face lambda to inline properly
+    void marche(
+        const LabelType* data,
+        std::size_t const sx, std::size_t const sy, std::size_t const sz,
+        const bool preserve_order,
+        Tag const& order_tag
+    ) {
         meshes_.reserve(sx * sy);
 
-        constexpr std::array<PositionType, 8> cube_corners = {
+        constexpr static std::array<PositionType, 8> cube_corners = {
             pack_coords(0, 0, 0), pack_coords(2, 0, 0), pack_coords(2, 0, 2),
             pack_coords(0, 0, 2), pack_coords(0, 2, 0), pack_coords(2, 2, 0),
-            pack_coords(2, 2, 2), pack_coords(0, 2, 2)};
+            pack_coords(2, 2, 2), pack_coords(0, 2, 2)
+        };
 
-        constexpr std::array<PositionType, 12> edge_midpoints = {
+        constexpr static std::array<PositionType, 12> edge_midpoints = {
             midpoint(cube_corners[0], cube_corners[1]),
             midpoint(cube_corners[1], cube_corners[2]),
             midpoint(cube_corners[2], cube_corners[3]),
@@ -307,13 +312,43 @@ private:
             midpoint(cube_corners[0], cube_corners[4]),
             midpoint(cube_corners[1], cube_corners[5]),
             midpoint(cube_corners[2], cube_corners[6]),
-            midpoint(cube_corners[3], cube_corners[7])};
+            midpoint(cube_corners[3], cube_corners[7])
+        };
 
         auto strides = get_strides(sx, sy, sz, order_tag);
 
-        mc_nested_loops(
-            sx, sy, sz,
-            [&](std::size_t x, std::size_t y, std::size_t z, std::size_t ind)
+        auto add_face = [&](
+            std::size_t x, std::size_t y, std::size_t z, 
+            const LabelType label, const uint8_t c
+        ) {
+            if (!mc_edge_table[c]) {
+                return;
+            }
+
+            PositionType cur =
+                ((x * mask_traits::unit_x) | (y * mask_traits::unit_y) |
+                 (z * mask_traits::unit_z))
+                << 1;
+
+            auto& face_list = meshes_[label];
+
+            for (
+                std::size_t n = 0;
+                mc_triangle_table[c][n] != mc_triangle_table_end;
+                n += 3
+            ) {
+                ++num_faces_;
+                face_list.emplace_back(
+                    edge_midpoints[mc_triangle_table[c][n + 2]] + cur,
+                    edge_midpoints[mc_triangle_table[c][n + 1]] + cur,
+                    edge_midpoints[mc_triangle_table[c][n]] + cur);
+            }
+        };
+
+        if (preserve_order) {
+            mc_nested_loops(
+                sx, sy, sz,
+                [&](std::size_t x, std::size_t y, std::size_t z, std::size_t ind)
             {
                 std::array<LabelType, 8> const labels = {
                     data[ind],
@@ -342,38 +377,12 @@ private:
                 std::array<LabelType, 8> ulabels = labels;
                 zi::mesh::sort_8(ulabels);
 
-                auto add_face = [&](const LabelType label, const uint8_t c) {
-                    if (!mc_edge_table[c])
-                    {
-                        return;
-                    }
-
-                    PositionType cur =
-                        ((x * mask_traits::unit_x) | (y * mask_traits::unit_y) |
-                         (z * mask_traits::unit_z))
-                        << 1;
-
-                    auto& face_list = meshes_[label];
-
-                    for (std::size_t n = 0;
-                         mc_triangle_table[c][n] != mc_triangle_table_end;
-                         n += 3)
-                    {
-                        ++num_faces_;
-                        face_list.emplace_back(
-                            edge_midpoints[mc_triangle_table[c][n + 2]] + cur,
-                            edge_midpoints[mc_triangle_table[c][n + 1]] + cur,
-                            edge_midpoints[mc_triangle_table[c][n]] + cur);
-                    }
-                };
-
                 // i=7
                 uint8_t accumulate = 0;
                 uint8_t c;
 
                 LabelType label = ulabels[7];
-                if (label == 0)
-                {
+                if (label == 0) {
                     return;
                 }
 
@@ -382,23 +391,20 @@ private:
                     c |= (uint8_t)(labels[n] != label) << n;
                 }
                 accumulate |= (uint8_t)~c;
-                add_face(label, c);
+                add_face(x, y, z, label, c);
 
-                for (int i = 6; i >= 0 && accumulate != 0xff; i--)
-                {
+                for (int i = 6; i >= 0 && accumulate != 0xff; i--) {
                     label = ulabels[i];
-                    if (label == 0)
-                    {
+                    if (label == 0) {
                         break;
                     }
-                    else if (ulabels[i + 1] == label)
-                    {
+                    else if (ulabels[i + 1] == label) {
                         continue;
                     }
 
                     if (label == ulabels[0]) {
                         c = accumulate;
-                        add_face(label, c);
+                        add_face(x, y, z, label, c);
                         break;
                     }
                     else {
@@ -407,29 +413,79 @@ private:
                             c |= (uint8_t)(labels[n] != label) << n;
                         }
                         accumulate |= (uint8_t)~c;
-                        add_face(label, c);
+                        add_face(x, y, z, label, c);
                     }
                 }
             },
             order_tag);
+        }
+        else {
+            mc_nested_loops(
+                sx, sy, sz,
+                [&](std::size_t x, std::size_t y, std::size_t z, std::size_t ind)
+            {
+                std::array<LabelType, 8> const labels = {
+                    data[ind],
+                    data[ind + strides[0]],
+                    data[ind + strides[1]],
+                    data[ind + strides[2]],
+                    data[ind + strides[3]],
+                    data[ind + strides[4]],
+                    data[ind + strides[5]],
+                    data[ind + strides[6]]};
+
+                if (all_equal(labels)) {
+                    return;
+                }
+
+                uint8_t accumulate = 0;
+                uint8_t c = 0;
+
+                for (int i = 0; i < 8 && accumulate != 0xff; i++) {
+                    int start = zmesh_ctz(~accumulate);
+                    int end = 8 - ((zmesh_clz((uint8_t)~accumulate)) - 24);
+
+                    const LabelType label = labels[start];
+
+                    c = 0;
+                    if (end == 8) {
+                        for (int n = start; n < 8; n++) {
+                            c |= (uint8_t)(labels[n] != label) << n;
+                        }
+                    }
+                    else {
+                        for (int n = start; n < end; n++) {
+                            c |= (uint8_t)(labels[n] != label) << n;
+                        }
+                    }
+                    accumulate |= (uint8_t)~c;
+
+                    if (label != 0) {
+                        add_face(x, y, z, label, c);
+                    }
+                }
+            },
+            order_tag);
+        }
     }
 
 public:
     void marche(const LabelType* data, std::size_t const sx,
                 std::size_t const sy, std::size_t const sz,
+                const bool preserve_order = true,
                 const bool c_order = true)
     {
         if (c_order)
         {
-            marche(data, sx, sy, sz, c_order_tag());
+            marche(data, sx, sy, sz, preserve_order, c_order_tag());
         }
         else
         {
-            marche(data, sx, sy, sz, fortran_order_tag());
+            marche(data, sx, sy, sz, preserve_order, fortran_order_tag());
         }
     }
 
-    std::vector<triangle_t> const& get_triangles(LabelType const& id) const
+    auto const& get_triangles(LabelType const& id) const
     {
         return meshes_.find(id)->second;
     }
