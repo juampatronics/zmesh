@@ -360,7 +360,7 @@ private:
                     data[ind + strides[5]],
                     data[ind + strides[6]]};
 
-                if (all_equal(labels))
+                if (all_equal_branchless(labels))
                 {
                     return;
                 }
@@ -434,7 +434,8 @@ private:
                     data[ind + strides[5]],
                     data[ind + strides[6]]};
 
-                if (all_equal(labels)) {
+                if (all_equal_branchless(labels))
+                {
                     return;
                 }
 

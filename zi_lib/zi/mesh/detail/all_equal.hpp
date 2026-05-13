@@ -53,4 +53,22 @@ bool all_equal(std::array<T, N> const& arr) noexcept
     }
 }
 
+template <class T, std::size_t N>
+bool all_equal_branchless(std::array<T, N> const& arr) noexcept
+{
+    if constexpr (N < 2)
+    {
+        return true;
+    }
+    else
+    {
+        T lo = arr[0], hi = arr[0];
+        for (int i = 1; i < N; i++) {
+            lo &= arr[i];
+            hi |= arr[i];
+        }
+        return lo == hi;
+    }
+}
+
 } // namespace zi::mesh
