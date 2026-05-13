@@ -124,6 +124,12 @@ public:
         init( o );
     }
 
+    void print() const {
+        printf("%.3f %.3f %.3f %.3f\n", a2, ab, ac, ad);
+        printf("     %.3f %.3f %.3f\n", b2, bc, bd);
+        printf("          %.3f %.3f\n", c2, cd);
+        printf("               %.3f\n", d2);
+    }
 
 #define ZI_QUADRATIC_COMPOUND_OPERATOR( op )                    \
                                                                 \
