@@ -122,38 +122,38 @@ public:
         const std::vector<triangle_t>& data = v_;
         pts.reserve(3 * data.size());
 
-        FOR_EACH(it, data)
+        FOR_EACH(tri, data)
         {
-            if (!pts.count(it->at(0)))
+            if (!pts.count(tri->at(0)))
             {
-                pts.insert(std::make_pair(it->at(0), idx++));
+                pts.insert(std::make_pair(tri->at(0), idx++));
             }
-            if (!pts.count(it->at(1)))
+            if (!pts.count(tri->at(1)))
             {
-                pts.insert(std::make_pair(it->at(1), idx++));
+                pts.insert(std::make_pair(tri->at(1), idx++));
             }
-            if (!pts.count(it->at(2)))
+            if (!pts.count(tri->at(2)))
             {
-                pts.insert(std::make_pair(it->at(2), idx++));
+                pts.insert(std::make_pair(tri->at(2), idx++));
             }
         }
 
         ret.resize(idx);
 
-        FOR_EACH(it, pts)
+        for (auto& [pt, face_id] : pts)
         {
-            ret.point(it->second) = vl::vec<T, 3>(
+            ret.point(face_id) = vl::vec<T, 3>(
                 marching_cubes<PositionType, LabelType>::template unpack_x<T>(
-                    it->first, xtrans, xscale),
+                    pt, xtrans, xscale),
                 marching_cubes<PositionType, LabelType>::template unpack_y<T>(
-                    it->first, ytrans, yscale),
+                    pt, ytrans, yscale),
                 marching_cubes<PositionType, LabelType>::template unpack_z<T>(
-                    it->first, ztrans, zscale));
+                    pt, ztrans, zscale));
         }
 
-        FOR_EACH(it, data)
+        FOR_EACH(tri, data)
         {
-            ret.add_face(pts[it->at(0)], pts[it->at(1)], pts[it->at(2)]);
+            ret.add_face(pts[tri->at(0)], pts[tri->at(1)], pts[tri->at(2)]);
         }
 
         return idx;
