@@ -288,7 +288,9 @@ public:
     {
         size_ = s;
         vertices_.resize( s );
-        clear();
+        edges_.clear();
+        faces_.clear();
+        max_face_ = 0;        
     }
 
     uint32_t add_face( const uint32_t x, const uint32_t y, const uint32_t z )
