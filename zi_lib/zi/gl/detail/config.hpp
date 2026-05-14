@@ -17,29 +17,29 @@
 //
 
 #ifndef ZI_GL_DETAIL_CONFIG_HPP
-#define ZI_GL_DETAIL_CONFIG_HPP 1
+#    define ZI_GL_DETAIL_CONFIG_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#if defined( ZI_OS_WINDOWS )
-#  // damn, windows.h defines min and mac macros
-#  // which make numerical_limits< ... >::min() / max() unusable!
-#  ifndef NOMINMAX
-#    define NOMINMAX 1
-#  endif
-#  ifndef WIN32_LEAN_AND_MEAN
-#    define WIN32_LEAN_AND_MEAN
-#    include <windows.h>
-#    undef  WIN32_LEAN_AND_MEAN
-#  else
-#    include <windows.h>
-#  endif
-#  undef NOMINMAX
+#    if defined(ZI_OS_WINDOWS)
+#        // damn, windows.h defines min and mac macros
+#        // which make numerical_limits< ... >::min() / max() unusable!
+#        ifndef NOMINMAX
+#            define NOMINMAX 1
+#        endif
+#        ifndef WIN32_LEAN_AND_MEAN
+#            define WIN32_LEAN_AND_MEAN
+#            include <windows.h>
+#            undef WIN32_LEAN_AND_MEAN
+#        else
+#            include <windows.h>
+#        endif
+#        undef NOMINMAX
 #
-#endif
+#    endif
 
-#ifndef APIENTRY
-#  define APIENTRY /* */
-#endif
+#    ifndef APIENTRY
+#        define APIENTRY /* */
+#    endif
 
 #endif

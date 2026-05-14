@@ -17,15 +17,16 @@
 //
 
 #ifndef ZI_UTILITY_DETAIL_EMPTY_TYPE_HPP
-#define ZI_UTILITY_DETAIL_EMPTY_TYPE_HPP 1
+#    define ZI_UTILITY_DETAIL_EMPTY_TYPE_HPP 1
 
-namespace zi {
-namespace detail {
+namespace zi
+{
+namespace detail
+{
 
 struct empty_type
 {
 };
-
 
 } // namespace detail
 } // namespace zi

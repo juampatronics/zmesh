@@ -17,28 +17,32 @@
 //
 
 #ifndef ZI_UTILITY_IS_COMPLEX_HPP
-#define ZI_UTILITY_IS_COMPLEX_HPP 1
+#    define ZI_UTILITY_IS_COMPLEX_HPP 1
 
-#include <zi/utility/enable_if.hpp>
+#    include <zi/utility/enable_if.hpp>
 
-#include <zi/bits/type_traits.hpp>
-#include <zi/bits/complex.hpp>
+#    include <zi/bits/complex.hpp>
+#    include <zi/bits/type_traits.hpp>
 
-namespace zi {
+namespace zi
+{
 
-namespace detail {
-namespace is_complex_ {
+namespace detail
+{
+namespace is_complex_
+{
 
 struct is_convertible_from_complex
 {
-   template< class T >
-   is_convertible_from_complex( const ::zi::complex< T >& );
+    template <class T>
+    is_convertible_from_complex(const ::zi::complex<T>&);
 };
 
-template< class T >
+template <class T>
 struct is_complex
 {
-    static const bool value = is_convertible< T, is_convertible_from_complex >::value;
+    static const bool value =
+        is_convertible<T, is_convertible_from_complex>::value;
 };
 
 } // namespace is_complex_

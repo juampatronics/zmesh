@@ -17,12 +17,14 @@
 //
 
 #ifndef ZI_CACHE_TAGS_HPP
-#define ZI_CACHE_TAGS_HPP 1
+#    define ZI_CACHE_TAGS_HPP 1
 
-#include <zi/cache/config.hpp>
+#    include <zi/cache/config.hpp>
 
-namespace zi {
-namespace cache {
+namespace zi
+{
+namespace cache
+{
 
 struct default_cache_tag;
 

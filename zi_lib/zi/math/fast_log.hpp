@@ -17,90 +17,89 @@
 //
 
 #ifndef ZI_MATH_FAST_LOG_HPP
-#define ZI_MATH_FAST_LOG_HPP 1
+#    define ZI_MATH_FAST_LOG_HPP 1
 
-#include <zi/utility/enable_singleton_of_this.hpp>
-#include <zi/bits/cstdint.hpp>
+#    include <zi/bits/cstdint.hpp>
+#    include <zi/utility/enable_singleton_of_this.hpp>
 
-#include <cmath>
+#    include <cmath>
 
-namespace zi {
-namespace math {
+namespace zi
+{
+namespace math
+{
 
-namespace detail {
+namespace detail
+{
 
-template< std::size_t N >
+template <std::size_t N>
 class fast_log_table
 {
 private:
-    float table_[ 1 << N ];
+    float table_[1 << N];
 
 public:
     fast_log_table()
     {
-        table_[ 0 ] = std::log( 1.0f ) / 0.69314718055995f;
+        table_[0] = std::log(1.0f) / 0.69314718055995f;
 
-        float v = 1.0f + ( 1.0f / ( 1 << ( N + 1 ) ) );
-        v += 1.0f / ( 1 << ( N ) );
+        float v = 1.0f + (1.0f / (1 << (N + 1)));
+        v += 1.0f / (1 << (N));
 
-        for( std::size_t i = 1; i < ( 1 << N ); ++i )
+        for (std::size_t i = 1; i < (1 << N); ++i)
         {
-            table_[ i ] = std::log( v ) / 0.69314718055995f;
+            table_[i] = std::log(v) / 0.69314718055995f;
 
-            v += 1.0f / ( 1 << N );
+            v += 1.0f / (1 << N);
         }
     }
 
-    const float* get_table_ptr() const
-    {
-        return table_;
-    }
+    const float* get_table_ptr() const { return table_; }
 };
 
 } // namespace detail
 
-
-template< std::size_t N >
-inline float fast_log( const float val )
+template <std::size_t N>
+inline float fast_log(const float val)
 {
     static const float* const table =
-        singleton< detail::fast_log_table< N > >::instance().get_table_ptr();
+        singleton<detail::fast_log_table<N>>::instance().get_table_ptr();
 
-    register const int* ival = reinterpret_cast< const int* >
-        ( &reinterpret_cast< const char& >( val ));
+    register const int* ival =
+        reinterpret_cast<const int*>(&reinterpret_cast<const char&>(val));
 
-    return ( static_cast< float >( (( *ival >> 23 ) & 255 ) - 127 ) +
-             table[ ( *ival & 0x7fffff ) >> ( 23 - N ) ] ) * 0.69314718055995f;
+    return (static_cast<float>(((*ival >> 23) & 255) - 127) +
+            table[(*ival & 0x7fffff) >> (23 - N)]) *
+           0.69314718055995f;
 }
 
-inline float fast_log( const float val )
+inline float fast_log(const float val)
 {
     static const float* const table =
-        singleton< detail::fast_log_table< 14 > >::instance().get_table_ptr();
+        singleton<detail::fast_log_table<14>>::instance().get_table_ptr();
 
-    register const int* ival = reinterpret_cast< const int* >
-        ( &reinterpret_cast< const char& >( val ));
+    register const int* ival =
+        reinterpret_cast<const int*>(&reinterpret_cast<const char&>(val));
 
-    return ( static_cast< float >( (( *ival >> 23 ) & 255 ) - 127 ) +
-             table[ ( *ival & 0x7fffff ) >> ( 23 - 14 ) ] ) * 0.69314718055995f;
+    return (static_cast<float>(((*ival >> 23) & 255) - 127) +
+            table[(*ival & 0x7fffff) >> (23 - 14)]) *
+           0.69314718055995f;
 }
 
-inline float fast_approximate_log( const float val )
+inline float fast_approximate_log(const float val)
 {
     static const float* const table =
-        singleton< detail::fast_log_table< 7 > >::instance().get_table_ptr();
+        singleton<detail::fast_log_table<7>>::instance().get_table_ptr();
 
-    register const int* ival = reinterpret_cast< const int* >
-        ( &reinterpret_cast< const char& >( val ));
+    register const int* ival =
+        reinterpret_cast<const int*>(&reinterpret_cast<const char&>(val));
 
-    return ( static_cast< float >( (( *ival >> 23 ) & 255 ) - 127 ) +
-             table[ ( *ival & 0x7fffff ) >> ( 23 - 7 ) ] ) * 0.69314718055995f;
+    return (static_cast<float>(((*ival >> 23) & 255) - 127) +
+            table[(*ival & 0x7fffff) >> (23 - 7)]) *
+           0.69314718055995f;
 }
-
-
 
 } // namespace math
 } // namespace zi
 
 #endif
-

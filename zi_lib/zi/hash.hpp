@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_HASH_HPP
-#define ZI_HASH_HPP 1
+#    define ZI_HASH_HPP 1
 
-#include <zi/bits/hash.hpp>
+#    include <zi/bits/hash.hpp>
 
 #endif
-

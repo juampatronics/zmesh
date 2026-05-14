@@ -17,8 +17,8 @@
 //
 
 #ifndef ZI_ZUNIT_MAIN_HPP
-#define ZI_ZUNIT_MAIN_HPP 1
+#    define ZI_ZUNIT_MAIN_HPP 1
 
-#include  <zi/zunit/main.ipp>
+#    include <zi/zunit/main.ipp>
 
 #endif

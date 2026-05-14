@@ -17,119 +17,121 @@
 //
 
 #ifndef ZI_MATH_TRANSFORMS_DETAIL_ROOTS_TABLE_HPP
-#define ZI_MATH_TRANSFORMS_DETAIL_ROOTS_TABLE_HPP 1
+#    define ZI_MATH_TRANSFORMS_DETAIL_ROOTS_TABLE_HPP 1
 
-#include <zi/bits/type_traits.hpp>
-#include <zi/bits/cstdint.hpp>
-#include <zi/utility/assert.hpp>
-#include <zi/utility/singleton.hpp>
-#include <zi/utility/for_each.hpp>
-#include <zi/utility/non_copyable.hpp>
-#include <zi/utility/static_assert.hpp>
-#include <zi/concurrency/mutex.hpp>
+#    include <zi/bits/cstdint.hpp>
+#    include <zi/bits/type_traits.hpp>
+#    include <zi/concurrency/mutex.hpp>
+#    include <zi/utility/assert.hpp>
+#    include <zi/utility/for_each.hpp>
+#    include <zi/utility/non_copyable.hpp>
+#    include <zi/utility/singleton.hpp>
+#    include <zi/utility/static_assert.hpp>
 
-#include <complex>
-#include <vector>
-#include <cstddef>
+#    include <complex>
+#    include <cstddef>
+#    include <vector>
 
-namespace zi {
-namespace math {
-namespace detail {
+namespace zi
+{
+namespace math
+{
+namespace detail
+{
 
-
-template< class T, std::size_t LogSize >
-class roots_table: non_copyable
+template <class T, std::size_t LogSize>
+class roots_table : non_copyable
 {
 private:
-    ZI_STATIC_ASSERT( is_floating_point< T >::value, not_floating_point_roots_table );
-    std::vector< std::complex< T > >   roots_   ;
-    mutex                              lock_    ;
-    bool                               computed_;
-    static const std::size_t N = ( 1ull << LogSize );
+    ZI_STATIC_ASSERT(is_floating_point<T>::value,
+                     not_floating_point_roots_table);
+    std::vector<std::complex<T>> roots_;
+    mutex                        lock_;
+    bool                         computed_;
+    static const std::size_t     N = (1ull << LogSize);
 
 public:
     roots_table()
-        : roots_(),
-          lock_(),
-          computed_( false )
+        : roots_()
+        , lock_()
+        , computed_(false)
     {
     }
 
     void compute()
     {
-        mutex::guard g( lock_ );
+        mutex::guard g(lock_);
 
-        if ( computed_ )
+        if (computed_)
         {
             return;
         }
 
-        roots_.resize( N + 1 );
+        roots_.resize(N + 1);
 
-        roots_[ N ] = roots_[ 0 ] = std::complex< T >( 1, 0 );
+        roots_[N] = roots_[0] = std::complex<T>(1, 0);
 
-        for ( std::size_t i = 1; i <= N/2; ++i )
+        for (std::size_t i = 1; i <= N / 2; ++i)
         {
-            T cosine = std::cos( constants< T >::pi() * 2 * i / N );
-            T sine   = std::sin( constants< T >::pi() * 2 * i / N );
-            roots_[ i ].real() = cosine;
-            roots_[ i ].imag() = sine  ;
+            T cosine         = std::cos(constants<T>::pi() * 2 * i / N);
+            T sine           = std::sin(constants<T>::pi() * 2 * i / N);
+            roots_[i].real() = cosine;
+            roots_[i].imag() = sine;
         }
 
-        for ( std::size_t i = 1; i < N/2; ++i )
+        for (std::size_t i = 1; i < N / 2; ++i)
         {
-            roots_[ i+N/2 ] = -roots_[ i ];
+            roots_[i + N / 2] = -roots_[i];
         }
 
         computed_ = true;
     }
 
-    const std::vector< std::complex< T > >& get_roots()
+    const std::vector<std::complex<T>>& get_roots()
     {
         compute();
         return roots_;
     }
-
 };
 
-template< class T, std::size_t S >
+template <class T, std::size_t S>
 class roots_table_fetcher;
 
-template< class T >
-class roots_table_fetcher< T, 26 >: non_copyable
+template <class T>
+class roots_table_fetcher<T, 26> : non_copyable
 {
 public:
-    static inline const std::vector< std::complex< T > >& get( std::size_t )
+    static inline const std::vector<std::complex<T>>& get(std::size_t)
     {
-        static std::vector< std::complex< T > > empty;
+        static std::vector<std::complex<T>> empty;
         return empty;
     }
 };
 
-template< class T, std::size_t S >
-class roots_table_fetcher: non_copyable
+template <class T, std::size_t S>
+class roots_table_fetcher : non_copyable
 {
 private:
-    ZI_STATIC_ASSERT( S < 26, too_large_root_table );
+    ZI_STATIC_ASSERT(S < 26, too_large_root_table);
 
 public:
-    static inline const std::vector< std::complex< T > >& get( std::size_t s )
+    static inline const std::vector<std::complex<T>>& get(std::size_t s)
     {
-        if ( s <= ( 1 << S ) )
+        if (s <= (1 << S))
         {
-            return singleton< roots_table< T, S > >::instance().get_roots();
+            return singleton<roots_table<T, S>>::instance().get_roots();
         }
         else
         {
-            return roots_table_fetcher< T, S+1 >::get( s );
+            return roots_table_fetcher<T, S + 1>::get(s);
         }
     }
 };
 
-template< class T >
-inline const std::vector< std::complex< T > >& get_roots_table( std::size_t s )
+template <class T>
+inline const std::vector<std::complex<T>>& get_roots_table(std::size_t s)
 {
-    return roots_table_fetcher< T, 1 >::get( s );
+    return roots_table_fetcher<T, 1>::get(s);
 }
 
 } // namespace detail
@@ -137,4 +139,3 @@ inline const std::vector< std::complex< T > >& get_roots_table( std::size_t s )
 } // namespace zi
 
 #endif
-

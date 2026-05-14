@@ -17,53 +17,53 @@
 //
 
 #ifndef ZI_ZLOG_LOG_PRINTF_HPP
-#define ZI_ZLOG_LOG_PRINTF_HPP 1
+#    define ZI_ZLOG_LOG_PRINTF_HPP 1
 
-#include <cstdlib>
-#include <cstdio>
-#include <cstdarg>
-#include <string>
+#    include <cstdarg>
+#    include <cstdio>
+#    include <cstdlib>
+#    include <string>
 
-namespace zi {
-namespace zlog {
-
-inline std::string log_printf() {
-    return "";
-}
-
-inline std::string log_printf( const char *fmt, ... )
+namespace zi
+{
+namespace zlog
 {
 
-    int n;
-    int size = 128;
-    char *np;
+inline std::string log_printf() { return ""; }
+
+inline std::string log_printf(const char* fmt, ...)
+{
+
+    int     n;
+    int     size = 128;
+    char*   np;
     va_list ap;
 
-    char *p = static_cast< char* >( std::malloc (size) );
+    char* p = static_cast<char*>(std::malloc(size));
 
-    if ( p == 0 )
+    if (p == 0)
     {
         return std::string();
     }
 
     while (1)
     {
-        va_start( ap, fmt );
-        n = vsnprintf( p, size, fmt, ap );
-        va_end( ap );
+        va_start(ap, fmt);
+        n = vsnprintf(p, size, fmt, ap);
+        va_end(ap);
 
-        if ( n > -1 && n < size )
+        if (n > -1 && n < size)
         {
             break;
         }
 
-        size = ( n > -1 ) ? n + 1 : size << 1;
+        size = (n > -1) ? n + 1 : size << 1;
 
-        np = static_cast< char* >( std::realloc( static_cast< void* >( p ), size ) );
+        np = static_cast<char*>(std::realloc(static_cast<void*>(p), size));
 
-        if ( np == 0 )
+        if (np == 0)
         {
-            std::free( p );
+            std::free(p);
             return std::string();
         }
         else
@@ -81,4 +81,3 @@ using zlog::log_printf;
 } // namespace zi
 
 #endif
-

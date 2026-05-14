@@ -17,12 +17,12 @@
 //
 
 #ifndef ZI_BITS_TYPEOF_HPP
-#define ZI_BITS_TYPEOF_HPP 1
+#    define ZI_BITS_TYPEOF_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#  ifndef __typeof__
-#    define __typeof__( expr ) decltype( expr )
-#  endif
+#    ifndef __typeof__
+#        define __typeof__(expr) decltype(expr)
+#    endif
 
 #endif

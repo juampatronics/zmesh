@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_ASSERT_HPP
-#define ZI_ASSERT_HPP 1
+#    define ZI_ASSERT_HPP 1
 
-#include <zi/debug/assert.hpp>
+#    include <zi/debug/assert.hpp>
 
 #endif
-

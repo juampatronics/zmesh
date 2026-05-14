@@ -17,18 +17,19 @@
 //
 
 #ifndef ZI_BITS_MEM_FN_HPP
-#define ZI_BITS_MEM_FN_HPP 1
+#    define ZI_BITS_MEM_FN_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#include <functional>
-#define ZI_MEM_FN_NAMESPACE ::std
+#    include <functional>
+#    define ZI_MEM_FN_NAMESPACE ::std
 
-namespace zi {
+namespace zi
+{
 
 using ZI_MEM_FN_NAMESPACE::mem_fn;
 
 } // namespace zi
 
-#undef ZI_MEM_FN_NAMESPACE
+#    undef ZI_MEM_FN_NAMESPACE
 #endif

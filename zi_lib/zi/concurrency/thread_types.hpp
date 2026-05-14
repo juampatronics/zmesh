@@ -17,43 +17,46 @@
 //
 
 #ifndef ZI_CONCURRENCY_THREAD_TYPES_HPP
-#define ZI_CONCURRENCY_THREAD_TYPES_HPP 1
+#    define ZI_CONCURRENCY_THREAD_TYPES_HPP 1
 
-#include <zi/concurrency/config.hpp>
+#    include <zi/concurrency/config.hpp>
 
-#if defined( ZI_HAS_PTHREADS )
-#  include <zi/concurrency/pthread/types.hpp>
+#    if defined(ZI_HAS_PTHREADS)
+#        include <zi/concurrency/pthread/types.hpp>
 #
-#elif defined( ZI_HAS_WINTHREADS )
-#  include <zi/concurrency/win32/types.hpp>
+#    elif defined(ZI_HAS_WINTHREADS)
+#        include <zi/concurrency/win32/types.hpp>
 #
-#else
-#  error "add other"
-#endif
+#    else
+#        error "add other"
+#    endif
 
-#include <zi/concurrency/detail/thread_info.hpp>
-#include <zi/concurrency/detail/all_threads_data.hpp>
-#include <zi/utility/singleton.hpp>
+#    include <zi/concurrency/detail/all_threads_data.hpp>
+#    include <zi/concurrency/detail/thread_info.hpp>
+#    include <zi/utility/singleton.hpp>
 
-namespace zi {
-namespace concurrency_ {
+namespace zi
+{
+namespace concurrency_
+{
 
+typedef detail::thread_info<thread_id_type, native_thread_handle_type>
+    thread_info;
+typedef detail::all_threads_data<thread_id_type, native_thread_handle_type>
+    all_threads_data;
 
-typedef detail::thread_info< thread_id_type, native_thread_handle_type >      thread_info      ;
-typedef detail::all_threads_data< thread_id_type, native_thread_handle_type > all_threads_data ;
+namespace
+{
 
-
-namespace {
-
-static all_threads_data &all_threads_info = singleton< all_threads_data >::instance();
+static all_threads_data& all_threads_info =
+    singleton<all_threads_data>::instance();
 
 }
 
-
 } // namespace concurrency_
 
-using zi::concurrency_::thread_id_type;
 using zi::concurrency_::native_thread_handle_type;
+using zi::concurrency_::thread_id_type;
 
 } // namespace zi
 

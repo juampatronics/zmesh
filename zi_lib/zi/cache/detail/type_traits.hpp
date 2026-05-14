@@ -17,8 +17,8 @@
 //
 
 #ifndef ZI_CACHE_DETAIL_TYPE_TRAITS_HPP
-#define ZI_CACHE_DETAIL_TYPE_TRAITS_HPP 1
+#    define ZI_CACHE_DETAIL_TYPE_TRAITS_HPP 1
 
-#include <zi/bits/type_traits.hpp>
+#    include <zi/bits/type_traits.hpp>
 
 #endif

@@ -17,89 +17,90 @@
 //
 
 #ifndef ZI_CONCURRENCY_SEMAPHORE_HPP
-#define ZI_CONCURRENCY_SEMAPHORE_HPP 1
+#    define ZI_CONCURRENCY_SEMAPHORE_HPP 1
 
-#include <zi/concurrency/config.hpp>
-#include <zi/concurrency/mutex.hpp>
-#include <zi/concurrency/condition_variable.hpp>
+#    include <zi/concurrency/condition_variable.hpp>
+#    include <zi/concurrency/config.hpp>
+#    include <zi/concurrency/mutex.hpp>
 
-#include <zi/utility/non_copyable.hpp>
-#include <zi/utility/assert.hpp>
+#    include <zi/utility/assert.hpp>
+#    include <zi/utility/non_copyable.hpp>
 
-#include <algorithm>
+#    include <algorithm>
 
-namespace zi {
-namespace concurrency_ {
+namespace zi
+{
+namespace concurrency_
+{
 
-
-class semaphore: non_copyable
+class semaphore : non_copyable
 {
 private:
-
-    mutable int64_t credit_   ;
-    mutable int64_t waiters_  ;
+    mutable int64_t credit_;
+    mutable int64_t waiters_;
 
     condition_variable cv_;
-    mutex              m_ ;
+    mutex              m_;
 
 public:
-
-    explicit semaphore( int64_t count = 0 ):
-        credit_( count ), waiters_( 0 ), cv_(), m_()
+    explicit semaphore(int64_t count = 0)
+        : credit_(count)
+        , waiters_(0)
+        , cv_()
+        , m_()
     {
-        ZI_ASSERT( count >= 0 );
+        ZI_ASSERT(count >= 0);
     }
 
-    void set( int64_t n ) const
+    void set(int64_t n) const
     {
-        mutex::guard g( m_ );
+        mutex::guard g(m_);
 
         credit_ = n;
 
-        if( n )
+        if (n)
         {
             cv_.notify_one();
         }
     }
 
-    void acquire( int64_t n = 1 ) const
+    void acquire(int64_t n = 1) const
     {
-        mutex::guard g( m_ );
+        mutex::guard g(m_);
 
-        while ( credit_ < n )
+        while (credit_ < n)
         {
             ++waiters_;
-            cv_.wait( m_ );
+            cv_.wait(m_);
             --waiters_;
         }
 
         credit_ -= n;
     }
 
-    bool timed_acquire( int64_t ttl ) const
+    bool timed_acquire(int64_t ttl) const
     {
-        mutex::guard g( m_ );
+        mutex::guard g(m_);
 
         int64_t end_at = now::msec() + ttl;
 
-        while ( credit_ <= 0 )
+        while (credit_ <= 0)
         {
             int64_t rest = end_at - now::msec();
 
-            if ( rest < 0 )
+            if (rest < 0)
             {
                 return false;
             }
 
             ++waiters_;
-            bool ok = cv_.timed_wait( m_, rest );
+            bool ok = cv_.timed_wait(m_, rest);
             --waiters_;
 
-            if ( !ok )
+            if (!ok)
             {
                 return false;
             }
-
         }
 
         --credit_;
@@ -107,25 +108,25 @@ public:
         return true;
     }
 
-    void release( int64_t n = 1 ) const
+    void release(int64_t n = 1) const
     {
-        mutex::guard g( m_ );
+        mutex::guard g(m_);
 
         credit_ += n;
 
-        n = std::min( n, waiters_ );
+        n = std::min(n, waiters_);
 
-        if ( n > 0 )
+        if (n > 0)
         {
-            if ( n > 1 )
+            if (n > 1)
             {
-                if ( ( n >> 1 ) >= waiters_ )
+                if ((n >> 1) >= waiters_)
                 {
                     cv_.notify_all();
                 }
                 else
                 {
-                    while ( n > 0 )
+                    while (n > 0)
                     {
                         cv_.notify_one();
                         --n;
@@ -139,36 +140,28 @@ public:
         }
     }
 
-    class synchronized: non_copyable
+    class synchronized : non_copyable
     {
     private:
-
-        const semaphore &s_;
+        const semaphore& s_;
 
     public:
-
-        synchronized( const semaphore &s ): s_( s )
+        synchronized(const semaphore& s)
+            : s_(s)
         {
             s_.acquire();
         }
 
-        ~synchronized()
-        {
-            s_.release();
-        }
-
+        ~synchronized() { s_.release(); }
     };
 
     typedef synchronized guard;
-
 };
-
 
 } // namespace concurrency_
 
 using concurrency_::semaphore;
 
 } // namespace zi
-
 
 #endif

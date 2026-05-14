@@ -17,9 +17,9 @@
 //
 
 #ifndef ZI_ZARGS_DETAIL_LEXICAL_CAST_HPP
-#define ZI_ZARGS_DETAIL_LEXICAL_CAST_HPP 1
+#    define ZI_ZARGS_DETAIL_LEXICAL_CAST_HPP 1
 
-#include <zi/config/config.hpp>
-#include <zi/zargs/detail/simple_lexical_cast.hpp>
+#    include <zi/config/config.hpp>
+#    include <zi/zargs/detail/simple_lexical_cast.hpp>
 
 #endif

@@ -17,266 +17,261 @@
 //
 
 #ifndef ZI_HEAP_DETAIL_BINARY_HEAP_IMPL_HPP
-#define ZI_HEAP_DETAIL_BINARY_HEAP_IMPL_HPP 1
+#    define ZI_HEAP_DETAIL_BINARY_HEAP_IMPL_HPP 1
 
-#include <zi/bits/ref.hpp>
-#include <zi/utility/exception.hpp>
-#include <zi/utility/assert.hpp>
-#include <zi/utility/for_each.hpp>
+#    include <zi/bits/ref.hpp>
+#    include <zi/utility/assert.hpp>
+#    include <zi/utility/exception.hpp>
+#    include <zi/utility/for_each.hpp>
 
-#include <cstddef>
-#include <cstdlib>
-#include <cstring>
-#include <vector>
-#include <functional>
-#include <utility>
-#include <algorithm>
+#    include <algorithm>
+#    include <cstddef>
+#    include <cstdlib>
+#    include <cstring>
+#    include <functional>
+#    include <utility>
+#    include <vector>
 
-#include <iostream>
+#    include <iostream>
 
-namespace zi {
-namespace heap {
-namespace detail {
+namespace zi
+{
+namespace heap
+{
+namespace detail
+{
 
-template< class Type,
-          class KeyType,
-          class ValueType,
-          class KeyExtractor,
-          class ValueExtractor,
-          class ValueCompare,
-          class Container,
-          class Allocator
-          >
+template <class Type, class KeyType, class ValueType, class KeyExtractor,
+          class ValueExtractor, class ValueCompare, class Container,
+          class Allocator>
 class binary_heap_impl
 {
 private:
+    std::size_t    size_;
+    std::size_t    reserved_;
+    KeyExtractor   key_extractor_;
+    ValueExtractor value_extractor_;
+    ValueCompare   compare_;
 
-    std::size_t          size_           ;
-    std::size_t          reserved_       ;
-    KeyExtractor         key_extractor_  ;
-    ValueExtractor       value_extractor_;
-    ValueCompare         compare_        ;
-
-    Allocator            alloc_   ;
-    Container            keymap_  ;
-    std::size_t*         heap_    ;
-    std::size_t*         map_     ;
-    Type*                store_   ;
+    Allocator    alloc_;
+    Container    keymap_;
+    std::size_t* heap_;
+    std::size_t* map_;
+    Type*        store_;
 
 private:
-
     void try_grow()
     {
-        if ( size_ == reserved_ )
+        if (size_ == reserved_)
         {
             const std::size_t s = reserved_ << 1;
 
-            Type* new_store = std::allocator_traits<Allocator>::allocate(alloc_,  s );
+            Type* new_store =
+                std::allocator_traits<Allocator>::allocate(alloc_, s);
 
-            for ( std::size_t i = 0; i < size_; ++i )
+            for (std::size_t i = 0; i < size_; ++i)
             {
-                std::allocator_traits<Allocator>::construct(alloc_,  new_store + heap_[ i ], store_[ heap_[ i ] ] );
-                std::allocator_traits<Allocator>::destroy(alloc_,  store_ + heap_[ i ] );
+                std::allocator_traits<Allocator>::construct(
+                    alloc_, new_store + heap_[i], store_[heap_[i]]);
+                std::allocator_traits<Allocator>::destroy(alloc_,
+                                                          store_ + heap_[i]);
             }
 
-            std::allocator_traits<Allocator>::deallocate(alloc_,  store_, reserved_ );
+            std::allocator_traits<Allocator>::deallocate(alloc_, store_,
+                                                         reserved_);
 
             store_ = new_store;
 
-            std::size_t* nheap = new std::size_t[ s ];
-            std::copy( heap_, heap_ + reserved_, nheap );
-            delete [] heap_;
+            std::size_t* nheap = new std::size_t[s];
+            std::copy(heap_, heap_ + reserved_, nheap);
+            delete[] heap_;
             heap_ = nheap;
 
-            std::size_t* nmap = new std::size_t[ s ];
-            std::copy( map_, map_ + reserved_, nmap );
-            delete [] map_;
+            std::size_t* nmap = new std::size_t[s];
+            std::copy(map_, map_ + reserved_, nmap);
+            delete[] map_;
             map_ = nmap;
 
-            for ( std::size_t i = static_cast< std::size_t >( reserved_ ); i < s; ++i )
+            for (std::size_t i = static_cast<std::size_t>(reserved_); i < s;
+                 ++i)
             {
-                heap_[ i ] = map_[ i ] = i;
+                heap_[i] = map_[i] = i;
             }
 
             reserved_ = s;
         }
 
-        ZI_ASSERT( size_ < reserved_ );
+        ZI_ASSERT(size_ < reserved_);
     }
 
     void try_shrink()
     {
-        if ( ( ( size_ << 2 ) < reserved_ ) && ( reserved_ > 4096 ) )
+        if (((size_ << 2) < reserved_) && (reserved_ > 4096))
         {
-            ZI_ASSERT( size_ == keymap_.size() );
+            ZI_ASSERT(size_ == keymap_.size());
 
             std::size_t s = reserved_ >> 1;
 
             Type* old = store_;
 
-            store_ = std::allocator_traits<Allocator>::allocate(alloc_,  s );
+            store_ = std::allocator_traits<Allocator>::allocate(alloc_, s);
 
             std::size_t si = 0;
 
-            for ( std::size_t i = 0; i < size_; ++i )
+            for (std::size_t i = 0; i < size_; ++i)
             {
-                if ( heap_[ i ] >= s )
+                if (heap_[i] >= s)
                 {
-                    while ( map_[ si ] < s )
+                    while (map_[si] < s)
                     {
                         ++si;
                     }
 
-                    keymap_[ key_extractor_( old[ heap_[ i ] ] ) ] = si;
-                    std::allocator_traits<Allocator>::construct(alloc_,  store_ + si, old[ heap_[ i ] ] );
-                    std::allocator_traits<Allocator>::destroy(alloc_,  old + heap_[ i ] );
+                    keymap_[key_extractor_(old[heap_[i]])] = si;
+                    std::allocator_traits<Allocator>::construct(
+                        alloc_, store_ + si, old[heap_[i]]);
+                    std::allocator_traits<Allocator>::destroy(alloc_,
+                                                              old + heap_[i]);
 
-                    heap_[ i ] = si;
-                    map_[ si ] = i;
+                    heap_[i] = si;
+                    map_[si] = i;
                 }
                 else // heap_[ i ] < s
                 {
-                    std::allocator_traits<Allocator>::construct(alloc_,  store_ + heap_[ i ], old[ heap_[ i ] ] );
-                    std::allocator_traits<Allocator>::destroy(alloc_,  old + heap_[ i ] );
+                    std::allocator_traits<Allocator>::construct(
+                        alloc_, store_ + heap_[i], old[heap_[i]]);
+                    std::allocator_traits<Allocator>::destroy(alloc_,
+                                                              old + heap_[i]);
                 }
-
             }
 
-            for ( std::size_t i = size_; i < s; ++i )
+            for (std::size_t i = size_; i < s; ++i)
             {
-                if ( heap_[ i ] >= s )
+                if (heap_[i] >= s)
                 {
-                    while ( map_[ si ] < s )
+                    while (map_[si] < s)
                     {
                         ++si;
                     }
-                    heap_[ i ] = si;
-                    map_[ si ] = i;
+                    heap_[i] = si;
+                    map_[si] = i;
                 }
             }
 
-            std::allocator_traits<Allocator>::deallocate(alloc_, old, reserved_ );
+            std::allocator_traits<Allocator>::deallocate(alloc_, old,
+                                                         reserved_);
 
-            std::size_t* nheap = new std::size_t[ s ];
-            std::copy( heap_, heap_ + s, nheap );
-            delete [] heap_;
+            std::size_t* nheap = new std::size_t[s];
+            std::copy(heap_, heap_ + s, nheap);
+            delete[] heap_;
             heap_ = nheap;
 
-            std::size_t* nmap = new std::size_t[ s ];
-            std::copy( map_, map_ + s, nmap );
-            delete [] map_;
+            std::size_t* nmap = new std::size_t[s];
+            std::copy(map_, map_ + s, nmap);
+            delete[] map_;
             map_ = nmap;
 
             reserved_ = s;
         }
 
-        ZI_ASSERT( size_ < reserved_ );
+        ZI_ASSERT(size_ < reserved_);
     }
 
 public:
-    binary_heap_impl( const ValueCompare& compare   = ValueCompare(),
-                      const Allocator   & allocator = Allocator(),
-                      std::size_t init_reserved = 16 )
-        : size_( 0 ),
-          reserved_( init_reserved ),
-          key_extractor_(),
-          value_extractor_(),
-          compare_( compare ),
-          alloc_( allocator ),
-          keymap_(),
-          heap_( 0 ),
-          map_( 0 ),
-          store_( 0 )
+    binary_heap_impl(const ValueCompare& compare       = ValueCompare(),
+                     const Allocator&    allocator     = Allocator(),
+                     std::size_t         init_reserved = 16)
+        : size_(0)
+        , reserved_(init_reserved)
+        , key_extractor_()
+        , value_extractor_()
+        , compare_(compare)
+        , alloc_(allocator)
+        , keymap_()
+        , heap_(0)
+        , map_(0)
+        , store_(0)
     {
-        if ( reserved_ < 16 )
+        if (reserved_ < 16)
         {
             reserved_ = 16;
         }
-        heap_ = new std::size_t[ reserved_ ];
-        map_  = new std::size_t[ reserved_ ];
-        store_ = std::allocator_traits<Allocator>::allocate(alloc_,  reserved_ );
+        heap_  = new std::size_t[reserved_];
+        map_   = new std::size_t[reserved_];
+        store_ = std::allocator_traits<Allocator>::allocate(alloc_, reserved_);
 
-        for ( std::size_t i = 0; i < reserved_; ++i )
+        for (std::size_t i = 0; i < reserved_; ++i)
         {
-            heap_[ i ] = map_[ i ] = i;
+            heap_[i] = map_[i] = i;
         }
     }
 
     ~binary_heap_impl()
     {
-        for ( std::size_t i = 0; i < size_; ++i )
+        for (std::size_t i = 0; i < size_; ++i)
         {
-            std::allocator_traits<Allocator>::destroy(alloc_,  store_ + heap_[ i ] );
+            std::allocator_traits<Allocator>::destroy(alloc_,
+                                                      store_ + heap_[i]);
         }
 
-        std::allocator_traits<Allocator>::deallocate(alloc_,  store_, reserved_ );
+        std::allocator_traits<Allocator>::deallocate(alloc_, store_, reserved_);
 
-        delete [] heap_;
-        delete [] map_ ;
-
+        delete[] heap_;
+        delete[] map_;
     }
 
-    inline std::size_t size() const
+    inline std::size_t size() const { return size_; }
+
+    bool empty() const { return size_ == 0; }
+
+    std::size_t count(const Type& v) const
     {
-        return size_;
+        return keymap_.count(key_extractor_(const_cast<Type&>(v)));
     }
 
-    bool empty() const
-    {
-        return size_ == 0;
-    }
-
-    std::size_t count( const Type& v ) const
-    {
-        return keymap_.count( key_extractor_( const_cast< Type& >( v ) ) );
-    }
-
-    std::size_t key_count( const KeyType& v ) const
-    {
-        return keymap_.count( v );
-    }
+    std::size_t key_count(const KeyType& v) const { return keymap_.count(v); }
 
     const Type& top() const
     {
-        if ( size_ == 0 )
+        if (size_ == 0)
         {
-            throw ::zi::exception( "called pop on an empty heap" );
+            throw ::zi::exception("called pop on an empty heap");
         }
-        return store_[ heap_[ 0 ] ];
+        return store_[heap_[0]];
     }
 
     Type& top()
     {
-        if ( size_ == 0 )
+        if (size_ == 0)
         {
-            throw ::zi::exception( "called pop on an empty heap" );
+            throw ::zi::exception("called pop on an empty heap");
         }
-        return store_[ heap_[ 0 ] ];
+        return store_[heap_[0]];
     }
 
-    void insert( const Type& v )
+    void insert(const Type& v)
     {
-        if ( !count( v ) )
+        if (!count(v))
         {
-            insert_( v );
+            insert_(v);
         }
     }
 
-    std::size_t erase( const Type& v )
+    std::size_t erase(const Type& v)
     {
-        if ( count( v ) )
+        if (count(v))
         {
-            erase_( v );
+            erase_(v);
             return 1;
         }
         return 0;
     }
 
-    std::size_t erase_key( const KeyType& v )
+    std::size_t erase_key(const KeyType& v)
     {
-        if ( key_count( v ) )
+        if (key_count(v))
         {
-            erase_key_( v );
+            erase_key_(v);
             return 1;
         }
         return 0;
@@ -284,78 +279,71 @@ public:
 
     void pop()
     {
-        if ( size_ > 0 )
+        if (size_ > 0)
         {
-            erase_( store_[ heap_[ 0 ] ] );
+            erase_(store_[heap_[0]]);
         }
     }
 
-    void clear()
-    {
-        clear_();
-    }
-
+    void clear() { clear_(); }
 
 private:
-
-    void swap_elements( std::size_t x, std::size_t y )
+    void swap_elements(std::size_t x, std::size_t y)
     {
-        std::swap( heap_[ x ], heap_[ y ] );
-        map_[ heap_[ x ] ] = x;
-        map_[ heap_[ y ] ] = y;
+        std::swap(heap_[x], heap_[y]);
+        map_[heap_[x]] = x;
+        map_[heap_[y]] = y;
     }
 
-    std::size_t heap_up( std::size_t index )
+    std::size_t heap_up(std::size_t index)
     {
-        std::size_t parent = ( index - 1 ) / 2;
-        while ( index > 0 && compare_( value_extractor_( store_[ heap_[ index  ] ] ),
-                                       value_extractor_( store_[ heap_[ parent ] ] )))
+        std::size_t parent = (index - 1) / 2;
+        while (index > 0 && compare_(value_extractor_(store_[heap_[index]]),
+                                     value_extractor_(store_[heap_[parent]])))
         {
-            swap_elements( index, parent );
-            index = parent;
-            parent = ( index - 1 ) / 2;
+            swap_elements(index, parent);
+            index  = parent;
+            parent = (index - 1) / 2;
         }
         return index;
     }
 
-    void heap_down( std::size_t index )
+    void heap_down(std::size_t index)
     {
         std::size_t child = index * 2 + 1;
-        while ( child < size_ )
+        while (child < size_)
         {
-            if ( child + 1 < size_ &&
-                 compare_( value_extractor_( store_[ heap_[ child + 1 ] ] ),
-                           value_extractor_( store_[ heap_[ child ] ] )))
+            if (child + 1 < size_ &&
+                compare_(value_extractor_(store_[heap_[child + 1]]),
+                         value_extractor_(store_[heap_[child]])))
             {
                 ++child;
             }
 
-            if ( compare_( value_extractor_( store_[ heap_[ index ] ] ),
-                           value_extractor_( store_[ heap_[ child ] ] )))
+            if (compare_(value_extractor_(store_[heap_[index]]),
+                         value_extractor_(store_[heap_[child]])))
             {
                 break;
             }
 
-            swap_elements( index, child );
+            swap_elements(index, child);
             index = child;
-            child = ( index << 1 ) + 1;
+            child = (index << 1) + 1;
         }
     }
 
-    void insert_( const Type& v )
+    void insert_(const Type& v)
     {
-        ZI_ASSERT( heap_[ size_ ] < reserved_ );
+        ZI_ASSERT(heap_[size_] < reserved_);
 
-        std::allocator_traits<Allocator>::construct(alloc_, store_ + heap_[ size_ ], v );
+        std::allocator_traits<Allocator>::construct(alloc_,
+                                                    store_ + heap_[size_], v);
 
-        keymap_.emplace(
-            key_extractor_(const_cast<Type&>(v)),
-            heap_[ size_ ] 
-        );
+        keymap_.emplace(key_extractor_(const_cast<Type&>(v)), heap_[size_]);
 
-        ZI_ASSERT( map_[ heap_[ size_ ] ] == size_ );
+        ZI_ASSERT(map_[heap_[size_]] == size_);
 
-        heap_up( static_cast< std::size_t >( size_ ) );
+        heap_up(static_cast<std::size_t>(size_));
 
         ++size_;
         try_grow();
@@ -363,28 +351,31 @@ private:
 
     void clear_()
     {
-        for ( std::size_t i = 0; i < size_; ++i )
+        for (std::size_t i = 0; i < size_; ++i)
         {
-            std::allocator_traits<Allocator>::destroy(alloc_,  store_ + heap_[ i ] );
+            std::allocator_traits<Allocator>::destroy(alloc_,
+                                                      store_ + heap_[i]);
         }
 
-        if ( reserved_ > 16 )
+        if (reserved_ > 16)
         {
 
-            std::allocator_traits<Allocator>::deallocate(alloc_,  store_, reserved_ );
+            std::allocator_traits<Allocator>::deallocate(alloc_, store_,
+                                                         reserved_);
 
-            delete [] heap_;
-            delete [] map_ ;
+            delete[] heap_;
+            delete[] map_;
 
-            heap_ = new std::size_t[ 16 ];
-            map_  = new std::size_t[ 16 ];
+            heap_ = new std::size_t[16];
+            map_  = new std::size_t[16];
 
             reserved_ = 16;
-            store_ = std::allocator_traits<Allocator>::allocate(alloc_,  reserved_ );
+            store_ =
+                std::allocator_traits<Allocator>::allocate(alloc_, reserved_);
 
-            for ( std::size_t i = 0; i < reserved_; ++i )
+            for (std::size_t i = 0; i < reserved_; ++i)
             {
-                heap_[ i ] = map_[ i ] = i;
+                heap_[i] = map_[i] = i;
             }
         }
 
@@ -392,38 +383,33 @@ private:
         keymap_.clear();
     }
 
-    void erase_( const Type& v )
+    void erase_(const Type& v)
     {
-        erase_at_( keymap_[ key_extractor_( const_cast< Type& > ( v ) ) ] );
+        erase_at_(keymap_[key_extractor_(const_cast<Type&>(v))]);
     }
 
-    void erase_key_( const KeyType& k )
-    {
-        erase_at_( keymap_[ k ] );
-    }
+    void erase_key_(const KeyType& k) { erase_at_(keymap_[k]); }
 
-    void erase_at_( const std::size_t pos )
+    void erase_at_(const std::size_t pos)
     {
-        ZI_VERIFY( keymap_.erase( key_extractor_( store_[ pos ] )));
+        ZI_VERIFY(keymap_.erase(key_extractor_(store_[pos])));
 
-        std::allocator_traits<Allocator>::destroy(alloc_,  store_ + pos );
+        std::allocator_traits<Allocator>::destroy(alloc_, store_ + pos);
         --size_;
 
-        if ( map_[ pos ] < size_ )
+        if (map_[pos] < size_)
         {
-            std::size_t hp = map_[ pos ];
-            swap_elements( map_[ pos ], size_ );
+            std::size_t hp = map_[pos];
+            swap_elements(map_[pos], size_);
             hp = heap_up(hp);
-            heap_down( hp );
+            heap_down(hp);
         }
         try_shrink();
     }
-
 };
 
 } // namespace detail
 } // namespace heap
 } // namespace zi
-
 
 #endif

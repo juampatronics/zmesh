@@ -17,26 +17,28 @@
 //
 
 #ifndef ZI_GL_DETAIL_TYPES_HPP
-#define ZI_GL_DETAIL_TYPES_HPP 1
+#    define ZI_GL_DETAIL_TYPES_HPP 1
 
-namespace zi {
-namespace gl {
+namespace zi
+{
+namespace gl
+{
 
-typedef unsigned int    gl_enum    ;
-typedef unsigned char   gl_boolean ;
-typedef unsigned int    gl_bitfield;
-typedef void            gl_void    ;
-typedef char            gl_byte    ;
-typedef short           gl_short   ;
-typedef int             gl_int     ;
-typedef unsigned char   gl_ubyte   ;
-typedef unsigned short  gl_ushort  ;
-typedef unsigned int    gl_uint    ;
-typedef int             gl_sizei   ;
-typedef float           gl_float   ;
-typedef float           gl_clampf  ;
-typedef double          gl_double  ;
-typedef double          gl_clampd  ;
+typedef unsigned int   gl_enum;
+typedef unsigned char  gl_boolean;
+typedef unsigned int   gl_bitfield;
+typedef void           gl_void;
+typedef char           gl_byte;
+typedef short          gl_short;
+typedef int            gl_int;
+typedef unsigned char  gl_ubyte;
+typedef unsigned short gl_ushort;
+typedef unsigned int   gl_uint;
+typedef int            gl_sizei;
+typedef float          gl_float;
+typedef float          gl_clampf;
+typedef double         gl_double;
+typedef double         gl_clampd;
 
 } // namespace gl
 } // namespace zi

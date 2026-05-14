@@ -17,162 +17,123 @@
 //
 
 #ifndef ZI_DETAIL_GLOBAL_FUNCTION_HPP
-#define ZI_DETAIL_GLOBAL_FUNCTION_HPP 1
+#    define ZI_DETAIL_GLOBAL_FUNCTION_HPP 1
 
-#include <zi/utility/static_if.hpp>
-#include <zi/utility/enable_if.hpp>
-#include <zi/bits/type_traits.hpp>
-#include <zi/bits/ref.hpp>
+#    include <zi/bits/ref.hpp>
+#    include <zi/bits/type_traits.hpp>
+#    include <zi/utility/enable_if.hpp>
+#    include <zi/utility/static_if.hpp>
 
-namespace zi {
-namespace detail {
+namespace zi
+{
+namespace detail
+{
 
-namespace global_function_ {
+namespace global_function_
+{
 
-template< class Type,
-          class Result,
-          Result (*StaticFunctionPtr)( Type )
-          >
+template <class Type, class Result, Result (*StaticFunctionPtr)(Type)>
 struct non_ref
 {
-    typedef typename remove_reference< Result >::type result_type;
+    typedef typename remove_reference<Result>::type result_type;
 
-    template< class PtrToType >
-    inline
-    typename disable_if<
-        is_convertible<
-            const PtrToType&,
-            const Type&
-        >::type::value,
-        Result
-    >::type
-    operator() ( const PtrToType& ptr ) const
+    template <class PtrToType>
+    inline typename disable_if<
+        is_convertible<const PtrToType&, const Type&>::type::value,
+        Result>::type
+    operator()(const PtrToType& ptr) const
     {
-        return this->operator() ( *ptr );
+        return this->operator()(*ptr);
     }
 
-    inline Result operator() ( const Type& v ) const
+    inline Result operator()(const Type& v) const
     {
-        return StaticFunctionPtr( v );
+        return StaticFunctionPtr(v);
     }
 
-    inline Result operator() ( const reference_wrapper< const Type >& v_ref ) const
+    inline Result operator()(const reference_wrapper<const Type>& v_ref) const
     {
-        return this->operator() ( v_ref.get() );
+        return this->operator()(v_ref.get());
     }
 
-    inline Result operator() ( const reference_wrapper<
-                            typename remove_const< Type >::type
-                        >& v_ref, void* = 0 ) const
+    inline Result operator()(
+        const reference_wrapper<typename remove_const<Type>::type>& v_ref,
+        void* = 0) const
     {
-        return this->operator() ( v_ref.get() );
+        return this->operator()(v_ref.get());
     }
-
 };
 
-template< class Type,
-          class Result,
-          Result (*StaticFunctionPtr)( Type )
-          >
+template <class Type, class Result, Result (*StaticFunctionPtr)(Type)>
 struct non_const_ref
 {
-    typedef typename remove_reference< Result >::type result_type;
+    typedef typename remove_reference<Result>::type result_type;
 
-    template< class PtrToType >
-    inline
-    typename disable_if<
-        is_convertible<
-            PtrToType&,
-            Type
-        >::type::value,
-        Result
-    >::type
-    operator() ( const PtrToType& ptr ) const
+    template <class PtrToType>
+    inline typename disable_if<is_convertible<PtrToType&, Type>::type::value,
+                               Result>::type
+    operator()(const PtrToType& ptr) const
     {
-        return this->operator() ( *ptr );
+        return this->operator()(*ptr);
     }
 
-    inline Result operator() ( Type v ) const
-    {
-        return StaticFunctionPtr( v );
-    }
+    inline Result operator()(Type v) const { return StaticFunctionPtr(v); }
 
-    inline Result operator() ( const reference_wrapper<
-                            typename remove_reference< Type >::type
-                        >& v_ref) const
+    inline Result operator()(
+        const reference_wrapper<typename remove_reference<Type>::type>& v_ref)
+        const
     {
-        return this->operator() ( v_ref.get() );
+        return this->operator()(v_ref.get());
     }
-
 };
 
-
-template< class Type,
-          class Result,
-          Result (*StaticFunctionPtr)( Type )
-          >
+template <class Type, class Result, Result (*StaticFunctionPtr)(Type)>
 struct const_ref
 {
-    typedef typename remove_reference< Result >::type result_type;
+    typedef typename remove_reference<Result>::type result_type;
 
-    template< class PtrToType >
+    template <class PtrToType>
     inline
-    typename disable_if<
-        is_convertible<
-            const PtrToType&,
-            Type
-        >::type::value,
-        Result
-    >::type
-    operator() ( const PtrToType& ptr ) const
+        typename disable_if<is_convertible<const PtrToType&, Type>::type::value,
+                            Result>::type
+        operator()(const PtrToType& ptr) const
     {
-        return this->operator() ( *ptr );
+        return this->operator()(*ptr);
     }
 
-    inline Result operator() ( Type v ) const
+    inline Result operator()(Type v) const { return StaticFunctionPtr(v); }
+
+    inline Result operator()(
+        const reference_wrapper<typename remove_reference<Type>::type>& v_ref)
+        const
     {
-        return StaticFunctionPtr( v );
+        return this->operator()(v_ref.get());
     }
 
-    inline Result operator() ( const reference_wrapper<
-                            typename remove_reference< Type >::type
-                        >& v_ref ) const
+    inline Result
+    operator()(const reference_wrapper<typename remove_const<
+                   typename remove_reference<Type>::type>::type>& v_ref,
+               void* = 0) const
     {
-        return this->operator() ( v_ref.get() );
+        return this->operator()(v_ref.get());
     }
-
-    inline Result operator() ( const reference_wrapper<
-                            typename remove_const<
-                                typename remove_reference< Type >::type
-                            >::type
-                        >& v_ref, void* = 0 ) const
-    {
-        return this->operator() ( v_ref.get() );
-    }
-
 };
 
 } // namespace global_function_
 
-template< class Type,
-          class Result,
-          Result (*StaticFunctionPtr)( Type )
-          >
-struct global_function:
-    if_<
-        is_reference< Type >::value,
-        typename if_<
-            is_const< typename remove_reference< Type >::type >::value,
-            global_function_::const_ref< Type, Result, StaticFunctionPtr >,
-            global_function_::non_const_ref< Type, Result, StaticFunctionPtr >
-        >::type,
-        global_function_::non_ref< Type, Result, StaticFunctionPtr >
-    >::type
+template <class Type, class Result, Result (*StaticFunctionPtr)(Type)>
+struct global_function
+    : if_<is_reference<Type>::value,
+          typename if_<
+              is_const<typename remove_reference<Type>::type>::value,
+              global_function_::const_ref<Type, Result, StaticFunctionPtr>,
+              global_function_::non_const_ref<Type, Result,
+                                              StaticFunctionPtr>>::type,
+          global_function_::non_ref<Type, Result, StaticFunctionPtr>>::type
 {
 };
 
 } // namespace detail
 } // namespace zi
-
 
 #endif

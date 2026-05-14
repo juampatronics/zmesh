@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_FUNCTION_HPP
-#define ZI_FUNCTION_HPP 1
+#    define ZI_FUNCTION_HPP 1
 
-#include <zi/bits/function.hpp>
+#    include <zi/bits/function.hpp>
 
 #endif
-

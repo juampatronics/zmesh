@@ -17,14 +17,18 @@
 //
 
 #ifndef ZI_META_NULL_TYPE_HPP
-#define ZI_META_NULL_TYPE_HPP 1
+#    define ZI_META_NULL_TYPE_HPP 1
 
-#include <zi/bits/type_traits.hpp>
+#    include <zi/bits/type_traits.hpp>
 
-namespace zi {
-namespace meta {
+namespace zi
+{
+namespace meta
+{
 
-struct null_type {};
+struct null_type
+{
+};
 typedef null_type null_;
 
 } // namespace meta

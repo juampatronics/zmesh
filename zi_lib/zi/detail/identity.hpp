@@ -17,101 +17,86 @@
 //
 
 #ifndef ZI_DETAIL_IDENTITY_HPP
-#define ZI_DETAIL_IDENTITY_HPP 1
+#    define ZI_DETAIL_IDENTITY_HPP 1
 
-#include <zi/utility/static_if.hpp>
-#include <zi/utility/enable_if.hpp>
-#include <zi/bits/type_traits.hpp>
-#include <zi/bits/ref.hpp>
+#    include <zi/bits/ref.hpp>
+#    include <zi/bits/type_traits.hpp>
+#    include <zi/utility/enable_if.hpp>
+#    include <zi/utility/static_if.hpp>
 
-namespace zi {
-namespace detail {
+namespace zi
+{
+namespace detail
+{
 
-namespace identity_ {
+namespace identity_
+{
 
-template< class Type >
+template <class Type>
 struct non_const_identity
 {
     typedef Type result_type;
 
-    template< class PtrToType >
+    template <class PtrToType>
     typename disable_if<
-        is_convertible< const PtrToType&, const Type& >::type::value, Type&
-    >::type
-    operator() ( const PtrToType& ptr ) const
+        is_convertible<const PtrToType&, const Type&>::type::value, Type&>::type
+    operator()(const PtrToType& ptr) const
     {
-        return this->operator() ( *ptr );
+        return this->operator()(*ptr);
     }
 
-    Type& operator() ( Type& v ) const
-    {
-        return v;
-    }
+    Type& operator()(Type& v) const { return v; }
 
-    const Type& operator() ( const Type& v, void* = 0 ) const
-    {
-        return v;
-    }
+    const Type& operator()(const Type& v, void* = 0) const { return v; }
 
-    Type& operator() ( const reference_wrapper< Type >& v_ref )
+    Type& operator()(const reference_wrapper<Type>& v_ref)
     {
         return v_ref.get();
     }
 
-    const Type& operator() ( const reference_wrapper< const Type >& v_ref )
+    const Type& operator()(const reference_wrapper<const Type>& v_ref)
     {
         return v_ref.get();
     }
-
 };
 
-template< class Type >
+template <class Type>
 struct const_identity
 {
     typedef Type result_type;
 
-    template< class PtrToType >
+    template <class PtrToType>
     typename disable_if<
-        is_convertible< const PtrToType&, const Type& >::type::value, Type&
-    >::type
-    operator() ( const PtrToType& ptr ) const
+        is_convertible<const PtrToType&, const Type&>::type::value, Type&>::type
+    operator()(const PtrToType& ptr) const
     {
-        return this->operator() ( *ptr );
+        return this->operator()(*ptr);
     }
 
-    Type& operator() ( Type& v ) const
-    {
-        return v;
-    }
+    Type& operator()(Type& v) const { return v; }
 
-    Type& operator() ( const reference_wrapper< Type >& v_ref ) const
+    Type& operator()(const reference_wrapper<Type>& v_ref) const
     {
         return v_ref.get();
     }
 
-    Type& operator() ( const reference_wrapper<
-                           typename remove_const< Type >::type
-                       >& v_ref, void* = 0 ) const
+    Type& operator()(
+        const reference_wrapper<typename remove_const<Type>::type>& v_ref,
+        void* = 0) const
     {
         return v_ref.get();
     }
-
 };
 
 } // namespace identity_
 
-template< class Type >
-struct identity:
-    if_<
-        is_const< Type >::value,
-        identity_::const_identity    < Type >,
-        identity_::non_const_identity< Type >
-    >::type
+template <class Type>
+struct identity : if_<is_const<Type>::value, identity_::const_identity<Type>,
+                      identity_::non_const_identity<Type>>::type
 {
 };
 
 } // namespace detail
 } // namespace zi
-
 
 #endif

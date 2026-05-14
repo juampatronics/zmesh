@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_TEST_HPP
-#define ZI_TEST_HPP 1
+#    define ZI_TEST_HPP 1
 
-#include <zi/zunit/zunit.hpp>
+#    include <zi/zunit/zunit.hpp>
 
 #endif
-

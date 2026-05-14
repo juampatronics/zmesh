@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_BIND_HPP
-#define ZI_BIND_HPP 1
+#    define ZI_BIND_HPP 1
 
-#include <zi/bits/bind.hpp>
+#    include <zi/bits/bind.hpp>
 
 #endif
-

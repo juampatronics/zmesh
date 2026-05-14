@@ -17,12 +17,14 @@
 //
 
 #ifndef ZI_UTILITY_DETAIL_YES_NO_TYPE_HPP
-#define ZI_UTILITY_DETAIL_YES_NO_TYPE_HPP 1
+#    define ZI_UTILITY_DETAIL_YES_NO_TYPE_HPP 1
 
-namespace zi {
-namespace detail {
+namespace zi
+{
+namespace detail
+{
 
-typedef char (&no_type )[1];
+typedef char (&no_type)[1];
 typedef char (&yes_type)[2];
 
 } // namespace detail

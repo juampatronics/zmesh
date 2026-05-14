@@ -17,8 +17,8 @@
 //
 
 #ifndef ZI_ZUNIT_CONFIG_HPP
-#define ZI_ZUNIT_CONFIG_HPP 1
+#    define ZI_ZUNIT_CONFIG_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
 #endif

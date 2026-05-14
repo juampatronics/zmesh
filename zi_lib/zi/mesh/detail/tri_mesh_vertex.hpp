@@ -17,18 +17,21 @@
 //
 
 #ifndef ZI_MESH_TRI_MESH_VERTEX_HPP
-#define ZI_MESH_TRI_MESH_VERTEX_HPP 1
+#    define ZI_MESH_TRI_MESH_VERTEX_HPP 1
 
-#include <zi/bits/cstdint.hpp>
-#include <zi/bits/unordered_set.hpp>
-#include <zi/bits/unordered_map.hpp>
+#    include <zi/bits/cstdint.hpp>
+#    include <zi/bits/unordered_map.hpp>
+#    include <zi/bits/unordered_set.hpp>
 
-#include <iterator>
-#include <cstddef>
+#    include <cstddef>
+#    include <iterator>
 
-namespace zi {
-namespace mesh {
-namespace detail {
+namespace zi
+{
+namespace mesh
+{
+namespace detail
+{
 
 // forward declaration
 class tri_mesh;
@@ -43,47 +46,31 @@ private:
     static const uint32_t invalid_edge = 0x7fffffff;
 
 public:
-    inline tri_mesh_vertex(): face_( 0 ), open_( 0 )
+    inline tri_mesh_vertex()
+        : face_(0)
+        , open_(0)
     {
     }
 
-    inline bool valid() const
-    {
-        return open_ & valid_edge;
-    }
+    inline bool valid() const { return open_ & valid_edge; }
 
-    inline bool on_border() const
-    {
-        return open_ != valid_edge;
-    }
+    inline bool on_border() const { return open_ != valid_edge; }
 
-    inline uint32_t face() const
-    {
-        return face_;
-    }
+    inline uint32_t face() const { return face_; }
 
     friend class tri_mesh;
 
 private:
-    inline void validate()
-    {
-        open_ |= valid_edge;
-    }
+    inline void validate() { open_ |= valid_edge; }
 
-    inline void unvalidate()
-    {
-        open_ &= invalid_edge;
-    }
+    inline void unvalidate() { open_ &= invalid_edge; }
 
-    inline void face( uint32_t f )
+    inline void face(uint32_t f)
     {
         face_ = f;
         validate();
     }
-
 };
-
-
 
 } // namespace detail
 } // namespace mesh

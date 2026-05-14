@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_NON_COPYABLE_HPP
-#define ZI_NON_COPYABLE_HPP 1
+#    define ZI_NON_COPYABLE_HPP 1
 
-#include <zi/utility/non_copyable.hpp>
+#    include <zi/utility/non_copyable.hpp>
 
 #endif
-

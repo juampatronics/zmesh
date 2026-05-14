@@ -17,21 +17,22 @@
 //
 
 #ifndef ZI_BITS_UNORDERED_MAP_HPP
-#define ZI_BITS_UNORDERED_MAP_HPP 1
+#    define ZI_BITS_UNORDERED_MAP_HPP 1
 
-#include <zi/config/config.hpp>
-#include <zi/bits/hash.hpp>
+#    include <zi/bits/hash.hpp>
+#    include <zi/config/config.hpp>
 
-#include <unordered_map>
-#define ZI_UNORDERED_MAP_NAMESPACE ::std
+#    include <unordered_map>
+#    define ZI_UNORDERED_MAP_NAMESPACE ::std
 
-namespace zi {
+namespace zi
+{
 
+using ZI_UNORDERED_MAP_NAMESPACE::swap;
 using ZI_UNORDERED_MAP_NAMESPACE::unordered_map;
 using ZI_UNORDERED_MAP_NAMESPACE::unordered_multimap;
-using ZI_UNORDERED_MAP_NAMESPACE::swap;
 
 } // namespace zi
 
-#undef ZI_UNORDERED_MAP_NAMESPACE
+#    undef ZI_UNORDERED_MAP_NAMESPACE
 #endif

@@ -17,8 +17,8 @@
 //
 
 #ifndef ZI_FOR_EACH_HPP
-#define ZI_FOR_EACH_HPP 1
+#    define ZI_FOR_EACH_HPP 1
 
-#include <zi/utility/for_each.hpp>
+#    include <zi/utility/for_each.hpp>
 
 #endif

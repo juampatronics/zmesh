@@ -17,51 +17,52 @@
 //
 
 #ifndef ZI_ATOMIC_FENCED_BLOCK_HPP
-#define ZI_ATOMIC_FENCED_BLOCK_HPP 1
+#    define ZI_ATOMIC_FENCED_BLOCK_HPP 1
 
-#include <zi/atomic/config.hpp>
-#include <zi/utility/non_copyable.hpp>
+#    include <zi/atomic/config.hpp>
+#    include <zi/utility/non_copyable.hpp>
 
-#define ZI_ATOMIC_FENCED_BLOCK_HPP_INCLUDING 1
+#    define ZI_ATOMIC_FENCED_BLOCK_HPP_INCLUDING 1
 
-#if defined( ZI_HAS_GCC_SYNC )
+#    if defined(ZI_HAS_GCC_SYNC)
 #
-#elif defined( __GNUC__ ) && ( defined( __i386__ ) || defined( __x86_64__ ) )
+#    elif defined(__GNUC__) && (defined(__i386__) || defined(__x86_64__))
 #
-#elif defined( ZI_OS_WINDOWS )
+#    elif defined(ZI_OS_WINDOWS)
 #
-#elif defined( ZI_OS_MACOS )
-#  include <libkern/OSAtomic.h>
+#    elif defined(ZI_OS_MACOS)
+#        include <libkern/OSAtomic.h>
 #
-#else
-#  error "no fenced_block functions available"
+#    else
+#        error "no fenced_block functions available"
 #
-#endif
+#    endif
 
-namespace zi {
-namespace atomic {
+namespace zi
+{
+namespace atomic
+{
 
-#if defined( ZI_HAS_GCC_SYNC )
-#  include <zi/atomic/detail/fenced_block_gcc_sync.hpp>
+#    if defined(ZI_HAS_GCC_SYNC)
+#        include <zi/atomic/detail/fenced_block_gcc_sync.hpp>
 #
-#elif defined( __GNUC__ ) && ( defined( __i386__ ) || defined( __x86_64__ ) )
-#  include <zi/atomic/detail/fenced_block_gcc_x86.hpp>
+#    elif defined(__GNUC__) && (defined(__i386__) || defined(__x86_64__))
+#        include <zi/atomic/detail/fenced_block_gcc_x86.hpp>
 #
-#elif defined( ZI_OS_MACOS )
-#  include <zi/atomic/detail/fenced_block_macos.hpp>
+#    elif defined(ZI_OS_MACOS)
+#        include <zi/atomic/detail/fenced_block_macos.hpp>
 #
-#elif defined( ZI_OS_WINDOWS )
-#  include <zi/atomic/detail/fenced_block_win32.hpp>
+#    elif defined(ZI_OS_WINDOWS)
+#        include <zi/atomic/detail/fenced_block_win32.hpp>
 #
-#else
-#  error "no fenced_block functions available"
+#    else
+#        error "no fenced_block functions available"
 #
-#endif
-
+#    endif
 
 } // namespace atomic
 } // namespace zi
 
-#undef ZI_ATOMIC_FENCED_BLOCK_HPP_INCLUDING
+#    undef ZI_ATOMIC_FENCED_BLOCK_HPP_INCLUDING
 
 #endif

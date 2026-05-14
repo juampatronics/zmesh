@@ -17,16 +17,17 @@
 //
 
 #ifndef ZI_CONCURRENCY_PTHREAD_TYPES_HPP
-#define ZI_CONCURRENCY_PTHREAD_TYPES_HPP 1
+#    define ZI_CONCURRENCY_PTHREAD_TYPES_HPP 1
 
-#include <zi/concurrency/config.hpp>
+#    include <zi/concurrency/config.hpp>
 
-namespace zi {
-namespace concurrency_ {
+namespace zi
+{
+namespace concurrency_
+{
 
-typedef pthread_t thread_id_type           ;
+typedef pthread_t thread_id_type;
 typedef pthread_t native_thread_handle_type;
-
 
 } // namespace concurrency_
 } // namespace zi

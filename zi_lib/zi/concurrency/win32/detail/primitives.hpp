@@ -17,46 +17,47 @@
 //
 
 #ifndef ZI_CONCURRENCY_WIN32_DETAIL_PRIMITIVES_HPP
-#define ZI_CONCURRENCY_WIN32_DETAIL_PRIMITIVES_HPP 1
+#    define ZI_CONCURRENCY_WIN32_DETAIL_PRIMITIVES_HPP 1
 
-#include <zi/concurrency/config.hpp>
+#    include <zi/concurrency/config.hpp>
 
-namespace zi {
-namespace concurrency_ {
-namespace win32 {
-
+namespace zi
+{
+namespace concurrency_
+{
+namespace win32
+{
 
 typedef CRITICAL_SECTION critical_section;
 
-using ::InitializeCriticalSection ;
-using ::EnterCriticalSection      ;
-using ::TryEnterCriticalSection   ;
-using ::LeaveCriticalSection      ;
-using ::DeleteCriticalSection     ;
+using ::DeleteCriticalSection;
+using ::EnterCriticalSection;
+using ::InitializeCriticalSection;
+using ::LeaveCriticalSection;
+using ::TryEnterCriticalSection;
 
-typedef HANDLE   handle  ;
-typedef DWORD    dword   ;
+typedef HANDLE   handle;
+typedef DWORD    dword;
 typedef LONGLONG longlong;
 
+using ::CloseHandle;
 using ::CreateEvent;
 using ::CreateMutex;
 using ::CreateSemaphore;
 using ::CreateThread;
+using ::GetCurrentThread;
+using ::GetCurrentThreadId;
 using ::ReleaseMutex;
 using ::ReleaseSemaphore;
-using ::WaitForSingleObject;
-using ::CloseHandle;
-using ::GetCurrentThreadId;
-using ::GetCurrentThread;
-using ::SignalObjectAndWait;
+using ::ResetEvent;
 using ::ResumeThread;
 using ::SetEvent;
-using ::ResetEvent;
+using ::SignalObjectAndWait;
+using ::WaitForSingleObject;
 
 using ::Sleep;
 
 const unsigned forever = INFINITE;
-
 
 } // namespace win32
 } // namespace concurrency_

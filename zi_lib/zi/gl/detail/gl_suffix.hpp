@@ -17,14 +17,14 @@
 //
 
 #ifdef ZI_GL_DETAIL_GL_PREFIX_HPP
-#undef ZI_GL_DETAIL_GL_PREFIX_HPP
+#    undef ZI_GL_DETAIL_GL_PREFIX_HPP
 
-#undef ZI_GLAPI
+#    undef ZI_GLAPI
 
-#undef ZI_GLAPI_ENTRY
+#    undef ZI_GLAPI_ENTRY
 
-#if defined( macintosh ) && PRAGMA_IMPORT_SUPPORTED
-#  pragma import off
-#endif
+#    if defined(macintosh) && PRAGMA_IMPORT_SUPPORTED
+#        pragma import off
+#    endif
 
 #endif

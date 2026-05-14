@@ -17,18 +17,19 @@
 //
 
 #ifndef ZI_BITS_ENABLE_SHARED_FROM_THIS_HPP
-#define ZI_BITS_ENABLE_SHARED_FROM_THIS_HPP 1
+#    define ZI_BITS_ENABLE_SHARED_FROM_THIS_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#include <memory>
-#define ZI_ENABLE_SHARED_FROM_THIS_NAMESPACE ::std
+#    include <memory>
+#    define ZI_ENABLE_SHARED_FROM_THIS_NAMESPACE ::std
 
-namespace zi {
+namespace zi
+{
 
 using ZI_ENABLE_SHARED_FROM_THIS_NAMESPACE::enable_shared_from_this;
 
 } // namespace zi
 
-#undef ZI_ENABLE_SHARED_FROM_THIS_NAMESPACE
+#    undef ZI_ENABLE_SHARED_FROM_THIS_NAMESPACE
 #endif

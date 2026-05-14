@@ -17,69 +17,61 @@
 //
 
 #ifndef ZI_CONCURRENCY_DETAIL_MUTEX_POOL_HPP
-#define ZI_CONCURRENCY_DETAIL_MUTEX_POOL_HPP 1
+#    define ZI_CONCURRENCY_DETAIL_MUTEX_POOL_HPP 1
 
-#include <zi/concurrency/config.hpp>
-#include <zi/utility/non_copyable.hpp>
+#    include <zi/concurrency/config.hpp>
+#    include <zi/utility/non_copyable.hpp>
 
-#include <cstddef>
+#    include <cstddef>
 
-namespace zi {
-namespace concurrency_ {
+namespace zi
+{
+namespace concurrency_
+{
 
 // forward
 class condition_variable;
 
-template< class Tag, class Mutex, std::size_t Size = 83 > // 83 is prime!
-class mutex_pool: non_copyable
+template <class Tag, class Mutex, std::size_t Size = 83> // 83 is prime!
+class mutex_pool : non_copyable
 {
 public:
-
-    typedef Mutex mutex_type;
+    typedef Mutex            mutex_type;
     static const std::size_t pool_size = Size;
 
 private:
-
-    static Mutex pool_[ Size ];
+    static Mutex pool_[Size];
 
 public:
-
-    class guard: non_copyable
+    class guard : non_copyable
     {
     public:
-
-        explicit guard( std::size_t ind ):
-            m_( pool_[ ind % pool_size ] )
+        explicit guard(std::size_t ind)
+            : m_(pool_[ind % pool_size])
         {
             m_.lock();
         }
 
-        explicit guard( void const * ptr ):
-            m_( pool_[ reinterpret_cast< std::size_t >( ptr ) % pool_size ] )
+        explicit guard(void const* ptr)
+            : m_(pool_[reinterpret_cast<std::size_t>(ptr) % pool_size])
         {
             m_.lock();
         }
 
-        ~guard()
-        {
-            m_.unlock();
-        }
+        ~guard() { m_.unlock(); }
 
         friend class condition_variable;
 
     private:
-
-        Mutex &m_;
+        Mutex& m_;
     };
 
 private:
-
     friend class guard;
-
 };
 
-template< class Tag, class Mutex, std::size_t Size >
-Mutex mutex_pool< Tag, Mutex, Size >::pool_[ Size ];
+template <class Tag, class Mutex, std::size_t Size>
+Mutex mutex_pool<Tag, Mutex, Size>::pool_[Size];
 
 } // namespace concurrency_
 

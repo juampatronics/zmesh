@@ -17,15 +17,14 @@
 //
 
 #ifndef ZI_META_META_HPP
-#define ZI_META_META_HPP 1
+#    define ZI_META_META_HPP 1
 
-#include <zi/meta/true_type.hpp>
-#include <zi/meta/false_type.hpp>
-#include <zi/meta/null_type.hpp>
-#include <zi/meta/bool.hpp>
-#include <zi/meta/if.hpp>
-#include <zi/meta/and.hpp>
-#include <zi/meta/or.hpp>
+#    include <zi/meta/and.hpp>
+#    include <zi/meta/bool.hpp>
+#    include <zi/meta/false_type.hpp>
+#    include <zi/meta/if.hpp>
+#    include <zi/meta/null_type.hpp>
+#    include <zi/meta/or.hpp>
+#    include <zi/meta/true_type.hpp>
 
 #endif
-

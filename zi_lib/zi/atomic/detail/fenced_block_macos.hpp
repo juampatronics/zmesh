@@ -17,24 +17,18 @@
 //
 
 #ifndef ZI_ATOMIC_DETAIL_FENCED_BLOCK_MACOS_HPP
-#define ZI_ATOMIC_DETAIL_FENCED_BLOCK_MACOS_HPP 1
+#    define ZI_ATOMIC_DETAIL_FENCED_BLOCK_MACOS_HPP 1
 
-#ifndef ZI_ATOMIC_FENCED_BLOCK_HPP_INCLUDING
-#  error "don't include this file directly, use fenced_block.hpp"
-#endif
+#    ifndef ZI_ATOMIC_FENCED_BLOCK_HPP_INCLUDING
+#        error "don't include this file directly, use fenced_block.hpp"
+#    endif
 
-class fenced_block: non_copyable
+class fenced_block : non_copyable
 {
 public:
-    fenced_block()
-    {
-        OSMemoryBarrier();
-    }
+    fenced_block() { OSMemoryBarrier(); }
 
-    ~fenced_block()
-    {
-        OSMemoryBarrier();
-    }
+    ~fenced_block() { OSMemoryBarrier(); }
 };
 
 #endif

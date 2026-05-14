@@ -17,110 +17,94 @@
 //
 
 #ifndef ZI_CONCURRENCY_PTHREAD_CONDITION_VARIABLE_HPP
-#define ZI_CONCURRENCY_PTHREAD_CONDITION_VARIABLE_HPP 1
+#    define ZI_CONCURRENCY_PTHREAD_CONDITION_VARIABLE_HPP 1
 
-#include <zi/concurrency/config.hpp>
-#include <zi/concurrency/detail/is_mutex.hpp>
-#include <zi/concurrency/pthread/spinlock.hpp>
-#include <zi/concurrency/pthread/mutex_types.hpp>
+#    include <zi/concurrency/config.hpp>
+#    include <zi/concurrency/detail/is_mutex.hpp>
+#    include <zi/concurrency/pthread/mutex_types.hpp>
+#    include <zi/concurrency/pthread/spinlock.hpp>
 
-#include <zi/utility/non_copyable.hpp>
-#include <zi/utility/enable_if.hpp>
-#include <zi/utility/assert.hpp>
+#    include <zi/utility/assert.hpp>
+#    include <zi/utility/enable_if.hpp>
+#    include <zi/utility/non_copyable.hpp>
 
-#include <zi/time/now.hpp>
-#include <zi/time/interval.hpp>
+#    include <zi/time/interval.hpp>
+#    include <zi/time/now.hpp>
 
-#include <zi/meta/enable_if.hpp>
+#    include <zi/meta/enable_if.hpp>
 
-#include <pthread.h>
+#    include <pthread.h>
 
+namespace zi
+{
+namespace concurrency_
+{
 
-namespace zi {
-namespace concurrency_ {
-
-
-class condition_variable: non_copyable
+class condition_variable : non_copyable
 {
 private:
-    struct  cv_tag;
+    struct cv_tag;
     mutable pthread_cond_t cv_;
 
 public:
-    condition_variable()
+    condition_variable() { ZI_VERIFY_0(pthread_cond_init(&cv_, NULL)); }
+
+    ~condition_variable() { ZI_VERIFY_0(pthread_cond_destroy(&cv_)); }
+
+    template <class MutexTag>
+    void wait(const mutex_tpl<MutexTag>& mutex) const
     {
-        ZI_VERIFY_0( pthread_cond_init( &cv_, NULL ) );
+        ZI_VERIFY_0(pthread_cond_wait(&cv_, &mutex.mutex_));
     }
 
-    ~condition_variable()
+    template <class Mutex>
+    void wait(const mutex_guard<Mutex>& g) const
     {
-        ZI_VERIFY_0( pthread_cond_destroy( &cv_ ) );
+        ZI_VERIFY_0(pthread_cond_wait(&cv_, &g.m_.mutex_));
     }
 
-    template< class MutexTag >
-    void wait( const mutex_tpl< MutexTag > &mutex ) const
-    {
-        ZI_VERIFY_0( pthread_cond_wait( &cv_, &mutex.mutex_ ) );
-    }
-
-    template< class Mutex >
-    void wait( const mutex_guard< Mutex > &g ) const
-    {
-        ZI_VERIFY_0( pthread_cond_wait( &cv_, &g.m_.mutex_ ) );
-    }
-
-    template< class MutexTag >
-    bool timed_wait( const mutex_tpl< MutexTag > &mutex, int64_t ttl ) const
+    template <class MutexTag>
+    bool timed_wait(const mutex_tpl<MutexTag>& mutex, int64_t ttl) const
     {
         timespec ts;
-        time_utils::msec_to_ts( ts, now::msec() + ttl );
-        return pthread_cond_timedwait( &cv_, &mutex.mutex_, &ts ) == 0;
+        time_utils::msec_to_ts(ts, now::msec() + ttl);
+        return pthread_cond_timedwait(&cv_, &mutex.mutex_, &ts) == 0;
     }
 
-    template< class Mutex >
-    bool timed_wait( const mutex_guard< Mutex > &g, int64_t ttl ) const
+    template <class Mutex>
+    bool timed_wait(const mutex_guard<Mutex>& g, int64_t ttl) const
     {
         timespec ts;
-        time_utils::msec_to_ts( ts, now::msec() + ttl );
-        return pthread_cond_timedwait( &cv_, &g.m_.mutex_, &ts ) == 0;
+        time_utils::msec_to_ts(ts, now::msec() + ttl);
+        return pthread_cond_timedwait(&cv_, &g.m_.mutex_, &ts) == 0;
     }
 
-    template< class MutexTag, class T >
-    bool timed_wait( const mutex_tpl< MutexTag > &mutex,
-                     const T &ttl,
-                     typename meta::enable_if< is_time_interval< T > >::type* = 0 )
-        const
+    template <class MutexTag, class T>
+    bool
+    timed_wait(const mutex_tpl<MutexTag>& mutex, const T& ttl,
+               typename meta::enable_if<is_time_interval<T>>::type* = 0) const
     {
         timespec ts;
-        time_utils::nsec_to_ts( ts, now::nsec() + ttl.nsecs() );
-        return pthread_cond_timedwait( &cv_, &mutex.mutex_, &ts ) == 0;
+        time_utils::nsec_to_ts(ts, now::nsec() + ttl.nsecs());
+        return pthread_cond_timedwait(&cv_, &mutex.mutex_, &ts) == 0;
     }
 
-    template< class Mutex, class T >
-    bool timed_wait( const mutex_guard< Mutex > &g,
-                     const T &ttl,
-                     typename meta::enable_if< is_time_interval< T > >::type* = 0 )
-        const
+    template <class Mutex, class T>
+    bool
+    timed_wait(const mutex_guard<Mutex>& g, const T& ttl,
+               typename meta::enable_if<is_time_interval<T>>::type* = 0) const
     {
         timespec ts;
-        time_utils::nsec_to_ts( ts, now::nsec() + ttl.nsecs() );
-        return pthread_cond_timedwait( &cv_, &g.m_.mutex_, &ts ) == 0;
+        time_utils::nsec_to_ts(ts, now::nsec() + ttl.nsecs());
+        return pthread_cond_timedwait(&cv_, &g.m_.mutex_, &ts) == 0;
     }
 
-    void notify_one() const
-    {
-        ZI_VERIFY_0( pthread_cond_signal( &cv_ ) );
-    }
+    void notify_one() const { ZI_VERIFY_0(pthread_cond_signal(&cv_)); }
 
-    void notify_all() const
-    {
-        ZI_VERIFY_0( pthread_cond_broadcast( &cv_ ) );
-    }
+    void notify_all() const { ZI_VERIFY_0(pthread_cond_broadcast(&cv_)); }
 };
-
 
 } // namespace concurrency_
 } // namespace zi
-
 
 #endif

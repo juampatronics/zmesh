@@ -17,30 +17,31 @@
 //
 
 #ifndef ZI_UTILITY_STATIC_IF_HPP
-#define ZI_UTILITY_STATIC_IF_HPP 1
+#    define ZI_UTILITY_STATIC_IF_HPP 1
 
-namespace zi {
+namespace zi
+{
 
-template< bool Cond, class IfTrueType, class IfFalseType >
+template <bool Cond, class IfTrueType, class IfFalseType>
 struct static_if
 {
     typedef IfTrueType type;
 };
 
-template< class IfTrueType, class IfFalseType >
-struct static_if< false, IfTrueType, IfFalseType >
+template <class IfTrueType, class IfFalseType>
+struct static_if<false, IfTrueType, IfFalseType>
 {
     typedef IfFalseType type;
 };
 
-template< bool Cond, class IfTrueType, class IfFalseType >
+template <bool Cond, class IfTrueType, class IfFalseType>
 struct if_
 {
     typedef IfTrueType type;
 };
 
-template< class IfTrueType, class IfFalseType >
-struct if_< false, IfTrueType, IfFalseType >
+template <class IfTrueType, class IfFalseType>
+struct if_<false, IfTrueType, IfFalseType>
 {
     typedef IfFalseType type;
 };

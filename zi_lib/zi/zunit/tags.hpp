@@ -17,20 +17,24 @@
 //
 
 #ifndef ZI_ZUNIT_TAGS_HPP
-#define ZI_ZUNIT_TAGS_HPP 1
+#    define ZI_ZUNIT_TAGS_HPP 1
 
-namespace zi {
-namespace zunit {
+namespace zi
+{
+namespace zunit
+{
 
-namespace {
+namespace
+{
 struct this_file_tag;
 }
 
 struct default_suite_tag;
 
-template< class FileTag = void > struct suite_tag
+template <class FileTag = void>
+struct suite_tag
 {
-    typedef default_suite_tag tag ;
+    typedef default_suite_tag tag;
 };
 
 } // namespace zunit

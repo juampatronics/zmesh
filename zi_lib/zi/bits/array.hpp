@@ -17,19 +17,20 @@
 //
 
 #ifndef ZI_BITS_ARRAY_HPP
-#define ZI_BITS_ARRAY_HPP 1
+#    define ZI_BITS_ARRAY_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#include <array>
-#define ZI_ARRAY_NAMESPACE ::std
+#    include <array>
+#    define ZI_ARRAY_NAMESPACE ::std
 
-namespace zi {
+namespace zi
+{
 
 using ZI_ARRAY_NAMESPACE::array;
 using ZI_ARRAY_NAMESPACE::swap;
 
 } // namespace zi
 
-#undef ZI_ARRAY_NAMESPACE
+#    undef ZI_ARRAY_NAMESPACE
 #endif

@@ -17,82 +17,69 @@
 //
 
 #ifndef ZI_DETAIL_MEMBER_FUNCTION_HPP
-#define ZI_DETAIL_MEMBER_FUNCTION_HPP 1
+#    define ZI_DETAIL_MEMBER_FUNCTION_HPP 1
 
-#include <zi/utility/enable_if.hpp>
-#include <zi/bits/type_traits.hpp>
-#include <zi/bits/ref.hpp>
+#    include <zi/bits/ref.hpp>
+#    include <zi/bits/type_traits.hpp>
+#    include <zi/utility/enable_if.hpp>
 
-namespace zi {
-namespace detail {
+namespace zi
+{
+namespace detail
+{
 
-template< class Type,
-          class Return,
-          Return (Type::*MemberFunctionPtr)()
-          >
+template <class Type, class Return, Return (Type::*MemberFunctionPtr)()>
 struct member_function
 {
-    typedef typename remove_reference< Return >::type result_type;
+    typedef typename remove_reference<Return>::type result_type;
 
-    template< class PtrToType >
-    inline typename disable_if<
-        is_convertible< PtrToType&, Type& >::type::value,
-        Return
-    >::type
-    operator() ( const PtrToType& ptr ) const
+    template <class PtrToType>
+    inline typename disable_if<is_convertible<PtrToType&, Type&>::type::value,
+                               Return>::type
+    operator()(const PtrToType& ptr) const
     {
-        return this->operator() ( *ptr );
+        return this->operator()(*ptr);
     }
 
-    inline Return operator() ( Type& v ) const
-    {
-        return (v.*MemberFunctionPtr)();
-    }
+    inline Return operator()(Type& v) const { return (v.*MemberFunctionPtr)(); }
 
-    inline Return operator() ( const reference_wrapper< Type >& v_ref )
+    inline Return operator()(const reference_wrapper<Type>& v_ref)
     {
-        return this->operator() ( v_ref.get() );
+        return this->operator()(v_ref.get());
     }
-
 };
 
-template< class Type,
-          class Return,
-          Return (Type::*MemberFunctionPtr)() const
-          >
+template <class Type, class Return, Return (Type::*MemberFunctionPtr)() const>
 struct const_member_function
 {
-    typedef typename remove_reference< Return >::type result_type;
+    typedef typename remove_reference<Return>::type result_type;
 
-    template< class PtrToType >
+    template <class PtrToType>
     inline typename disable_if<
-        is_convertible< const PtrToType&, const Type& >::type::value,
-        Return
-    >::type
-    operator() ( const PtrToType& ptr ) const
+        is_convertible<const PtrToType&, const Type&>::type::value,
+        Return>::type
+    operator()(const PtrToType& ptr) const
     {
-        return this->operator() ( *ptr );
+        return this->operator()(*ptr);
     }
 
-    inline Return operator() ( const Type& v ) const
+    inline Return operator()(const Type& v) const
     {
         return (v.*MemberFunctionPtr)();
     }
 
-    inline Return operator() ( const reference_wrapper< Type >& v_ref ) const
+    inline Return operator()(const reference_wrapper<Type>& v_ref) const
     {
-        return this->operator() ( v_ref.get() );
+        return this->operator()(v_ref.get());
     }
 
-    inline Return operator() ( const reference_wrapper< const Type >& v_ref ) const
+    inline Return operator()(const reference_wrapper<const Type>& v_ref) const
     {
-        return this->operator() ( v_ref.get() );
+        return this->operator()(v_ref.get());
     }
-
 };
 
 } // namespace detail
 } // namespace zi
-
 
 #endif

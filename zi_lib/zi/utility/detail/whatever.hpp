@@ -17,14 +17,16 @@
 //
 
 #ifndef ZI_UTILITY_DETAIL_WHATEVER_HPP
-#define ZI_UTILITY_DETAIL_WHATEVER_HPP 1
+#    define ZI_UTILITY_DETAIL_WHATEVER_HPP 1
 
-namespace zi {
-namespace detail {
+namespace zi
+{
+namespace detail
+{
 
 struct whatever
 {
-    whatever( ... );
+    whatever(...);
 };
 
 } // namespace detail

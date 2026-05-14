@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_STATIC_ASSERT_HPP
-#define ZI_STATIC_ASSERT_HPP 1
+#    define ZI_STATIC_ASSERT_HPP 1
 
-#include <zi/utility/static_assert.hpp>
+#    include <zi/utility/static_assert.hpp>
 
 #endif
-

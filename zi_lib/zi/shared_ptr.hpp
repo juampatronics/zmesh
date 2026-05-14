@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_SHARED_PTR_HPP
-#define ZI_SHARED_PTR_HPP 1
+#    define ZI_SHARED_PTR_HPP 1
 
-#include <zi/bits/shared_ptr.hpp>
+#    include <zi/bits/shared_ptr.hpp>
 
 #endif
-

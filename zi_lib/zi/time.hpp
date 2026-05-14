@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_TIME_HPP
-#define ZI_TIME_HPP 1
+#    define ZI_TIME_HPP 1
 
-#include <zi/time/time.hpp>
+#    include <zi/time/time.hpp>
 
 #endif
-

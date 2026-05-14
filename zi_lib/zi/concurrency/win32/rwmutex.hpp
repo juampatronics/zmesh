@@ -17,8 +17,8 @@
 //
 
 #ifndef ZI_CONCURRENCY_WIN32_RWMUTEX_HPP
-#define ZI_CONCURRENCY_WIN32_RWMUTEX_HPP 1
+#    define ZI_CONCURRENCY_WIN32_RWMUTEX_HPP 1
 
-#include <zi/concurrency/detail/rwmutex_impl.hpp>
+#    include <zi/concurrency/detail/rwmutex_impl.hpp>
 
 #endif

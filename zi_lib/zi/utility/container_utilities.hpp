@@ -17,14 +17,15 @@
 //
 
 #ifndef ZI_UTILITY_CONTAINER_UTILITIES_HPP
-#define ZI_UTILITY_CONTAINER_UTILITIES_HPP 1
+#    define ZI_UTILITY_CONTAINER_UTILITIES_HPP 1
 
-namespace zi {
-namespace containers {
-
+namespace zi
+{
+namespace containers
+{
 
 template <typename Container>
-void clear( Container& x )
+void clear(Container& x)
 {
     Container y;
     y.swap(x);

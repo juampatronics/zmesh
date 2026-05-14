@@ -17,48 +17,49 @@
 //
 
 #ifndef ZI_UTILITY_STRING_PRINTF
-#define ZI_UTILITY_STRING_PRINTF 1
+#    define ZI_UTILITY_STRING_PRINTF 1
 
-#include <cstdlib>
-#include <cstdio>
-#include <cstdarg>
-#include <string>
+#    include <cstdarg>
+#    include <cstdio>
+#    include <cstdlib>
+#    include <string>
 
-namespace zi {
-
-inline std::string string_printf( const char *fmt, ... )
+namespace zi
 {
 
-    int      n ;
-    char    *np;
-    va_list  ap;
-    int      size = 128;
+inline std::string string_printf(const char* fmt, ...)
+{
 
-    char *p = static_cast< char* >( std::malloc( size ) );
+    int     n;
+    char*   np;
+    va_list ap;
+    int     size = 128;
 
-    if ( p == 0 )
+    char* p = static_cast<char*>(std::malloc(size));
+
+    if (p == 0)
     {
         return std::string();
     }
 
-    while ( 1 )
+    while (1)
     {
-        va_start( ap, fmt );
-        n = vsnprintf( p, size, fmt, ap );
-        va_end( ap );
+        va_start(ap, fmt);
+        n = vsnprintf(p, size, fmt, ap);
+        va_end(ap);
 
-        if ( n > -1 && n < size )
+        if (n > -1 && n < size)
         {
             break;
         }
 
-        size = ( n > -1 ) ? n + 1 : size << 1;
+        size = (n > -1) ? n + 1 : size << 1;
 
-        np = static_cast< char* >( std::realloc( static_cast< void* >( p ), size ) );
+        np = static_cast<char*>(std::realloc(static_cast<void*>(p), size));
 
-        if ( np == 0 )
+        if (np == 0)
         {
-            std::free( p );
+            std::free(p);
             return std::string();
         }
         else
@@ -67,10 +68,9 @@ inline std::string string_printf( const char *fmt, ... )
         }
     }
 
-    return std::string( p );
+    return std::string(p);
 }
 
 } // namespace zi
 
 #endif
-

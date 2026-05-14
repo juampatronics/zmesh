@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_SYSTEM_HPP
-#define ZI_SYSTEM_HPP 1
+#    define ZI_SYSTEM_HPP 1
 
-#include <zi/system/system.hpp>
+#    include <zi/system/system.hpp>
 
 #endif
-

@@ -17,19 +17,23 @@
 //
 
 #ifndef ZI_UTILITY_DETAIL_DUMMY_HPP
-#define ZI_UTILITY_DETAIL_DUMMY_HPP 1
+#    define ZI_UTILITY_DETAIL_DUMMY_HPP 1
 
-namespace zi {
-namespace detail {
-
-template< int > struct dummy
+namespace zi
 {
-    dummy( int ) {}
+namespace detail
+{
+
+template <int>
+struct dummy
+{
+    dummy(int) {}
 };
 
-template< class T > struct dummy_type
+template <class T>
+struct dummy_type
 {
-    dummy_type( int ) {}
+    dummy_type(int) {}
 };
 
 } // namespace detail

@@ -17,37 +17,37 @@
 //
 
 #ifndef ZI_UTILITY_ASSERT_HPP
-#define ZI_UTILITY_ASSERT_HPP 1
+#    define ZI_UTILITY_ASSERT_HPP 1
 #
-#include <zi/config/config.hpp>
-#include <cassert>
+#    include <cassert>
+#    include <zi/config/config.hpp>
 #
-#undef ZI_VERIFY
+#    undef ZI_VERIFY
 #
-#if defined( NDEBUG ) || defined ( ZI_NO_DEBUG )
+#    if defined(NDEBUG) || defined(ZI_NO_DEBUG)
 #
-#  define ZI_ASSERT( what )   static_cast< void >( 0 )
-#  define ZI_ASSERT_T( what ) static_cast< void >( 0 )
-#  define ZI_ASSERT_0( what ) static_cast< void >( 0 )
+#        define ZI_ASSERT(what) static_cast<void>(0)
+#        define ZI_ASSERT_T(what) static_cast<void>(0)
+#        define ZI_ASSERT_0(what) static_cast<void>(0)
 #
-#  define ZI_VERIFY( what )   ( static_cast< void >( what ) )
-#  define ZI_VERIFY_T( what ) ( static_cast< void >( what ) )
-#  define ZI_VERIFY_0( what ) ( static_cast< void >( what ) )
+#        define ZI_VERIFY(what) (static_cast<void>(what))
+#        define ZI_VERIFY_T(what) (static_cast<void>(what))
+#        define ZI_VERIFY_0(what) (static_cast<void>(what))
 #
-#  define ZI_DEBUG_BLOCK() if ( false )
+#        define ZI_DEBUG_BLOCK() if (false)
 #
-#else
+#    else
 #
-#  define ZI_ASSERT( what )   assert( what )
-#  define ZI_ASSERT_T( what ) assert( what )
-#  define ZI_ASSERT_0( what ) assert( !static_cast< bool >( what ) )
+#        define ZI_ASSERT(what) assert(what)
+#        define ZI_ASSERT_T(what) assert(what)
+#        define ZI_ASSERT_0(what) assert(!static_cast<bool>(what))
 #
-#  define ZI_VERIFY( what )   assert( what )
-#  define ZI_VERIFY_T( what ) assert( what )
-#  define ZI_VERIFY_0( what ) assert( !static_cast< bool >( what ) )
+#        define ZI_VERIFY(what) assert(what)
+#        define ZI_VERIFY_T(what) assert(what)
+#        define ZI_VERIFY_0(what) assert(!static_cast<bool>(what))
 #
-#  define ZI_DEBUG_BLOCK() if ( true )
+#        define ZI_DEBUG_BLOCK() if (true)
 #
-#endif
+#    endif
 #
 #endif

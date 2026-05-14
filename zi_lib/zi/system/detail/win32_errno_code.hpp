@@ -17,93 +17,96 @@
 //
 
 #ifndef ZI_SYSTEM_DETAIL_WIN32_ERRNO_CODE_HPP
-#define ZI_SYSTEM_DETAIL_WIN32_ERRNO_CODE_HPP 1
+#    define ZI_SYSTEM_DETAIL_WIN32_ERRNO_CODE_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#if defined( ZI_OS_WINDOWS )
+#    if defined(ZI_OS_WINDOWS)
 
-namespace zi {
-namespace system {
-namespace win32_errno {
+namespace zi
+{
+namespace system
+{
+namespace win32_errno
+{
 
 enum win32_errno_type
 {
-    no_error                = 0,
-    invalid_function        = 1,
-    file_not_found          = 2,
-    path_not_found          = 3,
-    too_many_open_files     = 4,
-    access_denied           = 5,
-    invalid_handle          = 6,
-    arena_trashed           = 7,
-    not_enough_memory       = 8,
-    invalid_block           = 9,
+    no_error            = 0,
+    invalid_function    = 1,
+    file_not_found      = 2,
+    path_not_found      = 3,
+    too_many_open_files = 4,
+    access_denied       = 5,
+    invalid_handle      = 6,
+    arena_trashed       = 7,
+    not_enough_memory   = 8,
+    invalid_block       = 9,
 
-    bad_environment         = 10,
-    bad_format              = 11,
-    invalid_access          = 12,
-    invalid_data            = 13,
-    out_of_memory           = 14,
-    invalid_drive           = 15,
-    current_directory       = 16,
-    not_same_device         = 17,
-    no_more_files           = 18,
-    write_protect           = 19,
+    bad_environment   = 10,
+    bad_format        = 11,
+    invalid_access    = 12,
+    invalid_data      = 13,
+    out_of_memory     = 14,
+    invalid_drive     = 15,
+    current_directory = 16,
+    not_same_device   = 17,
+    no_more_files     = 18,
+    write_protect     = 19,
 
-    bad_unit                = 20,
-    not_ready               = 21,
-    bad_command             = 22,
-    crc                     = 23,
-    bad_length              = 24,
-    seek                    = 25,
-    not_dos_disk            = 26,
-    sector_not_found        = 27,
-    out_of_paper            = 28,
-    write_fault             = 29,
+    bad_unit         = 20,
+    not_ready        = 21,
+    bad_command      = 22,
+    crc              = 23,
+    bad_length       = 24,
+    seek             = 25,
+    not_dos_disk     = 26,
+    sector_not_found = 27,
+    out_of_paper     = 28,
+    write_fault      = 29,
 
-    read_fault              = 30,
-    gen_failure             = 31,
-    sharing_violation       = 32,
-    lock_violation          = 33,
-    wrong_disk              = 34,
+    read_fault        = 30,
+    gen_failure       = 31,
+    sharing_violation = 32,
+    lock_violation    = 33,
+    wrong_disk        = 34,
     //                      = 35,
     sharing_buffer_exceeded = 36,
     //                      = 37,
-    handle_eof              = 38,
-    handle_disk_full        = 39,
+    handle_eof       = 38,
+    handle_disk_full = 39,
 
-    not_supported           = 50,
-    rem_not_list            = 51,
-    dup_name                = 52,
-    bad_net_path            = 53,
-    network_busy            = 54,
-    bad_device              = 55,
-    too_many_cmds           = 56,
-    adapter_hadrware_error  = 57,
-    bad_network_response    = 58,
-    unexpected_network_error= 59,
+    not_supported            = 50,
+    rem_not_list             = 51,
+    dup_name                 = 52,
+    bad_net_path             = 53,
+    network_busy             = 54,
+    bad_device               = 55,
+    too_many_cmds            = 56,
+    adapter_hadrware_error   = 57,
+    bad_network_response     = 58,
+    unexpected_network_error = 59,
 
     // ...
 
-    file_exists             = 80,
-    cannot_make             = 82,
+    file_exists = 80,
+    cannot_make = 82,
 
-    broken_pipe             = 109,
-    open_failed             = 110,
-    buffer_overflow         = 111,
-    disk_full               = 112,
+    broken_pipe     = 109,
+    open_failed     = 110,
+    buffer_overflow = 111,
+    disk_full       = 112,
 
-    lock_failed             = 167,
-    busy                    = 170,
-    cancel_violation        = 173,
-    already_exists          = 183,
+    lock_failed      = 167,
+    busy             = 170,
+    cancel_violation = 173,
+    already_exists   = 183,
 };
 
 } // namespace win32_errno
 } // namespace system
 } // namespace zi
 
-#endif // defined( ZI_OS_WINDOWS )
+#    endif // defined( ZI_OS_WINDOWS )
 
 #endif

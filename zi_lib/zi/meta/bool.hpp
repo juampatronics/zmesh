@@ -17,19 +17,28 @@
 //
 
 #ifndef ZI_META_BOOL_HPP
-#define ZI_META_BOOL_HPP 1
+#    define ZI_META_BOOL_HPP 1
 
-#include <zi/meta/true_type.hpp>
-#include <zi/meta/false_type.hpp>
-#include <zi/meta/null_type.hpp>
+#    include <zi/meta/false_type.hpp>
+#    include <zi/meta/null_type.hpp>
+#    include <zi/meta/true_type.hpp>
 
-namespace zi {
-namespace meta {
+namespace zi
+{
+namespace meta
+{
 
-template< bool B > struct bool_c;
+template <bool B>
+struct bool_c;
 
-template<> struct bool_c< true  >: true_  {};
-template<> struct bool_c< false >: false_ {};
+template <>
+struct bool_c<true> : true_
+{
+};
+template <>
+struct bool_c<false> : false_
+{
+};
 
 } // namespace meta
 } // namespace zi

@@ -17,73 +17,84 @@
 //
 
 #ifndef ZI_VL_DETAIL_ENABLE_IF_HPP
-#define ZI_VL_DETAIL_ENABLE_IF_HPP 1
+#    define ZI_VL_DETAIL_ENABLE_IF_HPP 1
 
-#include <zi/bits/type_traits.hpp>
-#include <zi/bits/cstdint.hpp>
+#    include <zi/bits/cstdint.hpp>
+#    include <zi/bits/type_traits.hpp>
 
-#include <zi/meta/meta.hpp>
+#    include <zi/meta/meta.hpp>
 
-namespace zi {
-namespace vl {
+namespace zi
+{
+namespace vl
+{
 
-namespace detail {
+namespace detail
+{
 
-
-template< bool B, class T = void >
+template <bool B, class T = void>
 struct enable_if_c
 {
     typedef T type;
 };
 
-template< class T >
-struct enable_if_c< false, T > {};
+template <class T>
+struct enable_if_c<false, T>
+{
+};
 
-template< class B, class T = void >
-struct enable_if: enable_if_c< B::value, T > {};
+template <class B, class T = void>
+struct enable_if : enable_if_c<B::value, T>
+{
+};
 
-
-
-template< bool B, class T >
+template <bool B, class T>
 struct lazy_enable_if_c
 {
     typedef typename T::type type;
 };
 
-template< class T >
-struct lazy_enable_if_c< false, T > {};
+template <class T>
+struct lazy_enable_if_c<false, T>
+{
+};
 
-template< class B, class T = void >
-struct lazy_enable_if: lazy_enable_if_c< B::value, T > {};
+template <class B, class T = void>
+struct lazy_enable_if : lazy_enable_if_c<B::value, T>
+{
+};
 
-
-
-template< bool B, class T = void >
+template <bool B, class T = void>
 struct disable_if_c
 {
     typedef T type;
 };
 
-template< class T >
-struct disable_if_c< true, T > {};
+template <class T>
+struct disable_if_c<true, T>
+{
+};
 
-template< class B, class T = void >
-struct disable_if: disable_if_c< B::value, T > {};
+template <class B, class T = void>
+struct disable_if : disable_if_c<B::value, T>
+{
+};
 
-
-
-template< bool B, class T >
+template <bool B, class T>
 struct lazy_disable_if_c
 {
     typedef typename T::type type;
 };
 
-template< class T >
-struct lazy_disable_if_c< true, T > {};
+template <class T>
+struct lazy_disable_if_c<true, T>
+{
+};
 
-template< class B, class T = void >
-struct lazy_disable_if: lazy_disable_if_c< B::value, T > {};
-
+template <class B, class T = void>
+struct lazy_disable_if : lazy_disable_if_c<B::value, T>
+{
+};
 
 } // namespace detail
 
@@ -91,4 +102,3 @@ struct lazy_disable_if: lazy_disable_if_c< B::value, T > {};
 } // namespace zi
 
 #endif
-

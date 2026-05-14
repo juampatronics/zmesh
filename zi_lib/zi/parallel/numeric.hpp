@@ -17,17 +17,18 @@
 //
 
 #ifndef ZI_PARALLEL_NUMERIC_HPP
-#define ZI_PARALLEL_NUMERIC_HPP 1
+#    define ZI_PARALLEL_NUMERIC_HPP 1
 
-#ifdef ZI_USE_OPENMP
-#  include <parallel/numeric>
-#  define ZI_PARALLEL_NUMERIC_NAMESPACE __gnu_parallel
-#else
-#  include <numeric>
-#  define ZI_PARALLEL_NUMERIC_NAMESPACE std
-#endif
+#    ifdef ZI_USE_OPENMP
+#        include <parallel/numeric>
+#        define ZI_PARALLEL_NUMERIC_NAMESPACE __gnu_parallel
+#    else
+#        include <numeric>
+#        define ZI_PARALLEL_NUMERIC_NAMESPACE std
+#    endif
 
-namespace zi {
+namespace zi
+{
 
 using ZI_PARALLEL_NUMERIC_NAMESPACE::accumulate;
 using ZI_PARALLEL_NUMERIC_NAMESPACE::adjacent_difference;
@@ -36,7 +37,6 @@ using ZI_PARALLEL_NUMERIC_NAMESPACE::partial_sum;
 
 } // namespace zi
 
-#undef ZI_PARALLEL_NUMERIC_NAMESPACE
+#    undef ZI_PARALLEL_NUMERIC_NAMESPACE
 
 #endif
-

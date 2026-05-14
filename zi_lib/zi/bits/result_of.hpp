@@ -17,18 +17,19 @@
 //
 
 #ifndef ZI_BITS_RESULT_OF_HPP
-#define ZI_BITS_RESULT_OF_HPP 1
+#    define ZI_BITS_RESULT_OF_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#include <functional>
-#define ZI_RESULT_OF_NAMESPACE ::std
+#    include <functional>
+#    define ZI_RESULT_OF_NAMESPACE ::std
 
-namespace zi {
+namespace zi
+{
 
 using ZI_RESULT_OF_NAMESPACE::result_of;
 
 } // namespace zi
 
-#undef ZI_RESULT_OF_NAMESPACE
+#    undef ZI_RESULT_OF_NAMESPACE
 #endif

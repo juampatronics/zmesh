@@ -16,25 +16,25 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#if defined( ZI_OS_WINDOWS )
+#if defined(ZI_OS_WINDOWS)
 #
-#if defined( __MINGW32__ )
+#    if defined(__MINGW32__)
 #
-#  include <_mingw.h>
+#        include <_mingw.h>
 #
-#  if ( __MINGW32_MAJOR_VERSION >= 2 )
-#    define  ZI_HAS_POSIX_SUPPORT
-#    include <zi/config/posix.hpp>
-#  endif
+#        if (__MINGW32_MAJOR_VERSION >= 2)
+#            define ZI_HAS_POSIX_SUPPORT
+#            include <zi/config/posix.hpp>
+#        endif
 #
-#endif
+#    endif
 #
-#if !defined( WIN64 )
-#  if ( defined( _WIN64 ) || defined( __WIN64__ ) || defined( _M_X64 ) )
-#    define WIN64
-#  endif
-#endif
+#    if !defined(WIN64)
+#        if (defined(_WIN64) || defined(__WIN64__) || defined(_M_X64))
+#            define WIN64
+#        endif
+#    endif
 #
 #else
-#  warning "windows not detected"
+#    warning "windows not detected"
 #endif

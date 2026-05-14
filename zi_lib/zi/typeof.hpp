@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_TYPEOF_HPP
-#define ZI_TYPEOF_HPP 1
+#    define ZI_TYPEOF_HPP 1
 
-#include <zi/bits/typeof.hpp>
+#    include <zi/bits/typeof.hpp>
 
 #endif
-

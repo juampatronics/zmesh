@@ -17,92 +17,81 @@
 //
 
 #ifndef ZI_DETAIL_MEMBER_VARIABLE_HPP
-#define ZI_DETAIL_MEMBER_VARIABLE_HPP 1
+#    define ZI_DETAIL_MEMBER_VARIABLE_HPP 1
 
-#include <zi/utility/static_if.hpp>
-#include <zi/utility/enable_if.hpp>
-#include <zi/bits/type_traits.hpp>
-#include <zi/bits/ref.hpp>
+#    include <zi/bits/ref.hpp>
+#    include <zi/bits/type_traits.hpp>
+#    include <zi/utility/enable_if.hpp>
+#    include <zi/utility/static_if.hpp>
 
-namespace zi {
-namespace detail {
+namespace zi
+{
+namespace detail
+{
 
-namespace member_variable_ {
+namespace member_variable_
+{
 
-template< class Type,
-          class Result,
-          Result Type::*MemberVariablePtr
-          >
+template <class Type, class Result, Result Type::* MemberVariablePtr>
 struct non_const_member
 {
     typedef Result result_type;
 
-    template< class PtrToType >
+    template <class PtrToType>
     inline typename disable_if<
-        is_convertible< const PtrToType&, const Type& >::type::value, Result&
-    >::type
-    operator() ( const PtrToType& ptr ) const
+        is_convertible<const PtrToType&, const Type&>::type::value,
+        Result&>::type
+    operator()(const PtrToType& ptr) const
     {
-        return this->operator() ( *ptr );
+        return this->operator()(*ptr);
     }
 
-    inline Result& operator() ( Type& v ) const
-    {
-        return v.*MemberVariablePtr;
-    }
+    inline Result& operator()(Type& v) const { return v.*MemberVariablePtr; }
 };
 
-template< class Type,
-          class Result,
-          Result Type::*MemberVariablePtr
-          >
+template <class Type, class Result, Result Type::* MemberVariablePtr>
 struct const_member
 {
     typedef Result result_type;
 
-    template< class PtrToType >
+    template <class PtrToType>
     inline typename disable_if<
-        is_convertible< const PtrToType&, const Type& >::type::value, Result&
-    >::type
-    operator() ( const PtrToType& ptr ) const
+        is_convertible<const PtrToType&, const Type&>::type::value,
+        Result&>::type
+    operator()(const PtrToType& ptr) const
     {
-        return this->operator() ( *ptr );
+        return this->operator()(*ptr);
     }
 
-    inline Result& operator() ( const Type& v ) const
+    inline Result& operator()(const Type& v) const
     {
         return v.*MemberVariablePtr;
     }
 
-    inline Result& operator() ( const reference_wrapper< const Type >& v_ref ) const
+    inline Result& operator()(const reference_wrapper<const Type>& v_ref) const
     {
-        return this->operator() ( v_ref.get() );
+        return this->operator()(v_ref.get());
     }
 
-    inline Result& operator() ( const reference_wrapper< Type >& v_ref, void* = 0 ) const
+    inline Result& operator()(const reference_wrapper<Type>& v_ref,
+                              void* = 0) const
     {
-        return this->operator() ( v_ref.get() );
+        return this->operator()(v_ref.get());
     }
-
 };
 
 } // namespace member_variable_
 
-template< class Type,
-          class Result,
-          Result Type::*MemberVariablePtr
-          >
-struct member_variable:
-    if_<
-        is_const< Result >::value,
-        member_variable_::const_member    < Type, Result, MemberVariablePtr >,
-        member_variable_::non_const_member< Type, Result, MemberVariablePtr >
-    >::type
+template <class Type, class Result, Result Type::* MemberVariablePtr>
+struct member_variable
+    : if_<is_const<Result>::value,
+          member_variable_::const_member<Type, Result, MemberVariablePtr>,
+          member_variable_::non_const_member<Type, Result,
+                                             MemberVariablePtr>>::type
 {
 };
 
 } // namespace detail
 } // namespace zi
-
 
 #endif

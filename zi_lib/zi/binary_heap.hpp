@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_BINARY_HEAP_HPP
-#define ZI_BINARY_HEAP_HPP 1
+#    define ZI_BINARY_HEAP_HPP 1
 
-#include <zi/heap/binary_heap.hpp>
+#    include <zi/heap/binary_heap.hpp>
 
 #endif
-

@@ -17,46 +17,48 @@
 //
 
 #ifndef ZI_AI_DETAIL_ENTROPY_HPP
-#define ZI_AI_DETAIL_ENTROPY_HPP 1
+#    define ZI_AI_DETAIL_ENTROPY_HPP 1
 
-#include <zi/utility/assert.hpp>
-#include <zi/math/constants.hpp>
+#    include <zi/math/constants.hpp>
+#    include <zi/utility/assert.hpp>
 
-#include <limits>
-#include <cmath>
+#    include <cmath>
+#    include <limits>
 
-namespace zi {
-namespace ai {
-namespace detail {
-
-inline double entropy( double probability )
+namespace zi
 {
-    if (( probability     < std::numeric_limits< double >::epsilon() ) ||
-        ( 1 - probability < std::numeric_limits< double >::epsilon() ))
+namespace ai
+{
+namespace detail
+{
+
+inline double entropy(double probability)
+{
+    if ((probability < std::numeric_limits<double>::epsilon()) ||
+        (1 - probability < std::numeric_limits<double>::epsilon()))
     {
         return 0;
     }
 
-    //static const double one_over_ln_2 = static_cast< double >( 1 ) / std::log( 2 );
+    // static const double one_over_ln_2 = static_cast< double >( 1 ) /
+    // std::log( 2 );
 
-    return ( -probability * std::log( probability )
-             -( 1 - probability ) * std::log( 1 - probability ) ) *
-        ( math::constants< double >::one_over_ln_two() );
+    return (-probability * std::log(probability) -
+            (1 - probability) * std::log(1 - probability)) *
+           (math::constants<double>::one_over_ln_two());
 }
 
-inline double entropy( double instances_a, double instances_b )
+inline double entropy(double instances_a, double instances_b)
 {
-    if ( instances_b == 0 || instances_a == 0 )
+    if (instances_b == 0 || instances_a == 0)
     {
         return 0;
     }
-    return entropy( instances_a / ( instances_a + instances_b ) );
+    return entropy(instances_a / (instances_a + instances_b));
 }
 
 } // namespace detail
 } // namespace ai
 } // namespace zi
-
-
 
 #endif

@@ -17,38 +17,39 @@
 //
 
 #ifndef ZI_BITS_RANDOM_HPP
-#define ZI_BITS_RANDOM_HPP 1
+#    define ZI_BITS_RANDOM_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#include <random>
-#define ZI_RANDOM_NAMESPACE ::std
+#    include <random>
+#    define ZI_RANDOM_NAMESPACE ::std
 
-namespace zi {
+namespace zi
+{
 
-using ZI_RANDOM_NAMESPACE::variate_generator;
-using ZI_RANDOM_NAMESPACE::mersenne_twister;
-using ZI_RANDOM_NAMESPACE::discard_block;
-using ZI_RANDOM_NAMESPACE::uniform_int;
-using ZI_RANDOM_NAMESPACE::geometric_distribution;
-using ZI_RANDOM_NAMESPACE::poisson_distribution;
 using ZI_RANDOM_NAMESPACE::binomial_distribution;
-using ZI_RANDOM_NAMESPACE::uniform_real;
+using ZI_RANDOM_NAMESPACE::discard_block;
 using ZI_RANDOM_NAMESPACE::exponential_distribution;
-using ZI_RANDOM_NAMESPACE::normal_distribution;
 using ZI_RANDOM_NAMESPACE::gamma_distribution;
+using ZI_RANDOM_NAMESPACE::geometric_distribution;
+using ZI_RANDOM_NAMESPACE::mersenne_twister;
+using ZI_RANDOM_NAMESPACE::normal_distribution;
+using ZI_RANDOM_NAMESPACE::poisson_distribution;
+using ZI_RANDOM_NAMESPACE::uniform_int;
+using ZI_RANDOM_NAMESPACE::uniform_real;
+using ZI_RANDOM_NAMESPACE::variate_generator;
 
-using ZI_RANDOM_NAMESPACE::minstd_rand0;
 using ZI_RANDOM_NAMESPACE::minstd_rand;
+using ZI_RANDOM_NAMESPACE::minstd_rand0;
 using ZI_RANDOM_NAMESPACE::mt19937;
-using ZI_RANDOM_NAMESPACE::ranlux_base_01;
-using ZI_RANDOM_NAMESPACE::ranlux64_base_01;
 using ZI_RANDOM_NAMESPACE::ranlux3;
-using ZI_RANDOM_NAMESPACE::ranlux4;
 using ZI_RANDOM_NAMESPACE::ranlux3_01;
+using ZI_RANDOM_NAMESPACE::ranlux4;
 using ZI_RANDOM_NAMESPACE::ranlux4_01;
+using ZI_RANDOM_NAMESPACE::ranlux64_base_01;
+using ZI_RANDOM_NAMESPACE::ranlux_base_01;
 
 } // namespace zi
 
-#undef ZI_RANDOM_NAMESPACE
+#    undef ZI_RANDOM_NAMESPACE
 #endif

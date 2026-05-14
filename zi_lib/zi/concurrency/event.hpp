@@ -17,21 +17,22 @@
 //
 
 #ifndef ZI_CONCURRENCY_EVENT_HPP
-#define ZI_CONCURRENCY_EVENT_HPP 1
+#    define ZI_CONCURRENCY_EVENT_HPP 1
 
-#include <zi/concurrency/config.hpp>
+#    include <zi/concurrency/config.hpp>
 
-#if defined( ZI_HAS_PTHREADS )
-#  include <zi/concurrency/pthread/event.hpp>
+#    if defined(ZI_HAS_PTHREADS)
+#        include <zi/concurrency/pthread/event.hpp>
 #
-#elif defined( ZI_HAS_WINTHREADS )
-#  include <zi/concurrency/win32/event.hpp>
+#    elif defined(ZI_HAS_WINTHREADS)
+#        include <zi/concurrency/win32/event.hpp>
 #
-#else
-#  error "add other"
-#endif
+#    else
+#        error "add other"
+#    endif
 
-namespace zi {
+namespace zi
+{
 
 typedef concurrency_::event event;
 

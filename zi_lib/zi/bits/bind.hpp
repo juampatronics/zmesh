@@ -17,26 +17,28 @@
 //
 
 #ifndef ZI_BITS_BIND_HPP
-#define ZI_BITS_BIND_HPP 1
+#    define ZI_BITS_BIND_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#include <functional>
-#define ZI_BIND_NAMESPACE ::std
+#    include <functional>
+#    define ZI_BIND_NAMESPACE ::std
 
-namespace zi {
+namespace zi
+{
 
+using ZI_BIND_NAMESPACE::bind;
 using ZI_BIND_NAMESPACE::is_bind_expression;
 using ZI_BIND_NAMESPACE::is_placeholder;
-using ZI_BIND_NAMESPACE::bind;
 
-namespace placeholders {
+namespace placeholders
+{
 
-#ifndef ZI_PLACEHOLDERS_IN_UNNAMED
+#    ifndef ZI_PLACEHOLDERS_IN_UNNAMED
 
 using namespace ZI_BIND_NAMESPACE::placeholders;
 
-#else
+#    else
 
 using ::_1;
 using ::_2;
@@ -48,15 +50,16 @@ using ::_7;
 using ::_8;
 using ::_9;
 
-#endif
+#    endif
 
-}
+} // namespace placeholders
 
 } // namespace zi
 
-namespace {
+namespace
+{
 
-#ifndef ZI_PLACEHOLDERS_IN_UNNAMED
+#    ifndef ZI_PLACEHOLDERS_IN_UNNAMED
 
 // using ZI_BIND_NAMESPACE::placeholders::_1;
 // using ZI_BIND_NAMESPACE::placeholders::_2;
@@ -68,11 +71,11 @@ namespace {
 // using ZI_BIND_NAMESPACE::placeholders::_8;
 // using ZI_BIND_NAMESPACE::placeholders::_9;
 
-#else
-#  undef ZI_PLACEHOLDERS_IN_UNNAMED
-#endif
+#    else
+#        undef ZI_PLACEHOLDERS_IN_UNNAMED
+#    endif
 
-}
+} // namespace
 
-#undef ZI_BIND_NAMESPACE
+#    undef ZI_BIND_NAMESPACE
 #endif

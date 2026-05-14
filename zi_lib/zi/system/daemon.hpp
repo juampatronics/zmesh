@@ -17,35 +17,37 @@
 //
 
 #ifndef ZI_SYSTEM_DAEMON_HPP
-#define ZI_SYSTEM_DAEMON_HPP 1
+#    define ZI_SYSTEM_DAEMON_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#include <errno.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <unistd.h>
+#    include <errno.h>
+#    include <fcntl.h>
+#    include <signal.h>
+#    include <stdlib.h>
+#    include <unistd.h>
 
-namespace zi {
-namespace system {
+namespace zi
+{
+namespace system
+{
 
-#  if defined ( ZI_OS_LINUX )
+#    if defined(ZI_OS_LINUX)
 
-bool daemonize( bool no_chdir = false, bool no_close = false )
+bool daemonize(bool no_chdir = false, bool no_close = false)
 {
     struct sigaction osa, sa;
-    int fd, oerrno, osa_ok;
-    pid_t newgrp;
+    int              fd, oerrno, osa_ok;
+    pid_t            newgrp;
 
     ::sigemptyset(&sa.sa_mask);
 
     sa.sa_handler = SIG_IGN;
-    sa.sa_flags = 0;
+    sa.sa_flags   = 0;
 
     osa_ok = ::sigaction(SIGHUP, &sa, &osa);
 
-    switch ( ::fork() )
+    switch (::fork())
     {
     case -1:
         return false;
@@ -57,12 +59,12 @@ bool daemonize( bool no_chdir = false, bool no_close = false )
 
     newgrp = ::setsid();
     oerrno = errno;
-    if ( osa_ok != -1 )
+    if (osa_ok != -1)
     {
         ::sigaction(SIGHUP, &osa, NULL);
     }
 
-    if ( newgrp == -1 )
+    if (newgrp == -1)
     {
         errno = oerrno;
         return false;
@@ -73,7 +75,7 @@ bool daemonize( bool no_chdir = false, bool no_close = false )
         static_cast<void>(::chdir("/"));
     }
 
-    if ( !no_close && (fd = ::open("/dev/null", O_RDWR, 0)) != -1)
+    if (!no_close && (fd = ::open("/dev/null", O_RDWR, 0)) != -1)
     {
         static_cast<void>(::dup2(fd, STDIN_FILENO));
         static_cast<void>(::dup2(fd, STDOUT_FILENO));
@@ -87,14 +89,11 @@ bool daemonize( bool no_chdir = false, bool no_close = false )
     return true;
 }
 
-#  else
+#    else
 
-bool daemonize( bool no_chdir = false, bool no_close = false )
-{
-    return false;
-}
+bool daemonize(bool no_chdir = false, bool no_close = false) { return false; }
 
-#  endif
+#    endif
 
 } // namespace system
 } // namespace zi

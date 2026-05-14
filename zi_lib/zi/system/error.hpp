@@ -17,27 +17,28 @@
 //
 
 #ifndef ZI_SYSTEM_ERROR_HPP
-#define ZI_SYSTEM_ERROR_HPP 1
+#    define ZI_SYSTEM_ERROR_HPP 1
 
-#include <zi/system/detail/cerrno_code.hpp>
-#include <zi/system/detail/win32_errno_code.hpp>
-#include <zi/system/detail/linux_errno_code.hpp>
+#    include <zi/system/detail/cerrno_code.hpp>
+#    include <zi/system/detail/linux_errno_code.hpp>
+#    include <zi/system/detail/win32_errno_code.hpp>
 
-#include <stdexcept>
-#include <string>
+#    include <stdexcept>
+#    include <string>
 
-namespace zi {
-namespace system {
+namespace zi
+{
+namespace system
+{
 
-class error: public std::runtime_error
+class error : public std::runtime_error
 {
 private:
-    cerrno_type           error_code_;
-    mutable std::string   message_   ;
+    cerrno_type         error_code_;
+    mutable std::string message_;
 
 public:
     error(
-
 };
 
 } // namespace system

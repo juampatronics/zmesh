@@ -17,38 +17,40 @@
 //
 
 #ifndef ZI_MATH_TRANSFORMS_DETAIL_SIZE_LOG2_HPP
-#define ZI_MATH_TRANSFORMS_DETAIL_SIZE_LOG2_HPP 1
+#    define ZI_MATH_TRANSFORMS_DETAIL_SIZE_LOG2_HPP 1
 
-#include <zi/bits/type_traits.hpp>
-#include <zi/utility/static_assert.hpp>
-#include <zi/utility/assert.hpp>
+#    include <zi/bits/type_traits.hpp>
+#    include <zi/utility/assert.hpp>
+#    include <zi/utility/static_assert.hpp>
 
-#include <limits>
-#include <cstddef>
+#    include <cstddef>
+#    include <limits>
 
-namespace zi {
-namespace math {
-namespace detail {
-
-
-template< class T >
-std::size_t size_log2( T x )
+namespace zi
 {
-    ZI_STATIC_ASSERT( is_integral< T >::value, non_integral_value_given );
-    ZI_ASSERT( x > 0 );
+namespace math
+{
+namespace detail
+{
 
-    std::size_t t = integral_constant< std::size_t, sizeof( T ) >::value * 4;
+template <class T>
+std::size_t size_log2(T x)
+{
+    ZI_STATIC_ASSERT(is_integral<T>::value, non_integral_value_given);
+    ZI_ASSERT(x > 0);
+
+    std::size_t t = integral_constant<std::size_t, sizeof(T)>::value * 4;
     std::size_t r = 0;
 
-    if ( x & ( x-1 ) )
+    if (x & (x - 1))
     {
         ++r;
     }
 
-    while ( x != 1 )
+    while (x != 1)
     {
-        const T q = static_cast< T >( x >> t );
-        if ( q )
+        const T q = static_cast<T>(x >> t);
+        if (q)
         {
             x = q;
             r += t;
@@ -64,5 +66,3 @@ std::size_t size_log2( T x )
 } // namespace zi
 
 #endif
-
-

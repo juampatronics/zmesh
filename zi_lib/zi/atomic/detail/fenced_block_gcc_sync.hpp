@@ -17,28 +17,25 @@
 //
 
 #ifndef ZI_ATOMIC_DETAIL_FENCED_BLOCK_GCC_SYNC_HPP
-#define ZI_ATOMIC_DETAIL_FENCED_BLOCK_GCC_SYNC_HPP 1
+#    define ZI_ATOMIC_DETAIL_FENCED_BLOCK_GCC_SYNC_HPP 1
 
-#ifndef ZI_ATOMIC_FENCED_BLOCK_HPP_INCLUDING
-#  error "don't include this file directly, use fenced_block.hpp"
-#endif
+#    ifndef ZI_ATOMIC_FENCED_BLOCK_HPP_INCLUDING
+#        error "don't include this file directly, use fenced_block.hpp"
+#    endif
 
-class fenced_block: non_copyable
+class fenced_block : non_copyable
 {
 private:
     int tmp_;
 
 public:
-    fenced_block(): tmp_( 0 )
+    fenced_block()
+        : tmp_(0)
     {
-        __sync_lock_test_and_set( &tmp_, 1 );
+        __sync_lock_test_and_set(&tmp_, 1);
     }
 
-    ~fenced_block()
-    {
-        __sync_lock_release( &tmp_ );
-    }
-
+    ~fenced_block() { __sync_lock_release(&tmp_); }
 };
 
 #endif

@@ -17,110 +17,118 @@
 //
 
 #ifndef ZI_MESH_TRI_MESH_EDGE_HPP
-#define ZI_MESH_TRI_MESH_EDGE_HPP 1
+#    define ZI_MESH_TRI_MESH_EDGE_HPP 1
 
-#include <zi/bits/cstdint.hpp>
-#include <zi/bits/ref.hpp>
+#    include <zi/bits/cstdint.hpp>
+#    include <zi/bits/ref.hpp>
 
-#include <zi/utility/assert.hpp>
-#include <zi/utility/enable_if.hpp>
-#include <zi/utility/non_copyable.hpp>
-#include <zi/utility/static_if.hpp>
-#include <zi/utility/robin_hood.hpp>
+#    include <zi/utility/assert.hpp>
+#    include <zi/utility/enable_if.hpp>
+#    include <zi/utility/non_copyable.hpp>
+#    include <zi/utility/robin_hood.hpp>
+#    include <zi/utility/static_if.hpp>
 
-#include <iterator>
-#include <cstddef>
+#    include <cstddef>
+#    include <iterator>
 
-namespace zi {
-namespace mesh {
+namespace zi
+{
+namespace mesh
+{
 
 // forward declaration
 class tri_mesh;
 
-namespace detail {
+namespace detail
+{
 
 struct tri_mesh_edge_impl
 {
 private:
-    uint32_t face_  ;
+    uint32_t face_;
     uint32_t vertex_;
 
     friend class ::zi::mesh::tri_mesh;
 
 public:
     tri_mesh_edge_impl()
-        : face_( 0 ), vertex_( 0 )
+        : face_(0)
+        , vertex_(0)
     {
     }
 
-    tri_mesh_edge_impl( uint32_t f, uint32_t v )
-        : face_( f ), vertex_( v )
+    tri_mesh_edge_impl(uint32_t f, uint32_t v)
+        : face_(f)
+        , vertex_(v)
     {
     }
 
-    inline bool operator==( const tri_mesh_edge_impl& o ) const
+    inline bool operator==(const tri_mesh_edge_impl& o) const
     {
         return face_ == o.face_ && vertex_ == o.vertex_;
     }
 
-    inline bool operator!=( const tri_mesh_edge_impl& o ) const
+    inline bool operator!=(const tri_mesh_edge_impl& o) const
     {
-        return !( *this == o );
+        return !(*this == o);
     }
 
-    uint32_t face() const   { return face_; }
+    uint32_t face() const { return face_; }
     uint32_t vertex() const { return vertex_; }
 };
 
 struct tri_mesh_edge_container
 {
 protected:
-    reference_wrapper< robin_hood::unordered_flat_map< uint64_t, tri_mesh_edge_impl > > edges_;
+    reference_wrapper<
+        robin_hood::unordered_flat_map<uint64_t, tri_mesh_edge_impl>>
+        edges_;
 
-    tri_mesh_edge_container( robin_hood::unordered_flat_map< uint64_t, tri_mesh_edge_impl > &edges )
-        : edges_( edges )
+    tri_mesh_edge_container(
+        robin_hood::unordered_flat_map<uint64_t, tri_mesh_edge_impl>& edges)
+        : edges_(edges)
     {
     }
 
     friend class ::zi::mesh::tri_mesh;
 
 public:
-
-    template< bool IsConst >
+    template <bool IsConst>
     struct iterator_base
     {
     private:
-        static inline uint32_t edge_source( uint64_t e )
+        static inline uint32_t edge_source(uint64_t e)
         {
-            return ( static_cast< uint32_t >( ~e >> 32 ) );
+            return (static_cast<uint32_t>(~e >> 32));
         }
 
-        static inline uint32_t edge_sink( uint64_t e )
+        static inline uint32_t edge_sink(uint64_t e)
         {
-            return ( static_cast< uint32_t >( ~e & 0x7fffffff ) );
+            return (static_cast<uint32_t>(~e & 0x7fffffff));
         }
 
-        static inline uint64_t edge_inverse( uint64_t e )
+        static inline uint64_t edge_inverse(uint64_t e)
         {
-            return ( e >> 32 ) | ( e << 32 );
+            return (e >> 32) | (e << 32);
         }
 
     public:
-        typedef iterator_base< IsConst > iterator_type;
-        typedef std::ptrdiff_t           difference_type;
-        typedef std::forward_iterator_tag iterator_category;
-        typedef tri_mesh_edge_impl       value_type;
-        typedef typename if_< IsConst,
-                              const tri_mesh_edge_impl*,
-                              tri_mesh_edge_impl* >::type pointer;
-        typedef typename if_< IsConst,
-                              const tri_mesh_edge_impl&,
-                              tri_mesh_edge_impl& >::type reference;
+        typedef iterator_base<IsConst>                  iterator_type;
+        typedef std::ptrdiff_t                          difference_type;
+        typedef std::forward_iterator_tag               iterator_category;
+        typedef tri_mesh_edge_impl                      value_type;
+        typedef typename if_<IsConst, const tri_mesh_edge_impl*,
+                             tri_mesh_edge_impl*>::type pointer;
+        typedef typename if_<IsConst, const tri_mesh_edge_impl&,
+                             tri_mesh_edge_impl&>::type reference;
 
-        inline iterator_base() : i_() {}
+        inline iterator_base()
+            : i_()
+        {
+        }
 
-        inline reference operator*() const  { return i_->second; }
-        inline pointer operator->() const   { return &i_->second; }
+        inline reference operator*() const { return i_->second; }
+        inline pointer   operator->() const { return &i_->second; }
 
         inline iterator_type& operator++()
         {
@@ -128,60 +136,77 @@ public:
             return *this;
         }
 
-        inline iterator_type operator++( int )
+        inline iterator_type operator++(int)
         {
             iterator_type tmp = *this;
             ++i_;
             return tmp;
         }
 
-        template< bool B >
-        inline bool operator==( const iterator_base< B >& o ) const
+        template <bool B>
+        inline bool operator==(const iterator_base<B>& o) const
         {
             return i_ == o.i_;
         }
 
-        template< bool B >
-        inline bool operator!=( const iterator_base< B >& o ) const
+        template <bool B>
+        inline bool operator!=(const iterator_base<B>& o) const
         {
             return i_ != o.i_;
         }
 
-        inline uint64_t id() const       { return i_->first; }
-        inline operator uint64_t() const { return i_->first; }
+        inline uint64_t id() const { return i_->first; }
+        inline          operator uint64_t() const { return i_->first; }
 
-        inline uint32_t face() const     { return i_->second.face(); }
-        inline uint32_t v2() const       { return i_->second.vertex(); }
-        inline uint32_t vertex() const   { return i_->second.vertex(); }
-        inline uint32_t source() const   { return edge_source( i_->first ); }
-        inline uint32_t sink() const     { return edge_sink( i_->first ); }
-        inline uint32_t v0() const       { return edge_source( i_->first ); }
-        inline uint32_t v1() const       { return edge_sink( i_->first ); }
-        inline uint64_t pair() const     { return edge_inverse( i_->first ); }
+        inline uint32_t face() const { return i_->second.face(); }
+        inline uint32_t v2() const { return i_->second.vertex(); }
+        inline uint32_t vertex() const { return i_->second.vertex(); }
+        inline uint32_t source() const { return edge_source(i_->first); }
+        inline uint32_t sink() const { return edge_sink(i_->first); }
+        inline uint32_t v0() const { return edge_source(i_->first); }
+        inline uint32_t v1() const { return edge_sink(i_->first); }
+        inline uint64_t pair() const { return edge_inverse(i_->first); }
 
         friend struct tri_mesh_edge_container;
 
     private:
-        typedef typename if_< IsConst,
-                              robin_hood::unordered_flat_map< uint64_t, tri_mesh_edge_impl >::const_iterator,
-                              robin_hood::unordered_flat_map< uint64_t, tri_mesh_edge_impl >::iterator
-                              >::type base_type;
+        typedef typename if_<IsConst,
+                             robin_hood::unordered_flat_map<
+                                 uint64_t, tri_mesh_edge_impl>::const_iterator,
+                             robin_hood::unordered_flat_map<
+                                 uint64_t, tri_mesh_edge_impl>::iterator>::type
+            base_type;
 
         base_type i_;
 
-        explicit iterator_base( const base_type& i ) : i_( i ) {}
+        explicit iterator_base(const base_type& i)
+            : i_(i)
+        {
+        }
     };
 
-    typedef iterator_base< false >::iterator_type  iterator;
-    typedef iterator_base< true  >::iterator_type  const_iterator;
+    typedef iterator_base<false>::iterator_type iterator;
+    typedef iterator_base<true>::iterator_type  const_iterator;
 
-    inline iterator find( uint64_t id )             { return iterator( edges_.get().find( id ) ); }
-    inline const_iterator find( uint64_t id ) const { return const_iterator( edges_.get().find( id ) ); }
+    inline iterator find(uint64_t id)
+    {
+        return iterator(edges_.get().find(id));
+    }
+    inline const_iterator find(uint64_t id) const
+    {
+        return const_iterator(edges_.get().find(id));
+    }
 
-    inline iterator begin()             { return iterator( edges_.get().begin() ); }
-    inline iterator end()               { return iterator( edges_.get().end() ); }
-    inline const_iterator begin() const { return const_iterator( edges_.get().begin() ); }
-    inline const_iterator end() const   { return const_iterator( edges_.get().end() ); }
+    inline iterator       begin() { return iterator(edges_.get().begin()); }
+    inline iterator       end() { return iterator(edges_.get().end()); }
+    inline const_iterator begin() const
+    {
+        return const_iterator(edges_.get().begin());
+    }
+    inline const_iterator end() const
+    {
+        return const_iterator(edges_.get().end());
+    }
 };
 
 } // namespace detail

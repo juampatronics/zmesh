@@ -17,20 +17,23 @@
 //
 
 #ifndef ZI_CONCURRENCY_WIN32_DETAIL_INTERLOCKED_HPP
-#define ZI_CONCURRENCY_WIN32_DETAIL_INTERLOCKED_HPP 1
+#    define ZI_CONCURRENCY_WIN32_DETAIL_INTERLOCKED_HPP 1
 
-#include <zi/concurrency/config.hpp>
+#    include <zi/concurrency/config.hpp>
 
-namespace zi {
-namespace concurrency_ {
-namespace win32 {
+namespace zi
+{
+namespace concurrency_
+{
+namespace win32
+{
 
-#if 0
+#    if 0
 
-#ifdef ZI_CXX_MSVC
+#        ifdef ZI_CXX_MSVC
 
 extern "C" void _ReadWriteBarrier( void );
-#pragma intrinsic( _ReadWriteBarrier )
+#            pragma intrinsic(_ReadWriteBarrier)
 
 inline long interlocked_read_acquire( volatile long* x )
 {
@@ -58,7 +61,7 @@ inline void interlocked_write_release( volatile void** x, void* value )
     *x = value;
 }
 
-#else
+#        else
 
 inline long interlocked_read_acquire( long* x )
 {
@@ -80,7 +83,7 @@ inline void interlocked_write_release( void** x, void* value )
     (void) InterlockedExchangePointer( x, value );
 }
 
-#endif
+#        endif
 
 using ::zi::atomic::atomic_word;
 using ::zi::atomic::compare_swap;
@@ -93,14 +96,13 @@ using ::zi::atomic::write;
 using ::zi::atomic::read;
 using ::zi::atomic::test_increment_swap;
 
+#    endif // 0
 
-#endif // 0
-
-using ::InterlockedIncrement;
-using ::InterlockedDecrement;
 using ::InterlockedCompareExchange;
+using ::InterlockedDecrement;
 using ::InterlockedExchange;
 using ::InterlockedExchangeAdd;
+using ::InterlockedIncrement;
 
 } // namespace win32
 } // namespace concurrency_

@@ -17,46 +17,45 @@
 //
 
 #ifndef ZI_CONCURRENCY_GUARD_HPP
-#define ZI_CONCURRENCY_GUARD_HPP 1
+#    define ZI_CONCURRENCY_GUARD_HPP 1
 
-#include <zi/concurrency/config.hpp>
-#include <zi/concurrency/mutex.hpp>
-#include <zi/concurrency/spinlock.hpp>
-#include <zi/concurrency/rwmutex.hpp>
-#include <zi/concurrency/detail/is_mutex.hpp>
+#    include <zi/concurrency/config.hpp>
+#    include <zi/concurrency/detail/is_mutex.hpp>
+#    include <zi/concurrency/mutex.hpp>
+#    include <zi/concurrency/rwmutex.hpp>
+#    include <zi/concurrency/spinlock.hpp>
 
-#include <zi/utility/non_copyable.hpp>
-#include <zi/utility/enable_if.hpp>
+#    include <zi/utility/enable_if.hpp>
+#    include <zi/utility/non_copyable.hpp>
 
-#include <zi/bits/function.hpp>
-#include <zi/bits/bind.hpp>
+#    include <zi/bits/bind.hpp>
+#    include <zi/bits/function.hpp>
 
-namespace zi {
-namespace concurrency_ {
+namespace zi
+{
+namespace concurrency_
+{
 
-class lock_unlocker: function< void() >
+class lock_unlocker : function<void()>
 {
 public:
-    template< class Mutex >
-    explicit lock_unlocker( const Mutex& m,
-                            typename enable_if< is_mutex< Mutex >::value >::type* = 0 )
-        : function< void() >( ::zi::bind( &Mutex::unlock, &m ) )
+    template <class Mutex>
+    explicit lock_unlocker(
+        const Mutex& m, typename enable_if<is_mutex<Mutex>::value>::type* = 0)
+        : function<void()>(::zi::bind(&Mutex::unlock, &m))
     {
         m.lock();
     }
 
-    template< class Mutex >
-    explicit lock_unlocker( const Mutex& m,
-                            typename enable_if< is_rwmutex< Mutex >::value >::type* = 0 )
-        : function< void() >( ::zi::bind( &Mutex::release_write, &m ) )
+    template <class Mutex>
+    explicit lock_unlocker(
+        const Mutex& m, typename enable_if<is_rwmutex<Mutex>::value>::type* = 0)
+        : function<void()>(::zi::bind(&Mutex::release_write, &m))
     {
         m.acquire_write();
     }
 
-    void operator()() const
-    {
-        function< void() >::operator() ();
-    }
+    void operator()() const { function<void()>::operator()(); }
 };
 
 // forward declarations
@@ -69,54 +68,51 @@ struct guard_container_wrapper
     virtual ~guard_container_wrapper() {}
 };
 
-template< class Mutex >
-struct guard_container: guard_container_wrapper
+template <class Mutex>
+struct guard_container : guard_container_wrapper
 {
 private:
-    const Mutex &m_;
+    const Mutex& m_;
 
 public:
-    explicit guard_container( const Mutex& m ): m_( m )
+    explicit guard_container(const Mutex& m)
+        : m_(m)
     {
         m_.lock();
     }
 
-    virtual ~guard_container()
-    {
-        m_.unlock();
-    }
+    virtual ~guard_container() { m_.unlock(); }
 
     friend class condition_variable;
     friend class event;
-
 };
 
-class guard: non_copyable
+class guard : non_copyable
 {
 private:
-    //guard_container_wrapper *gcw_;
+    // guard_container_wrapper *gcw_;
     lock_unlocker unlocker_;
 
 public:
-    template< class Guarded >
-    explicit guard( const Guarded &m,
-                    typename enable_if< is_mutex< Guarded >::value >::type* = 0 )
-        : unlocker_( m )
-//        gcw_( new guard_container< Guarded >( m ) )
+    template <class Guarded>
+    explicit guard(const Guarded& m,
+                   typename enable_if<is_mutex<Guarded>::value>::type* = 0)
+        : unlocker_(m)
+    //        gcw_( new guard_container< Guarded >( m ) )
     {
     }
 
-    template< class Guarded >
-    explicit guard( const Guarded &m,
-                    typename enable_if< is_rwmutex< Guarded >::value >::type* = 0 )
-        : unlocker_( m )
-//        gcw_( new guard_container< Guarded >( m ) )
+    template <class Guarded>
+    explicit guard(const Guarded& m,
+                   typename enable_if<is_rwmutex<Guarded>::value>::type* = 0)
+        : unlocker_(m)
+    //        gcw_( new guard_container< Guarded >( m ) )
     {
     }
 
     ~guard()
     {
-        //delete gcw_;
+        // delete gcw_;
         unlocker_();
     }
 

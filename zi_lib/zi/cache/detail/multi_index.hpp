@@ -14,7 +14,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 
 // #ifndef ZI_CACHE_DETAIL_MULTI_INDEX_HPP
 // #define ZI_CACHE_DETAIL_MULTI_INDEX_HPP 1
@@ -40,4 +40,3 @@
 // #define MULTI_INDEX_MEMBER BOOST_MULTI_INDEX_MEMBER
 
 // #endif
-

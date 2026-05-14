@@ -17,10 +17,9 @@
 //
 
 #ifndef ZI_MUTEX_HPP
-#define ZI_MUTEX_HPP 1
+#    define ZI_MUTEX_HPP 1
 
-#include <zi/concurrency/mutex.hpp>
-#include <zi/concurrency/guard.hpp>
+#    include <zi/concurrency/guard.hpp>
+#    include <zi/concurrency/mutex.hpp>
 
 #endif
-

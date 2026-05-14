@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_TUPLE_HPP
-#define ZI_TUPLE_HPP 1
+#    define ZI_TUPLE_HPP 1
 
-#include <zi/bits/tuple.hpp>
+#    include <zi/bits/tuple.hpp>
 
 #endif
-

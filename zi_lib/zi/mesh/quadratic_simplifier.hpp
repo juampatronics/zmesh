@@ -17,28 +17,28 @@
 //
 
 #ifndef ZI_MESH_QUADRATIC_SIMPLIFIER_HPP
-#define ZI_MESH_QUADRATIC_SIMPLIFIER_HPP 1
+#    define ZI_MESH_QUADRATIC_SIMPLIFIER_HPP 1
 
-#include "detail/packed_coordinate.hpp"
+#    include "detail/packed_coordinate.hpp"
 
-#include <zi/bits/shared_ptr.hpp>
-#include <zi/bits/unordered_map.hpp>
-#include <zi/utility/robin_hood.hpp>
-#include <zi/utility/static_assert.hpp>
+#    include <zi/bits/shared_ptr.hpp>
+#    include <zi/bits/unordered_map.hpp>
+#    include <zi/utility/robin_hood.hpp>
+#    include <zi/utility/static_assert.hpp>
 
-#include <zi/heap/binary_heap.hpp>
-#include <zi/mesh/detail/qmetric.hpp>
-#include <zi/mesh/detail/quadratic.hpp>
-#include <zi/mesh/tri_list.hpp>
-#include <zi/mesh/tri_mesh.hpp>
-#include <zi/mesh/tri_stripper.hpp>
+#    include <zi/heap/binary_heap.hpp>
+#    include <zi/mesh/detail/qmetric.hpp>
+#    include <zi/mesh/detail/quadratic.hpp>
+#    include <zi/mesh/tri_list.hpp>
+#    include <zi/mesh/tri_mesh.hpp>
+#    include <zi/mesh/tri_stripper.hpp>
 
-#include <zi/vl/quat.hpp>
-#include <zi/vl/vec.hpp>
+#    include <zi/vl/quat.hpp>
+#    include <zi/vl/vec.hpp>
 
-#include <functional>
-#include <iostream>
-#include <vector>
+#    include <functional>
+#    include <iostream>
+#    include <vector>
 
 namespace zi
 {
@@ -69,8 +69,8 @@ private:
     std::vector<coord_t> points_;
     std::vector<coord_t> normals_;
 
-    std::vector<quadratic_t> quadratic_;
-    robin_hood::unordered_flat_set<uint64_t>  invalid_;
+    std::vector<quadratic_t>                 quadratic_;
+    robin_hood::unordered_flat_set<uint64_t> invalid_;
 
     struct heap_entry
     {
@@ -458,11 +458,11 @@ public:
         return heap_.size();
     }
 
-    std::size_t
-    optimize(std::size_t target_faces, Float max_error,
-             Float min_error = -1.0)
+    std::size_t optimize(std::size_t target_faces, Float max_error,
+                         Float min_error = -1.0)
     {
-        if (min_error < 0) {
+        if (min_error < 0)
+        {
             min_error = std::numeric_limits<Float>::epsilon() * 25;
         }
 
@@ -552,18 +552,18 @@ public:
     }
 
 public:
-#define ZI_MESH_SIMPLIFIER_GET_FACES_HELPER_FUNCTION(__what)                   \
-    if (reduction[__what] & 0x8000000)                                         \
-    {                                                                          \
-        reduction[__what] = max_idx;                                           \
-        indices.push_back(__what);                                             \
-        __what = max_idx++;                                                    \
-    }                                                                          \
-    else                                                                       \
-    {                                                                          \
-        __what = reduction[__what];                                            \
-    }                                                                          \
-    static_cast<void>(0)
+#    define ZI_MESH_SIMPLIFIER_GET_FACES_HELPER_FUNCTION(__what)               \
+        if (reduction[__what] & 0x8000000)                                     \
+        {                                                                      \
+            reduction[__what] = max_idx;                                       \
+            indices.push_back(__what);                                         \
+            __what = max_idx++;                                                \
+        }                                                                      \
+        else                                                                   \
+        {                                                                      \
+            __what = reduction[__what];                                        \
+        }                                                                      \
+        static_cast<void>(0)
 
     std::size_t get_faces(std::vector<vl::vec<Float, 3>>&    points,
                           std::vector<vl::vec<Float, 3>>&    normals,
@@ -597,7 +597,7 @@ public:
         return faces.size();
     }
 
-#undef ZI_MESH_SIMPLIFIER_GET_FACES_HELPER_FUNCTION
+#    undef ZI_MESH_SIMPLIFIER_GET_FACES_HELPER_FUNCTION
 
 private:
     bool check_valid(const uint64_t e, const vl::vec<Float, 3>& p) const

@@ -17,12 +17,12 @@
 //
 
 #ifndef ZI_CONCURRENCY_PTHREAD_RWMUTEX_HPP
-#define ZI_CONCURRENCY_PTHREAD_RWMUTEX_HPP 1
+#    define ZI_CONCURRENCY_PTHREAD_RWMUTEX_HPP 1
 
-#if defined( ZI_USE_PTHREAD_RWLOCK_T )
-#  include <zi/concurrency/pthread/rwmutex_using_pthread_rwlock_t.hpp>
-#else
-#  include <zi/concurrency/detail/rwmutex_impl.hpp>
-#endif
+#    if defined(ZI_USE_PTHREAD_RWLOCK_T)
+#        include <zi/concurrency/pthread/rwmutex_using_pthread_rwlock_t.hpp>
+#    else
+#        include <zi/concurrency/detail/rwmutex_impl.hpp>
+#    endif
 
 #endif

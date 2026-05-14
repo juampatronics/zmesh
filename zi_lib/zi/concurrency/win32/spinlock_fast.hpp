@@ -17,61 +17,58 @@
 //
 
 #ifndef ZI_CONCURRENCY_WIN32_SPINLOCK_FAST_HPP
-#define ZI_CONCURRENCY_WIN32_SPINLOCK_FAST_HPP 1
+#    define ZI_CONCURRENCY_WIN32_SPINLOCK_FAST_HPP 1
 
-#include <zi/concurrency/config.hpp>
-#include <zi/concurrency/detail/mutex_guard.hpp>
-#include <zi/concurrency/detail/mutex_pool.hpp>
-#include <zi/concurrency/detail/compiler_fence.hpp>
-#include <zi/concurrency/win32/detail/primitives.hpp>
-#include <zi/concurrency/win32/detail/interlocked.hpp>
+#    include <zi/concurrency/config.hpp>
+#    include <zi/concurrency/detail/compiler_fence.hpp>
+#    include <zi/concurrency/detail/mutex_guard.hpp>
+#    include <zi/concurrency/detail/mutex_pool.hpp>
+#    include <zi/concurrency/win32/detail/interlocked.hpp>
+#    include <zi/concurrency/win32/detail/primitives.hpp>
 
-#include <zi/utility/non_copyable.hpp>
+#    include <zi/utility/non_copyable.hpp>
 
 // silly int->bool warning in msvc
-#if defined( ZI_CXX_MSVC )
-#  pragma warning( push )
-#  pragma warning( disable: 4800 )
-#endif
+#    if defined(ZI_CXX_MSVC)
+#        pragma warning(push)
+#        pragma warning(disable : 4800)
+#    endif
 
-#if defined( _MSC_VER ) && _MSC_VER >= 1310 && ( defined( _M_X64 ) )
+#    if defined(_MSC_VER) && _MSC_VER >= 1310 && (defined(_M_X64))
 
 extern "C" void _mm_pause();
 
-#pragma intrinsic( _mm_pause )
+#        pragma intrinsic(_mm_pause)
 #
-#define ZI_CONCURRENCY_SMT_PAUSE _mm_pause()
+#        define ZI_CONCURRENCY_SMT_PAUSE _mm_pause()
 #
-#elif defined( __GNUC__ ) && ( defined( __i386__ ) || defined( __x86_64__ ) )
+#    elif defined(__GNUC__) && (defined(__i386__) || defined(__x86_64__))
 #
-#define ZI_CONCURRENCY_SMT_PAUSE asm volatile( "rep; nop" : : : "memory" )
+#        define ZI_CONCURRENCY_SMT_PAUSE asm volatile("rep; nop" : : : "memory")
 #
-#endif
+#    endif
 
+namespace zi
+{
+namespace concurrency_
+{
 
-namespace zi {
-namespace concurrency_ {
-
-
-class spinlock: non_copyable
+class spinlock : non_copyable
 {
 private:
     mutable long lock_;
 
 public:
-
-    spinlock(): lock_( 0 )
+    spinlock()
+        : lock_(0)
     {
     }
 
-    ~spinlock()
-    {
-        ZI_ASSERT_0( lock_ );
-    }
+    ~spinlock() { ZI_ASSERT_0(lock_); }
 
     inline bool try_lock() const
     {
-        long r = win32::InterlockedExchange( &lock_, 1 );
+        long r = win32::InterlockedExchange(&lock_, 1);
 
         ZI_CONCURRENCY_COMPILER_FENCE
 
@@ -80,25 +77,24 @@ public:
 
     inline void lock() const
     {
-        for ( unsigned i = 0; !try_lock(); ++i )
+        for (unsigned i = 0; !try_lock(); ++i)
         {
-            if ( i < 4 )
+            if (i < 4)
             {
-
             }
-#if defined( ZI_CONCURRENCY_SMT_PAUSE )
-            else if ( i < 16 )
+#    if defined(ZI_CONCURRENCY_SMT_PAUSE)
+            else if (i < 16)
             {
                 ZI_CONCURRENCY_SMT_PAUSE;
             }
-#endif
-            else if ( i < 32 )
+#    endif
+            else if (i < 32)
             {
-                win32::Sleep( 0 );
+                win32::Sleep(0);
             }
             else
             {
-                win32::Sleep( 1 );
+                win32::Sleep(1);
             }
         }
     }
@@ -107,22 +103,22 @@ public:
     {
         ZI_CONCURRENCY_COMPILER_FENCE
 
-        *const_cast< long volatile* >( &lock_ ) = 0;
+        *const_cast<long volatile*>(&lock_) = 0;
     }
 
-    typedef mutex_guard< spinlock > guard;
+    typedef mutex_guard<spinlock> guard;
 
-    template< class Tag >
-    struct pool: mutex_pool< Tag, spinlock > { };
-
+    template <class Tag>
+    struct pool : mutex_pool<Tag, spinlock>
+    {
+    };
 };
-
 
 } // namespace concurrency_
 } // namespace zi
 
-#if defined( ZI_CXX_MSVC )
-#  pragma warning( pop )
-#endif
+#    if defined(ZI_CXX_MSVC)
+#        pragma warning(pop)
+#    endif
 
 #endif

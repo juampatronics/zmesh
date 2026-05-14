@@ -17,58 +17,57 @@
 //
 
 #ifndef ZI_UTILITY_FOR_EACH_HPP
-#define ZI_UTILITY_FOR_EACH_HPP 1
+#    define ZI_UTILITY_FOR_EACH_HPP 1
 
-#include <zi/bits/typeof.hpp>
+#    include <zi/bits/typeof.hpp>
 
-#if defined ( __typeof__ )
+#    if defined(__typeof__)
 
-#  define FOR_EACH( it, cnt )                                   \
-    FOR_EACH_RANGE( it, ( cnt ).begin(), ( cnt ).end() )
+#        define FOR_EACH(it, cnt) FOR_EACH_RANGE(it, (cnt).begin(), (cnt).end())
 
-#  define FOR_EACH_R( it, cnt )                                 \
-    FOR_EACH_RANGE( it, ( cnt ).rbegin(), ( cnt ).rend() )
+#        define FOR_EACH_R(it, cnt)                                            \
+            FOR_EACH_RANGE(it, (cnt).rbegin(), (cnt).rend())
 
-#  define REVERSE_FOR_EACH FOR_EACH_R
+#        define REVERSE_FOR_EACH FOR_EACH_R
 
-#  define FOR_EACH_RANGE( it, begin, end )                              \
-    for (__typeof__( begin ) it = ( begin ); it != ( end ); ++it)
+#        define FOR_EACH_RANGE(it, begin, end)                                 \
+            for (__typeof__(begin) it = (begin); it != (end); ++it)
 
-#  define FOR_EACH_ERASE_RANGE( it, begin, end, cnt )                   \
-    for (__typeof__( begin ) it = ( begin ); it != ( end ); it = ( cnt ).erase( it ) )
+#        define FOR_EACH_ERASE_RANGE(it, begin, end, cnt)                      \
+            for (__typeof__(begin) it = (begin); it != (end);                  \
+                 it                   = (cnt).erase(it))
 
-#  define FOR_EACH_ERASE( it, cnt )                                     \
-    FOR_EACH_ERASE_RANGE( it, ( cnt ).begin(), ( cnt ).end(), cnt )
+#        define FOR_EACH_ERASE(it, cnt)                                        \
+            FOR_EACH_ERASE_RANGE(it, (cnt).begin(), (cnt).end(), cnt)
 
-#  define FOR_EACH_R_ERASE( it, cnt )                                   \
-    FOR_EACH_ERASE_RANGE( it, ( cnt ).rbegin(), ( cnt ).rend(), cnt )
+#        define FOR_EACH_R_ERASE(it, cnt)                                      \
+            FOR_EACH_ERASE_RANGE(it, (cnt).rbegin(), (cnt).rend(), cnt)
 
-#  define REVERSE_FOR_EACH_ERASE FOR_EACH_R_ERASE
+#        define REVERSE_FOR_EACH_ERASE FOR_EACH_R_ERASE
 
-
-#  ifdef ZI_USE_LOWERCASE_FOREACH
+#        ifdef ZI_USE_LOWERCASE_FOREACH
 #
-#    ifndef foreach
-#      define foreach FOR_EACH
-#    endif
+#            ifndef foreach
+#                define foreach FOR_EACH
+#            endif
 #
-#    ifndef foreach_r
-#      define foreach_r FOR_EACH_R
-#    endif
+#            ifndef foreach_r
+#                define foreach_r FOR_EACH_R
+#            endif
 #
-#    ifndef reverse_foreach
-#      define reverse_foreach foreach_r
-#    endif
+#            ifndef reverse_foreach
+#                define reverse_foreach foreach_r
+#            endif
 #
-#    ifndef foreach_range
-#      define foreach_range FOR_EACH_RANGE
-#    endif
+#            ifndef foreach_range
+#                define foreach_range FOR_EACH_RANGE
+#            endif
 #
-#  endif // ZI_NO_LOWERCASE_FOREACH
+#        endif // ZI_NO_LOWERCASE_FOREACH
 
-#else  // defined( __typeof__ ) not defined
-#  error "can't define FOR_EACH macros with no __typeof__ defined"
+#    else // defined( __typeof__ ) not defined
+#        error "can't define FOR_EACH macros with no __typeof__ defined"
 
-#endif // defined( __typeof__ )
+#    endif // defined( __typeof__ )
 
 #endif

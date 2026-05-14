@@ -17,12 +17,14 @@
 //
 
 #ifndef ZI_META_TRUE_TYPE_HPP
-#define ZI_META_TRUE_TYPE_HPP 1
+#    define ZI_META_TRUE_TYPE_HPP 1
 
-#include <zi/bits/type_traits.hpp>
+#    include <zi/bits/type_traits.hpp>
 
-namespace zi {
-namespace meta {
+namespace zi
+{
+namespace meta
+{
 
 using ::zi::true_type;
 typedef ::zi::true_type true_;

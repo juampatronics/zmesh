@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_RANDOM_HPP
-#define ZI_RANDOM_HPP 1
+#    define ZI_RANDOM_HPP 1
 
-#include <zi/bits/random.hpp>
+#    include <zi/bits/random.hpp>
 
 #endif
-

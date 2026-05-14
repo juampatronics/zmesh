@@ -17,60 +17,61 @@
 //
 
 #ifndef ZI_UTILITY_NATURAL_COMPARE_HPP
-#define ZI_UTILITY_NATURAL_COMPARE_HPP 1
+#    define ZI_UTILITY_NATURAL_COMPARE_HPP 1
 
-#include <functional>
-#include <iterator>
-#include <locale>
+#    include <functional>
+#    include <iterator>
+#    include <locale>
 
-namespace zi {
+namespace zi
+{
 
-template< class CharCompare >
+template <class CharCompare>
 class natural_compare
 {
 private:
     CharCompare compare_;
-    std::locale locale_ ;
+    std::locale locale_;
 
-    template< class Iterator >
-    int compare_to_right( Iterator& abeg, Iterator aend,
-                          Iterator& bbeg, Iterator bend ) const
+    template <class Iterator>
+    int compare_to_right(Iterator& abeg, Iterator aend, Iterator& bbeg,
+                         Iterator bend) const
     {
-        typedef typename std::iterator_traits< Iterator >::value_type value_type;
+        typedef typename std::iterator_traits<Iterator>::value_type value_type;
 
-        for ( int res = 0 ;; ++abeg, ++bbeg )
+        for (int res = 0;; ++abeg, ++bbeg)
         {
-            value_type ca = ( abeg != aend ) ? *abeg : value_type();
-            value_type cb = ( bbeg != bend ) ? *bbeg : value_type();
+            value_type ca = (abeg != aend) ? *abeg : value_type();
+            value_type cb = (bbeg != bend) ? *bbeg : value_type();
 
-            bool da = std::isdigit( ca, locale_ );
-            bool db = std::isdigit( cb, locale_ );
+            bool da = std::isdigit(ca, locale_);
+            bool db = std::isdigit(cb, locale_);
 
-            if ( !da && !db )
+            if (!da && !db)
             {
                 return res;
             }
 
-            else if ( !da )
+            else if (!da)
             {
-                return compare_( 0, 1 ) ? 1 : -1;
+                return compare_(0, 1) ? 1 : -1;
             }
-            else if ( !db )
+            else if (!db)
             {
-                return compare_( 0, 1 ) ? -1 : 1;
+                return compare_(0, 1) ? -1 : 1;
             }
-            else if ( res == 0 )
+            else if (res == 0)
             {
-                if ( compare_( ca, cb ) )
+                if (compare_(ca, cb))
                 {
                     res = 1;
                 }
-                else if ( compare_( cb, ca ) )
+                else if (compare_(cb, ca))
                 {
                     res = -1;
                 }
             }
-            else if ( bbeg == bend && abeg == aend )
+            else if (bbeg == bend && abeg == aend)
             {
                 return res;
             }
@@ -78,93 +79,97 @@ private:
     }
 
 public:
-    natural_compare(): compare_(), locale_()
-    { }
+    natural_compare()
+        : compare_()
+        , locale_()
+    {
+    }
 
-    template< class T >
-    bool operator()( const T& a, const T& b ) const
+    template <class T>
+    bool operator()(const T& a, const T& b) const
     {
         typedef typename T::const_iterator const_iterator;
-        typedef typename std::iterator_traits< const_iterator >::value_type value_type;
+        typedef typename std::iterator_traits<const_iterator>::value_type
+            value_type;
 
-        std::equal_to< value_type > equals;
+        std::equal_to<value_type> equals;
 
-        for ( const_iterator ia = a.begin(), ib = b.begin();; ++ia, ++ib )
+        for (const_iterator ia = a.begin(), ib = b.begin();; ++ia, ++ib)
         {
 
             value_type ca = value_type();
             value_type cb = value_type();
 
-            if ( ia != a.end() )
+            if (ia != a.end())
             {
                 ca = *ia;
             }
 
-            if ( ib != b.end() )
+            if (ib != b.end())
             {
                 cb = *ib;
             }
 
-            while ( std::isspace( ca, locale_ ) || equals( ca, '0' ))
+            while (std::isspace(ca, locale_) || equals(ca, '0'))
             {
-                ca = ( ++ia == a.end() ) ? value_type() : *ia;
+                ca = (++ia == a.end()) ? value_type() : *ia;
             }
 
-            while ( std::isspace( cb, locale_ ) || equals( cb, '0' ))
+            while (std::isspace(cb, locale_) || equals(cb, '0'))
             {
-                cb = ( ++ib == b.end() ) ? value_type() : *ib;
+                cb = (++ib == b.end()) ? value_type() : *ib;
             }
 
-            if ( std::isdigit( ca, locale_ ) && std::isdigit( cb, locale_ ) )
+            if (std::isdigit(ca, locale_) && std::isdigit(cb, locale_))
             {
-                int result = compare_to_right( ia, a.end(), ib, b.end() );
-                if ( result )
+                int result = compare_to_right(ia, a.end(), ib, b.end());
+                if (result)
                 {
                     return result > 0;
                 }
             }
 
-            if ( ia == a.end() && ib == b.end() )
+            if (ia == a.end() && ib == b.end())
             {
-                return std::lexicographical_compare( a.begin(), a.end(),
-                                                     b.begin(), b.end(), compare_ );
+                return std::lexicographical_compare(
+                    a.begin(), a.end(), b.begin(), b.end(), compare_);
             }
 
-            if ( compare_( ca, cb ) )
+            if (compare_(ca, cb))
             {
                 return true;
             }
 
-            if ( compare_( cb, ca ) )
+            if (compare_(cb, ca))
             {
                 return false;
             }
         }
     }
-
 };
 
-template< class CharType >
-struct naturally_less
-    : natural_compare< std::less< CharType > >
-{ };
+template <class CharType>
+struct naturally_less : natural_compare<std::less<CharType>>
+{
+};
 
-template< class CharType >
-struct naturally_less< std::basic_string< CharType > >
-    : natural_compare< std::less< CharType > >
-{ };
+template <class CharType>
+struct naturally_less<std::basic_string<CharType>>
+    : natural_compare<std::less<CharType>>
+{
+};
 
-template< class CharType >
-struct naturally_greater
-    : natural_compare< std::greater< CharType > >
-{ };
+template <class CharType>
+struct naturally_greater : natural_compare<std::greater<CharType>>
+{
+};
 
-template< class CharType >
-struct naturally_greater< std::basic_string< CharType > >
-    : natural_compare< std::greater< CharType > >
-{ };
+template <class CharType>
+struct naturally_greater<std::basic_string<CharType>>
+    : natural_compare<std::greater<CharType>>
+{
+};
 
 } // namespace zi
 
 #endif
-

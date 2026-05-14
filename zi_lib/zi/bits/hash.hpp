@@ -17,20 +17,23 @@
 //
 
 #ifndef ZI_BITS_HASH_HPP
-#define ZI_BITS_HASH_HPP 1
+#    define ZI_BITS_HASH_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#include <functional>
-#define ZI_HASH_NAMESPACE ::std
-#define ZI_HASH_EXPORT_NAMESPACE_BEGIN namespace std {
-#define ZI_HASH_EXPORT_NAMESPACE_END }
+#    include <functional>
+#    define ZI_HASH_NAMESPACE ::std
+#    define ZI_HASH_EXPORT_NAMESPACE_BEGIN                                     \
+        namespace std                                                          \
+        {
+#    define ZI_HASH_EXPORT_NAMESPACE_END }
 
-namespace zi {
+namespace zi
+{
 
 using ZI_HASH_NAMESPACE::hash;
 
 } // namespace zi
 
-#undef ZI_HASH_NAMESPACE
+#    undef ZI_HASH_NAMESPACE
 #endif

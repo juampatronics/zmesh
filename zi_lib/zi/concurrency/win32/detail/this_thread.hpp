@@ -17,30 +17,28 @@
 //
 
 #ifndef ZI_CONCURRENCY_WIN32_DETAIL_THIS_THREAD_HPP
-#define ZI_CONCURRENCY_WIN32_DETAIL_THIS_THREAD_HPP 1
+#    define ZI_CONCURRENCY_WIN32_DETAIL_THIS_THREAD_HPP 1
 
-#include <zi/concurrency/config.hpp>
-#include <zi/concurrency/win32/detail/primitives.hpp>
+#    include <zi/concurrency/config.hpp>
+#    include <zi/concurrency/win32/detail/primitives.hpp>
 
-namespace zi {
-namespace concurrency_ {
-
-namespace this_thread {
-
-inline void usleep_nt( int64_t usec )
+namespace zi
 {
-    Sleep( static_cast< win32::dword >( usec / 1000 + ( ( usec % 1000 > 500 ) ? 1 : 0 ) ) );
+namespace concurrency_
+{
+
+namespace this_thread
+{
+
+inline void usleep_nt(int64_t usec)
+{
+    Sleep(
+        static_cast<win32::dword>(usec / 1000 + ((usec % 1000 > 500) ? 1 : 0)));
 }
 
-inline win32::dword id()
-{
-    return win32::GetCurrentThreadId();
-}
+inline win32::dword id() { return win32::GetCurrentThreadId(); }
 
-inline void yield()
-{
-    Yield();
-}
+inline void yield() { Yield(); }
 
 } // namespace this_thread
 
@@ -48,4 +46,3 @@ inline void yield()
 } // namespace zi
 
 #endif
-

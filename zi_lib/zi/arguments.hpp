@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_ARGUMENTS_HPP
-#define ZI_ARGUMENTS_HPP 1
+#    define ZI_ARGUMENTS_HPP 1
 
-#include <zi/zargs/zargs.hpp>
+#    include <zi/zargs/zargs.hpp>
 
 #endif
-

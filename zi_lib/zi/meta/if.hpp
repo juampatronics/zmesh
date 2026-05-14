@@ -17,38 +17,42 @@
 //
 
 #ifndef ZI_META_IF_HPP
-#define ZI_META_IF_HPP 1
+#    define ZI_META_IF_HPP 1
 
-#include <zi/meta/true_type.hpp>
-#include <zi/meta/false_type.hpp>
-#include <zi/meta/null_type.hpp>
+#    include <zi/meta/false_type.hpp>
+#    include <zi/meta/null_type.hpp>
+#    include <zi/meta/true_type.hpp>
 
-namespace zi {
-namespace meta {
+namespace zi
+{
+namespace meta
+{
 
-template< bool B, class T1, class T2 >
+template <bool B, class T1, class T2>
 struct if_c
 {
     typedef T1 type;
 };
 
-template< class T1, class T2 >
-struct if_c< false, T1, T2 >
+template <class T1, class T2>
+struct if_c<false, T1, T2>
 {
     typedef T2 type;
 };
 
-template< class B, class T1, class T2 >
-struct if_: if_c< B::value, T1, T2 > {};
+template <class B, class T1, class T2>
+struct if_ : if_c<B::value, T1, T2>
+{
+};
 
-template< class T1, class T2 >
-struct if_< true_, T1, T2 >
+template <class T1, class T2>
+struct if_<true_, T1, T2>
 {
     typedef T1 type;
 };
 
-template< class T1, class T2 >
-struct if_< false_, T1, T2 >
+template <class T1, class T2>
+struct if_<false_, T1, T2>
 {
     typedef T2 type;
 };

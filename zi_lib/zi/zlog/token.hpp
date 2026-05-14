@@ -17,79 +17,73 @@
 //
 
 #ifndef ZI_ZLOG_TOKEN_HPP
-#define ZI_ZLOG_TOKEN_HPP 1
+#    define ZI_ZLOG_TOKEN_HPP 1
 
-#include <zi/utility/non_copyable.hpp>
-#include <zi/utility/enable_if.hpp>
-#include <zi/utility/is_printable.hpp>
-#include <zi/utility/address_of.hpp>
-#include <zi/debug/printable_type.hpp>
-#include <zi/time/now.hpp>
-#include <zi/bits/cstdint.hpp>
+#    include <zi/bits/cstdint.hpp>
+#    include <zi/debug/printable_type.hpp>
+#    include <zi/time/now.hpp>
+#    include <zi/utility/address_of.hpp>
+#    include <zi/utility/enable_if.hpp>
+#    include <zi/utility/is_printable.hpp>
+#    include <zi/utility/non_copyable.hpp>
 
-#include <sstream>
+#    include <sstream>
 
-namespace zi {
-namespace zlog {
+namespace zi
+{
+namespace zlog
+{
 
 // forward declaration
 class sink;
 
-class token: non_copyable
+class token : non_copyable
 {
 private:
-    typedef std::ios_base& (ios_base_manipulator)( std::ios_base& );
+    typedef std::ios_base&(ios_base_manipulator)(std::ios_base&);
 
     bool               done_;
-    std::ostringstream out_ ;
+    std::ostringstream out_;
 
-    token(): done_( false ), out_()
+    token()
+        : done_(false)
+        , out_()
     {
         out_ << zi::now::usec();
     }
 
-    void mark_done()
-    {
-        done_ = true;
-    }
+    void mark_done() { done_ = true; }
 
-    bool is_done() const
-    {
-        return done_;
-    }
+    bool is_done() const { return done_; }
 
     friend class sink;
 
 public:
-
-    token&
-    operator<< ( ios_base_manipulator& manipulator )
+    token& operator<<(ios_base_manipulator& manipulator)
     {
-        manipulator( out_ );
+        manipulator(out_);
         return *this;
     }
 
-    template< class T >
-    typename enable_if< is_printable< T >::value, token& >::type
-    operator<< ( const T& v )
+    template <class T>
+    typename enable_if<is_printable<T>::value, token&>::type
+    operator<<(const T& v)
     {
         out_ << "\t" << v;
         return *this;
     }
 
-    template< class T >
-    typename disable_if< is_printable< T >::value, token& >::type
-    operator<< ( const T& v )
+    template <class T>
+    typename disable_if<is_printable<T>::value, token&>::type
+    operator<<(const T& v)
     {
-        out_ << "\t< " << debug::printable_type< T >() << " @"
-             << address_of( v ) << ">";
+        out_ << "\t< " << debug::printable_type<T>() << " @" << address_of(v)
+             << ">";
         return *this;
     }
-
 };
 
 } // namespace zlog
 } // namespace zi
 
 #endif
-

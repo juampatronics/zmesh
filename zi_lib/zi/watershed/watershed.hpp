@@ -17,10 +17,12 @@
 //
 
 #ifndef ZI_WATERSHED_WATERSHED_HPP
-#define ZI_WATERSHED_WATERSHED_HPP 1
+#    define ZI_WATERSHED_WATERSHED_HPP 1
 
-namespace zi {
-namespace watershed {
+namespace zi
+{
+namespace watershed
+{
 
 } // namespace watershed
 } // namespace zi

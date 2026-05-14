@@ -17,65 +17,55 @@
 //
 
 #ifndef ZI_CONCURRENCY_WIN32_EVENT_HPP
-#define ZI_CONCURRENCY_WIN32_EVENT_HPP 1
+#    define ZI_CONCURRENCY_WIN32_EVENT_HPP 1
 
-#include <zi/concurrency/config.hpp>
-#include <zi/concurrency/win32/mutex_types.hpp>
-#include <zi/concurrency/win32/detail/primitives.hpp>
-#include <zi/concurrency/win32/detail/interlocked.hpp>
+#    include <zi/concurrency/config.hpp>
+#    include <zi/concurrency/win32/detail/interlocked.hpp>
+#    include <zi/concurrency/win32/detail/primitives.hpp>
+#    include <zi/concurrency/win32/mutex_types.hpp>
 
-#include <zi/utility/non_copyable.hpp>
-#include <zi/utility/assert.hpp>
+#    include <zi/utility/assert.hpp>
+#    include <zi/utility/non_copyable.hpp>
 
-namespace zi {
-namespace concurrency_ {
+namespace zi
+{
+namespace concurrency_
+{
 
-
-class event: non_copyable
+class event : non_copyable
 {
 private:
-    win32::handle         event_;
+    win32::handle event_;
 
 public:
-
-    event(): event_( win32::CreateEvent( 0, true, false, 0 ) )
+    event()
+        : event_(win32::CreateEvent(0, true, false, 0))
     {
-        ZI_ASSERT( event_ );
+        ZI_ASSERT(event_);
     }
 
-    ~event()
-    {
-        ZI_VERIFY( win32::CloseHandle( event_ ) );
-    }
+    ~event() { ZI_VERIFY(win32::CloseHandle(event_)); }
 
-    template< class MutexTag >
-    void wait( const mutex_tpl< MutexTag > &mutex ) const
+    template <class MutexTag>
+    void wait(const mutex_tpl<MutexTag>& mutex) const
     {
         mutex.unlock();
-        win32::WaitForSingleObject( event_, win32::forever );
+        win32::WaitForSingleObject(event_, win32::forever);
         mutex.lock();
     }
 
-    template< class Mutex >
-    void wait( const mutex_guard< Mutex > &g ) const
+    template <class Mutex>
+    void wait(const mutex_guard<Mutex>& g) const
     {
         g.m_.unlock();
-        win32::WaitForSingleObject( event_, win32::forever );
+        win32::WaitForSingleObject(event_, win32::forever);
         g.m_.lock();
     }
 
-    void signal() const
-    {
-        win32::SetEvent( event_ );
-    }
+    void signal() const { win32::SetEvent(event_); }
 
-    void clear() const
-    {
-        win32::ResetEvent( event_ );
-    }
-
+    void clear() const { win32::ResetEvent(event_); }
 };
-
 
 } // namespace concurrency_
 } // namespace zi

@@ -17,20 +17,21 @@
 //
 
 #ifndef ZI_BITS_UNORDERED_SET_HPP
-#define ZI_BITS_UNORDERED_SET_HPP 1
+#    define ZI_BITS_UNORDERED_SET_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#include <unordered_set>
-#define ZI_UNORDERED_SET_NAMESPACE ::std
+#    include <unordered_set>
+#    define ZI_UNORDERED_SET_NAMESPACE ::std
 
-namespace zi {
+namespace zi
+{
 
-using ZI_UNORDERED_SET_NAMESPACE::unordered_set;
-using ZI_UNORDERED_SET_NAMESPACE::unordered_multiset;
 using ZI_UNORDERED_SET_NAMESPACE::swap;
+using ZI_UNORDERED_SET_NAMESPACE::unordered_multiset;
+using ZI_UNORDERED_SET_NAMESPACE::unordered_set;
 
 } // namespace zi
 
-#undef ZI_UNORDERED_SET_NAMESPACE
+#    undef ZI_UNORDERED_SET_NAMESPACE
 #endif

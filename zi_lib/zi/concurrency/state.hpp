@@ -17,40 +17,42 @@
 //
 
 #ifndef ZI_CONCURRENCY_STATE_HPP
-#define ZI_CONCURRENCY_STATE_HPP 1
+#    define ZI_CONCURRENCY_STATE_HPP 1
 
-#include <zi/concurrency/config.hpp>
-#include <zi/concurrency/mutex.hpp>
-#include <zi/concurrency/condition_variable.hpp>
+#    include <zi/concurrency/condition_variable.hpp>
+#    include <zi/concurrency/config.hpp>
+#    include <zi/concurrency/mutex.hpp>
 
-#include <zi/utility/non_copyable.hpp>
-#include <zi/utility/assert.hpp>
+#    include <zi/utility/assert.hpp>
+#    include <zi/utility/non_copyable.hpp>
 
-namespace zi {
-namespace concurrency_ {
+namespace zi
+{
+namespace concurrency_
+{
 
-template< class T >
-class state: non_copyable
+template <class T>
+class state : non_copyable
 {
 public:
     typedef T state_type;
 
 private:
-    mutable state_type state_  ;
-    condition_variable cv_     ;
-    mutex              m_      ;
+    mutable state_type state_;
+    condition_variable cv_;
+    mutex              m_;
     int                waiters_;
 
-    void set_to_nl( state_type s ) const
+    void set_to_nl(state_type s) const
     {
-        if ( state_ != s )
+        if (state_ != s)
         {
             state_ = s;
-            if ( waiters_ == 1 )
+            if (waiters_ == 1)
             {
                 cv_.notify_one();
             }
-            else if ( waiters_ > 1 )
+            else if (waiters_ > 1)
             {
                 cv_.notify_all();
             }
@@ -58,60 +60,58 @@ private:
     }
 
 public:
-
-    explicit state( state_type s = state_type() )
-        : state_( s ), cv_(), m_(), waiters_( 0 )
+    explicit state(state_type s = state_type())
+        : state_(s)
+        , cv_()
+        , m_()
+        , waiters_(0)
     {
     }
 
-    void set_to( state_type s ) const
+    void set_to(state_type s) const
     {
-        mutex::guard g( m_ );
-        set_to_nl( s );
+        mutex::guard g(m_);
+        set_to_nl(s);
     }
 
-    state_type compare_and_set_to( state_type expected, state_type s ) const
+    state_type compare_and_set_to(state_type expected, state_type s) const
     {
-        mutex::guard g( m_ );
-        if ( state_ == expected )
+        mutex::guard g(m_);
+        if (state_ == expected)
         {
-            set_to_nl( s );
+            set_to_nl(s);
         }
         return state_;
     }
 
-    void wait_for( state_type s ) const
+    void wait_for(state_type s) const
     {
-        mutex::guard g( m_ );
-        while ( state_ != s )
+        mutex::guard g(m_);
+        while (state_ != s)
         {
             ++waiters_;
-            cv_.wait( m_ );
+            cv_.wait(m_);
             --waiters_;
         }
     }
 
-    state_type operator() () const
+    state_type operator()() const
     {
-        mutex::guard g( m_ );
+        mutex::guard g(m_);
         return state_;
     }
 
     state_type get_state() const
     {
-        mutex::guard g( m_ );
+        mutex::guard g(m_);
         return state_;
     }
-
 };
-
-
 
 } // namespace concurrency_
 
 using concurrency_::state;
 
 } // namespace zi
-
 
 #endif

@@ -17,19 +17,20 @@
 //
 
 #ifndef ZI_BITS_SHARED_PTR_HPP
-#define ZI_BITS_SHARED_PTR_HPP 1
+#    define ZI_BITS_SHARED_PTR_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#include <memory>
-#define ZI_SHARED_PTR_NAMESPACE ::std
+#    include <memory>
+#    define ZI_SHARED_PTR_NAMESPACE ::std
 
-namespace zi {
+namespace zi
+{
 
-using ZI_SHARED_PTR_NAMESPACE::shared_ptr ;
-using ZI_SHARED_PTR_NAMESPACE::weak_ptr   ;
+using ZI_SHARED_PTR_NAMESPACE::shared_ptr;
+using ZI_SHARED_PTR_NAMESPACE::weak_ptr;
 
 } // namespace zi
 
-#undef ZI_SHARED_PTR_NAMESPACE
+#    undef ZI_SHARED_PTR_NAMESPACE
 #endif

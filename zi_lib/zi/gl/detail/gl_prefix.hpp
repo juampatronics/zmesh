@@ -17,16 +17,16 @@
 //
 
 #ifndef ZI_GL_DETAIL_GL_PREFIX_HPP
-#define ZI_GL_DETAIL_GL_PREFIX_HPP 1
+#    define ZI_GL_DETAIL_GL_PREFIX_HPP 1
 
-#include <zi/gl/detail/config.hpp>
+#    include <zi/gl/detail/config.hpp>
 
-#if defined( macintosh ) && PRAGMA_IMPORT_SUPPORTED
-#  pragma import on
-#endif
+#    if defined(macintosh) && PRAGMA_IMPORT_SUPPORTED
+#        pragma import on
+#    endif
 
-#define ZI_GLAPI extern "C"
+#    define ZI_GLAPI extern "C"
 
-#define ZI_GLAPI_ENTRY
+#    define ZI_GLAPI_ENTRY
 
 #endif

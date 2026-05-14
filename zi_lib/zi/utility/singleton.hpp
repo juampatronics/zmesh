@@ -17,41 +17,43 @@
 //
 
 #ifndef ZI_UTILITY_SINGLETON_HPP
-#define ZI_UTILITY_SINGLETON_HPP 1
+#    define ZI_UTILITY_SINGLETON_HPP 1
 
-namespace zi {
-namespace singleton_ {
+namespace zi
+{
+namespace singleton_
+{
 
-template< class Type > class singleton: private Type
+template <class Type>
+class singleton : private Type
 {
 private:
-
     singleton() {};
     ~singleton() {};
-    singleton( const singleton< Type >& );
-    singleton& operator=( const singleton< Type >& );
+    singleton(const singleton<Type>&);
+    singleton& operator=(const singleton<Type>&);
 
 public:
+    typedef singleton<Type> type;
 
-    typedef singleton< Type > type;
-
-    template< class Tag > static Type& instance()
+    template <class Tag>
+    static Type& instance()
     {
-        static singleton< Type > instance;
+        static singleton<Type> instance;
         return instance;
     }
 
     static Type& instance()
     {
-        static singleton< Type > instance;
+        static singleton<Type> instance;
         return instance;
     }
-
 };
 
-template< class Type > Type& singleton_of()
+template <class Type>
+Type& singleton_of()
 {
-    return singleton< Type >::instance();
+    return singleton<Type>::instance();
 }
 
 } // namespace singleton_

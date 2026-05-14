@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_UNORDERED_MAP_HPP
-#define ZI_UNORDERED_MAP_HPP 1
+#    define ZI_UNORDERED_MAP_HPP 1
 
-#include <zi/bits/unordered_map.hpp>
+#    include <zi/bits/unordered_map.hpp>
 
 #endif
-

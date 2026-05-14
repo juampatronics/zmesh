@@ -17,8 +17,8 @@
 //
 
 #ifndef ZI_CERRNO_HPP
-#define ZI_CERRNO_HPP 1
+#    define ZI_CERRNO_HPP 1
 
-#include <zi/bits/cerrno.hpp>
+#    include <zi/bits/cerrno.hpp>
 
 #endif

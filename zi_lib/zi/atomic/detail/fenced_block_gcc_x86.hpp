@@ -17,36 +17,26 @@
 //
 
 #ifndef ZI_ATOMIC_DETAIL_FENCED_BLOCK_GCC_X86_HPP
-#define ZI_ATOMIC_DETAIL_FENCED_BLOCK_GCC_X86_HPP 1
+#    define ZI_ATOMIC_DETAIL_FENCED_BLOCK_GCC_X86_HPP 1
 
-#ifndef ZI_ATOMIC_FENCED_BLOCK_HPP_INCLUDING
-#  error "don't include this file directly, use fenced_block.hpp"
-#endif
+#    ifndef ZI_ATOMIC_FENCED_BLOCK_HPP_INCLUDING
+#        error "don't include this file directly, use fenced_block.hpp"
+#    endif
 
-class fenced_block: non_copyable
+class fenced_block : non_copyable
 {
 private:
     static int memory_barrier()
     {
         int r = 0;
-        asm volatile ( "xchgl %%eax, %0"
-                       : "=m" ( r )
-                       :
-                       : "memory", "cc" );
+        asm volatile("xchgl %%eax, %0" : "=m"(r) : : "memory", "cc");
         return r;
     }
 
 public:
-    fenced_block()
-    {
-        memory_barrier();
-    }
+    fenced_block() { memory_barrier(); }
 
-    ~fenced_block()
-    {
-        memory_barrier();
-    }
-
+    ~fenced_block() { memory_barrier(); }
 };
 
 #endif

@@ -17,20 +17,21 @@
 //
 
 #ifndef ZI_BITS_REF_HPP
-#define ZI_BITS_REF_HPP 1
+#    define ZI_BITS_REF_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#include <functional>
-#define ZI_REF_NAMESPACE ::std
+#    include <functional>
+#    define ZI_REF_NAMESPACE ::std
 
-namespace zi {
+namespace zi
+{
 
-using ZI_REF_NAMESPACE::reference_wrapper;
-using ZI_REF_NAMESPACE::ref;
 using ZI_REF_NAMESPACE::cref;
+using ZI_REF_NAMESPACE::ref;
+using ZI_REF_NAMESPACE::reference_wrapper;
 
 } // namespace zi
 
-#undef ZI_REF_NAMESPACE
+#    undef ZI_REF_NAMESPACE
 #endif

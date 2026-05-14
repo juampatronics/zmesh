@@ -17,9 +17,9 @@
 //
 
 #ifndef ZI_CACHE_CONFIG_HPP
-#define ZI_CACHE_CONFIG_HPP 1
+#    define ZI_CACHE_CONFIG_HPP 1
 
-#include <zi/config/config.hpp>
-#include <cstddef>
+#    include <cstddef>
+#    include <zi/config/config.hpp>
 
 #endif

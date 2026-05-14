@@ -17,60 +17,64 @@
 //
 
 #ifndef ZI_CONCURRENCY_PTHREAD_MUTEX_INITIALIZERS_HPP
-#define ZI_CONCURRENCY_PTHREAD_MUTEX_INITIALIZERS_HPP 1
+#    define ZI_CONCURRENCY_PTHREAD_MUTEX_INITIALIZERS_HPP 1
 
-#include <zi/concurrency/config.hpp>
-#include <zi/concurrency/pthread/mutex_tags.hpp>
+#    include <zi/concurrency/config.hpp>
+#    include <zi/concurrency/pthread/mutex_tags.hpp>
 
-#include <zi/utility/assert.hpp>
+#    include <zi/utility/assert.hpp>
 
-#include <pthread.h>
+#    include <pthread.h>
 
-namespace zi {
-namespace concurrency_ {
-
-
-template< class PtMutexTag > struct mutex_initializer;
-
-template<> struct mutex_initializer< mutex_default_tag >
+namespace zi
 {
-    static void initialize( pthread_mutex_t &ptm)
+namespace concurrency_
+{
+
+template <class PtMutexTag>
+struct mutex_initializer;
+
+template <>
+struct mutex_initializer<mutex_default_tag>
+{
+    static void initialize(pthread_mutex_t& ptm)
     {
-#if defined( __USE_GNU )
+#    if defined(__USE_GNU)
         static const pthread_mutex_t stored_initializer =
             PTHREAD_MUTEX_INITIALIZER;
         ptm = stored_initializer;
-#else
-        ZI_VERIFY_0( pthread_mutex_init( &ptm, NULL ) );
-#endif
+#    else
+        ZI_VERIFY_0(pthread_mutex_init(&ptm, NULL));
+#    endif
     }
-
 };
 
-template<> struct mutex_initializer< mutex_adaptive_tag >
+template <>
+struct mutex_initializer<mutex_adaptive_tag>
 {
-    static void initialize( pthread_mutex_t &ptm)
+    static void initialize(pthread_mutex_t& ptm)
     {
-#if defined( __USE_GNU )
+#    if defined(__USE_GNU)
         static const pthread_mutex_t stored_initializer =
             PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP;
         ptm = stored_initializer;
-#else
-        ZI_VERIFY_0( pthread_mutex_init( &ptm, NULL ) );
-#endif
+#    else
+        ZI_VERIFY_0(pthread_mutex_init(&ptm, NULL));
+#    endif
     }
 };
 
-template<> struct mutex_initializer< mutex_recursive_tag >
+template <>
+struct mutex_initializer<mutex_recursive_tag>
 {
-#if defined( PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP )
-    static void initialize( pthread_mutex_t &ptm )
+#    if defined(PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP)
+    static void initialize(pthread_mutex_t& ptm)
     {
         static const pthread_mutex_t stored_initializer =
             PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
         ptm = stored_initializer;
     }
-#else
+#    else
 
     struct recursive_mutex_initializer_impl
     {
@@ -78,30 +82,26 @@ template<> struct mutex_initializer< mutex_recursive_tag >
 
         recursive_mutex_initializer_impl()
         {
-	    ZI_VERIFY_0( pthread_mutexattr_init( &attr_ ) );
-            ZI_VERIFY_0( pthread_mutexattr_settype( &attr_, PTHREAD_MUTEX_RECURSIVE ) );
+            ZI_VERIFY_0(pthread_mutexattr_init(&attr_));
+            ZI_VERIFY_0(
+                pthread_mutexattr_settype(&attr_, PTHREAD_MUTEX_RECURSIVE));
         }
 
         ~recursive_mutex_initializer_impl()
         {
-            ZI_VERIFY_0( pthread_mutexattr_destroy( &attr_ ) );
+            ZI_VERIFY_0(pthread_mutexattr_destroy(&attr_));
         }
     };
 
-    static void initialize( pthread_mutex_t &ptm )
+    static void initialize(pthread_mutex_t& ptm)
     {
         static recursive_mutex_initializer_impl impl;
 
-        ZI_VERIFY_0( pthread_mutex_init( &ptm, &impl.attr_ ) );
-
+        ZI_VERIFY_0(pthread_mutex_init(&ptm, &impl.attr_));
     }
 
-#endif
-
-
+#    endif
 };
-
-
 
 } // namespace concurrency_
 } // namespace zi

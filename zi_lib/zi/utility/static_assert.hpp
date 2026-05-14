@@ -17,24 +17,33 @@
 //
 
 #ifndef ZI_UTILITY_STATIC_ASSERT_HPP
-#define ZI_UTILITY_STATIC_ASSERT_HPP 1
+#    define ZI_UTILITY_STATIC_ASSERT_HPP 1
 
-#include <zi/config/config.hpp>
-#include <zi/zpp/glue.hpp>
+#    include <zi/config/config.hpp>
+#    include <zi/zpp/glue.hpp>
 
-namespace zi {
+namespace zi
+{
 
-template< bool Condition > struct STATIC_ASSERT_FAILED;
+template <bool Condition>
+struct STATIC_ASSERT_FAILED;
 
-template<> struct STATIC_ASSERT_FAILED< true > { static const bool value = true; };
+template <>
+struct STATIC_ASSERT_FAILED<true>
+{
+    static const bool value = true;
+};
 
-template< int I > struct static_assert_test { };
+template <int I>
+struct static_assert_test
+{
+};
 
-#define ZI_STATIC_ASSERT( value, message )                              \
-                                                                        \
-    typedef ::zi::static_assert_test                                    \
-    < sizeof( ::zi::STATIC_ASSERT_FAILED< (bool)( value ) > ) >         \
-    ZiPP_GLUE( message##_at_line_, __LINE__ )
+#    define ZI_STATIC_ASSERT(value, message)                                   \
+                                                                               \
+        typedef ::zi::static_assert_test<sizeof(                               \
+            ::zi::STATIC_ASSERT_FAILED<(bool)(value)>)>                        \
+        ZiPP_GLUE(message##_at_line_, __LINE__)
 
 } // namespace zi
 

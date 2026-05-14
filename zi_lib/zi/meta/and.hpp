@@ -17,28 +17,28 @@
 //
 
 #ifndef ZI_META_AND_HPP
-#define ZI_META_AND_HPP 1
+#    define ZI_META_AND_HPP 1
 
-#include <zi/meta/true_type.hpp>
-#include <zi/meta/false_type.hpp>
-#include <zi/meta/null_type.hpp>
-#include <zi/meta/if.hpp>
+#    include <zi/meta/false_type.hpp>
+#    include <zi/meta/if.hpp>
+#    include <zi/meta/null_type.hpp>
+#    include <zi/meta/true_type.hpp>
 
-namespace zi {
-namespace meta {
+namespace zi
+{
+namespace meta
+{
 
-template< class V1,
-          class V2 = null_type,
-          class V3 = null_type, class V4 = null_type,
-          class V5 = null_type, class V6 = null_type >
-struct and_: if_< V1,
-                  and_< V2, V3, V4, V5, V6 >,
-                  false_ >::type
-{};
+template <class V1, class V2 = null_type, class V3 = null_type,
+          class V4 = null_type, class V5 = null_type, class V6 = null_type>
+struct and_ : if_<V1, and_<V2, V3, V4, V5, V6>, false_>::type
+{
+};
 
-template< class V2, class V3, class V4, class V5, class V6 >
-struct and_< null_type, V2, V3, V4, V5, V6 >: true_ {};
-
+template <class V2, class V3, class V4, class V5, class V6>
+struct and_<null_type, V2, V3, V4, V5, V6> : true_
+{
+};
 
 } // namespace meta
 } // namespace zi

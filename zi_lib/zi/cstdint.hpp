@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_CSTDINT_HPP
-#define ZI_CSTDINT_HPP 1
+#    define ZI_CSTDINT_HPP 1
 
-#include <zi/bits/cstdint.hpp>
+#    include <zi/bits/cstdint.hpp>
 
 #endif
-

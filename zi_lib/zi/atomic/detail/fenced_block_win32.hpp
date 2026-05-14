@@ -17,29 +17,28 @@
 //
 
 #ifndef ZI_ATOMIC_DETAIL_FENCED_BLOCK_WIN32_HPP
-#define ZI_ATOMIC_DETAIL_FENCED_BLOCK_WIN32_HPP 1
+#    define ZI_ATOMIC_DETAIL_FENCED_BLOCK_WIN32_HPP 1
 
-#ifndef ZI_ATOMIC_FENCED_BLOCK_HPP_INCLUDING
-#  error "don't include this file directly, use fenced_block.hpp"
-#endif
+#    ifndef ZI_ATOMIC_FENCED_BLOCK_HPP_INCLUDING
+#        error "don't include this file directly, use fenced_block.hpp"
+#    endif
 
-class fenced_block: non_copyable
+class fenced_block : non_copyable
 {
 public:
     fenced_block()
     {
-#if defined( _MSC_VER ) && ( ( _MSC_VER < 1400 ) || !defined( MemoryBarrier ) )
+#    if defined(_MSC_VER) && ((_MSC_VER < 1400) || !defined(MemoryBarrier))
         MemoryBarrier();
-#endif
+#    endif
     }
 
     ~fenced_block()
     {
-#if defined( _MSC_VER ) && ( ( _MSC_VER < 1400 ) || !defined( MemoryBarrier ) )
+#    if defined(_MSC_VER) && ((_MSC_VER < 1400) || !defined(MemoryBarrier))
         MemoryBarrier();
-#endif
+#    endif
     }
-
 };
 
 #endif

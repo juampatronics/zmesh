@@ -17,14 +17,16 @@
 //
 
 #ifndef ZI_GL_GL_1_2_HPP
-#define ZI_GL_GL_1_2_HPP 1
+#    define ZI_GL_GL_1_2_HPP 1
 
-#include <zi/gl/detail/types.hpp>
+#    include <zi/gl/detail/types.hpp>
 
-#include <zi/gl/detail/gl_prefix.hpp>
+#    include <zi/gl/detail/gl_prefix.hpp>
 
-namespace zi {
-namespace gl {
+namespace zi
+{
+namespace gl
+{
 
 static const int rescale_normal                = 0x803a;
 static const int clamp_to_edge                 = 0x812f;
@@ -68,19 +70,42 @@ static const int texture_wrap_r                = 0x8072;
 static const int max_3d_texture_size           = 0x8073;
 static const int texture_binding_3d            = 0x806a;
 
-ZI_GLAPI void ZI_GLAPI_ENTRY glDrawRangeElements( gl_enum mode, gl_uint start, gl_uint end, gl_sizei count, gl_enum type, const gl_void *indices );
-ZI_GLAPI void ZI_GLAPI_ENTRY glTexImage3D( gl_enum target, gl_int level, gl_int internalFormat, gl_sizei width, gl_sizei height, gl_sizei depth, gl_int border, gl_enum format, gl_enum type, const gl_void *pixels );
-ZI_GLAPI void ZI_GLAPI_ENTRY glTexSubImage3D( gl_enum target, gl_int level, gl_int xoffset, gl_int yoffset, gl_int zoffset, gl_sizei width, gl_sizei height, gl_sizei depth, gl_enum format, gl_enum type, const gl_void *pixels);
-ZI_GLAPI void ZI_GLAPI_ENTRY glCopyTexSubImage3D( gl_enum target, gl_int level, gl_int xoffset, gl_int yoffset, gl_int zoffset, gl_int x, gl_int y, gl_sizei width, gl_sizei height );
+ZI_GLAPI void ZI_GLAPI_ENTRY glDrawRangeElements(gl_enum mode, gl_uint start,
+                                                 gl_uint end, gl_sizei count,
+                                                 gl_enum        type,
+                                                 const gl_void* indices);
+ZI_GLAPI void ZI_GLAPI_ENTRY glTexImage3D(gl_enum target, gl_int level,
+                                          gl_int internalFormat, gl_sizei width,
+                                          gl_sizei height, gl_sizei depth,
+                                          gl_int border, gl_enum format,
+                                          gl_enum type, const gl_void* pixels);
+ZI_GLAPI void ZI_GLAPI_ENTRY glTexSubImage3D(gl_enum target, gl_int level,
+                                             gl_int xoffset, gl_int yoffset,
+                                             gl_int zoffset, gl_sizei width,
+                                             gl_sizei height, gl_sizei depth,
+                                             gl_enum format, gl_enum type,
+                                             const gl_void* pixels);
+ZI_GLAPI void ZI_GLAPI_ENTRY glCopyTexSubImage3D(gl_enum target, gl_int level,
+                                                 gl_int xoffset, gl_int yoffset,
+                                                 gl_int zoffset, gl_int x,
+                                                 gl_int y, gl_sizei width,
+                                                 gl_sizei height);
 
-//typedef void (APIENTRYP PFNGLDRAWRANGEELEMENTSPROC) (gl_enum mode, gl_uint start, gl_uint end, gl_sizei count, gl_enum type, const gl_void *indices);
-//typedef void (APIENTRYP PFNGLTEXIMAGE3DPROC) (gl_enum target, gl_int level, gl_int internalformat, gl_sizei width, gl_sizei height, gl_sizei depth, gl_int border, gl_enum format, gl_enum type, const gl_void *pixels);
-//typedef void (APIENTRYP PFNGLTEXSUBIMAGE3DPROC) (gl_enum target, gl_int level, gl_int xoffset, gl_int yoffset, gl_int zoffset, gl_sizei width, gl_sizei height, gl_sizei depth, gl_enum format, gl_enum type, const gl_void *pixels);
-//typedef void (APIENTRYP PFNGLCOPYTEXSUBIMAGE3DPROC) (gl_enum target, gl_int level, gl_int xoffset, gl_int yoffset, gl_int zoffset, gl_int x, gl_int y, gl_sizei width, gl_sizei height);
+// typedef void (APIENTRYP PFNGLDRAWRANGEELEMENTSPROC) (gl_enum mode, gl_uint
+// start, gl_uint end, gl_sizei count, gl_enum type, const gl_void *indices);
+// typedef void (APIENTRYP PFNGLTEXIMAGE3DPROC) (gl_enum target, gl_int level,
+// gl_int internalformat, gl_sizei width, gl_sizei height, gl_sizei depth,
+// gl_int border, gl_enum format, gl_enum type, const gl_void *pixels); typedef
+// void (APIENTRYP PFNGLTEXSUBIMAGE3DPROC) (gl_enum target, gl_int level, gl_int
+// xoffset, gl_int yoffset, gl_int zoffset, gl_sizei width, gl_sizei height,
+// gl_sizei depth, gl_enum format, gl_enum type, const gl_void *pixels); typedef
+// void (APIENTRYP PFNGLCOPYTEXSUBIMAGE3DPROC) (gl_enum target, gl_int level,
+// gl_int xoffset, gl_int yoffset, gl_int zoffset, gl_int x, gl_int y, gl_sizei
+// width, gl_sizei height);
 
 } // namespace gl
 } // namespace zi
 
-#include <zi/gl/detail/gl_suffix.hpp>
+#    include <zi/gl/detail/gl_suffix.hpp>
 
 #endif

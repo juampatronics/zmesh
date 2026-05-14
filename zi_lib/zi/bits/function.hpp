@@ -17,14 +17,15 @@
 //
 
 #ifndef ZI_BITS_FUNCTION_HPP
-#define ZI_BITS_FUNCTION_HPP 1
+#    define ZI_BITS_FUNCTION_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#include <functional>
-#define ZI_FUNCTION_NAMESPACE ::std
+#    include <functional>
+#    define ZI_FUNCTION_NAMESPACE ::std
 
-namespace zi {
+namespace zi
+{
 
 using ZI_FUNCTION_NAMESPACE::bad_function_call;
 using ZI_FUNCTION_NAMESPACE::function;
@@ -32,5 +33,5 @@ using ZI_FUNCTION_NAMESPACE::swap;
 
 } // namespace zi
 
-#undef ZI_FUNCTION_NAMESPACE
+#    undef ZI_FUNCTION_NAMESPACE
 #endif

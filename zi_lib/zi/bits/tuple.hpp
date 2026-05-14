@@ -17,24 +17,25 @@
 //
 
 #ifndef ZI_BITS_TUPLE_HPP
-#define ZI_BITS_TUPLE_HPP 1
+#    define ZI_BITS_TUPLE_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#include <tuple>
-#define ZI_TUPLE_NAMESPACE ::std
+#    include <tuple>
+#    define ZI_TUPLE_NAMESPACE ::std
 
-namespace zi {
+namespace zi
+{
 
-using ZI_TUPLE_NAMESPACE::tuple;
+using ZI_TUPLE_NAMESPACE::get;
 using ZI_TUPLE_NAMESPACE::ignore;
 using ZI_TUPLE_NAMESPACE::make_tuple;
 using ZI_TUPLE_NAMESPACE::tie;
-using ZI_TUPLE_NAMESPACE::get;
-using ZI_TUPLE_NAMESPACE::tuple_size;
+using ZI_TUPLE_NAMESPACE::tuple;
 using ZI_TUPLE_NAMESPACE::tuple_element;
+using ZI_TUPLE_NAMESPACE::tuple_size;
 
 } // namespace zi
 
-#undef ZI_TUPLE_NAMESPACE
+#    undef ZI_TUPLE_NAMESPACE
 #endif

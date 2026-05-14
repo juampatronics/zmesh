@@ -17,44 +17,47 @@
 //
 
 #ifndef ZI_ANSI_TERM_TERM_OSTREAM_HPP
-#define ZI_ANSI_TERM_TERM_OSTREAM_HPP 1
+#    define ZI_ANSI_TERM_TERM_OSTREAM_HPP 1
 
-#include <zi/config/config.hpp>
-#include <zi/ansi_term/constants.hpp>
-#include <zi/ansi_term/tags.hpp>
-#include <zi/ansi_term/flags.hpp>
+#    include <zi/ansi_term/constants.hpp>
+#    include <zi/ansi_term/flags.hpp>
+#    include <zi/ansi_term/tags.hpp>
+#    include <zi/config/config.hpp>
 
-#include <zi/bits/cstdint.hpp>
-#include <iostream>
-#include <iomanip>
-#include <queue>
+#    include <iomanip>
+#    include <iostream>
+#    include <queue>
+#    include <zi/bits/cstdint.hpp>
 
-namespace zi {
-namespace tos {
+namespace zi
+{
+namespace tos
+{
 
-namespace detail {
-template <typename T> struct formatter;
+namespace detail
+{
+template <typename T>
+struct formatter;
 }
 
-class term_ostream {
+class term_ostream
+{
 private:
-    std::ostream&             out_        ;
-    detail::flags             flags_      ;
+    std::ostream&             out_;
+    detail::flags             flags_;
     std::queue<detail::flags> flags_stack_;
 
 public:
-    term_ostream(std::ostream &out = std::cout):
-        out_(out), flags_(), flags_stack_() {}
-
-    ~term_ostream()
+    term_ostream(std::ostream& out = std::cout)
+        : out_(out)
+        , flags_()
+        , flags_stack_()
     {
-        flush();
     }
 
-    void flush()
-    {
-        out_.flush();
-    }
+    ~term_ostream() { flush(); }
+
+    void flush() { out_.flush(); }
 
     void reset()
     {
@@ -62,149 +65,154 @@ public:
         flags_ = detail::flags();
     }
 
-    void move_to(int l)
-    {
-        out_ << "\033[" << l << 'G';
-    }
+    void move_to(int l) { out_ << "\033[" << l << 'G'; }
 
-    void move_forward(int l)
-    {
-        out_ << "\033[" << l << 'C';
-    }
+    void move_forward(int l) { out_ << "\033[" << l << 'C'; }
 
-    inline void push_flags()
-    {
-        flags_stack_.push(flags_);
-    }
+    inline void push_flags() { flags_stack_.push(flags_); }
 
     inline void pop_flags()
     {
-        if (flags_stack_.size()) {
+        if (flags_stack_.size())
+        {
             flags_ = flags_stack_.front();
             flags_stack_.pop();
         }
     }
 
-    inline term_ostream &operator<< (const detail::flush_tag &)
+    inline term_ostream& operator<<(const detail::flush_tag&)
     {
         flush();
         return *this;
     }
 
-    inline term_ostream &operator<< (const detail::reset_tag &)
+    inline term_ostream& operator<<(const detail::reset_tag&)
     {
         reset();
         return *this;
     }
 
-    inline term_ostream &operator<< (const detail::push_flags_tag &)
+    inline term_ostream& operator<<(const detail::push_flags_tag&)
     {
         push_flags();
         return *this;
     }
 
-    inline term_ostream &operator<< (const detail::pop_flags_tag &)
+    inline term_ostream& operator<<(const detail::pop_flags_tag&)
     {
         pop_flags();
         return *this;
     }
 
-    inline term_ostream &operator<< (color_constants color)
+    inline term_ostream& operator<<(color_constants color)
     {
         flags_.set_color(color);
         return *this;
     }
 
-    inline term_ostream &operator<< (bg_color_constants color)
+    inline term_ostream& operator<<(bg_color_constants color)
     {
         flags_.set_bg_color(color);
         return *this;
     }
 
-    inline term_ostream &operator<< (weight_constants weight)
+    inline term_ostream& operator<<(weight_constants weight)
     {
         flags_.set_weight(weight);
         return *this;
     }
 
-    inline term_ostream &operator<< (decoration_constants decor)
+    inline term_ostream& operator<<(decoration_constants decor)
     {
         flags_.set_decoration(decor);
         return *this;
     }
 
-    inline term_ostream &operator<< (const detail::flags &f)
+    inline term_ostream& operator<<(const detail::flags& f)
     {
         flags_ = f;
         return *this;
     }
 
     template <typename T>
-    inline term_ostream &operator<< (const detail::flags_diff<T> &diff)
+    inline term_ostream& operator<<(const detail::flags_diff<T>& diff)
     {
         diff(flags_);
         return *this;
     }
 
     template <typename T>
-    inline term_ostream &operator<< (const detail::formatter<T> &f)
+    inline term_ostream& operator<<(const detail::formatter<T>& f)
     {
         f(*this);
         return *this;
     }
 
     template <typename T>
-    inline term_ostream &operator<< (const T &t)
+    inline term_ostream& operator<<(const T& t)
     {
-        if (flags_.dirty()) {
+        if (flags_.dirty())
+        {
             flags_.clear();
             out_ << flags_ << t << default_flags;
-        } else {
+        }
+        else
+        {
             out_ << t;
         }
         return *this;
     }
 
-    inline term_ostream &operator<< (const std::ios_base::fmtflags &t)
+    inline term_ostream& operator<<(const std::ios_base::fmtflags& t)
     {
         out_ << t;
         return *this;
     }
 
-    template <typename T> friend struct detail::formatter;
-
+    template <typename T>
+    friend struct detail::formatter;
 };
 
-namespace detail {
+namespace detail
+{
 
-template <> struct formatter<move_to_tag>
+template <>
+struct formatter<move_to_tag>
 {
     int left_;
-    formatter(int left): left_(left) {}
-    inline void operator() (term_ostream& t) const { t.move_to(left_); }
+    formatter(int left)
+        : left_(left)
+    {
+    }
+    inline void operator()(term_ostream& t) const { t.move_to(left_); }
 };
 
-template <> struct formatter<move_forward_tag>
+template <>
+struct formatter<move_forward_tag>
 {
     int len_;
-    formatter(int len): len_(len) {}
-    inline void operator() (term_ostream& t) const { t.move_forward(len_); }
+    formatter(int len)
+        : len_(len)
+    {
+    }
+    inline void operator()(term_ostream& t) const { t.move_forward(len_); }
 };
 
-typedef detail::formatter<detail::move_to_tag>      move_to     ;
+typedef detail::formatter<detail::move_to_tag>      move_to;
 typedef detail::formatter<detail::move_forward_tag> move_forward;
 
 } // namespace detail
 
-using detail::move_to     ;
 using detail::move_forward;
+using detail::move_to;
 
 } // namespace tos
 
-namespace {
+namespace
+{
 zi::tos::term_ostream tout;
 zi::tos::term_ostream terr(std::cerr);
-}
+} // namespace
 
 } // namespace zi
 

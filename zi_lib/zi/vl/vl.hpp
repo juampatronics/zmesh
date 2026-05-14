@@ -17,11 +17,10 @@
 //
 
 #ifndef ZI_VL_VL_HPP
-#define ZI_VL_VL_HPP 1
+#    define ZI_VL_VL_HPP 1
 
-#include <zi/vl/vec.hpp>
-#include <zi/vl/mat.hpp>
-#include <zi/vl/quat.hpp>
+#    include <zi/vl/mat.hpp>
+#    include <zi/vl/quat.hpp>
+#    include <zi/vl/vec.hpp>
 
 #endif
-

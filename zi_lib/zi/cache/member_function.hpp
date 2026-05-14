@@ -17,85 +17,73 @@
 //
 
 #ifndef ZI_CACHE_MEMBER_FUNCTION_HPP
-#define ZI_CACHE_MEMBER_FUNCTION_HPP 1
+#    define ZI_CACHE_MEMBER_FUNCTION_HPP 1
 
-#include <zi/cache/config.hpp>
-#include <zi/cache/detail/enable_if.hpp>
-#include <zi/cache/detail/type_traits.hpp>
-#include <zi/cache/detail/ref.hpp>
+#    include <zi/cache/config.hpp>
+#    include <zi/cache/detail/enable_if.hpp>
+#    include <zi/cache/detail/ref.hpp>
+#    include <zi/cache/detail/type_traits.hpp>
 
-namespace zi {
-namespace cache {
+namespace zi
+{
+namespace cache
+{
 
-template< class CachedType,
-          class Return,
-          Return (CachedType::*MemberFunctionPtr)()
-          >
+template <class CachedType, class Return,
+          Return (CachedType::*MemberFunctionPtr)()>
 struct member_function
 {
-    typedef typename remove_reference< Return >::type result_type;
+    typedef typename remove_reference<Return>::type result_type;
 
-    template< class PtrToCachedType >
+    template <class PtrToCachedType>
     typename disable_if<
-        is_convertible< PtrToCachedType&, CachedType& >::type::value,
-        Return
-    >::type
-    operator() ( const PtrToCachedType& ptr ) const
+        is_convertible<PtrToCachedType&, CachedType&>::type::value,
+        Return>::type
+    operator()(const PtrToCachedType& ptr) const
     {
-        return this->operator() ( *ptr );
+        return this->operator()(*ptr);
     }
 
-    Return operator() ( CachedType& v ) const
-    {
-        return (v.*MemberFunctionPtr)();
-    }
+    Return operator()(CachedType& v) const { return (v.*MemberFunctionPtr)(); }
 
-    Return operator() ( const reference_wrapper< CachedType >& v_ref )
+    Return operator()(const reference_wrapper<CachedType>& v_ref)
     {
-        return this->operator() ( v_ref.get() );
+        return this->operator()(v_ref.get());
     }
-
 };
 
-template< class CachedType,
-          class Return,
-          Return (CachedType::*MemberFunctionPtr)() const
-          >
+template <class CachedType, class Return,
+          Return (CachedType::*MemberFunctionPtr)() const>
 struct const_member_function
 {
-    typedef typename remove_reference< Return >::type result_type;
+    typedef typename remove_reference<Return>::type result_type;
 
-    template< class PtrToCachedType >
+    template <class PtrToCachedType>
     typename disable_if<
-        is_convertible< const PtrToCachedType&, const CachedType& >::type::value,
-        Return
-    >::type
-    operator() ( const PtrToCachedType& ptr ) const
+        is_convertible<const PtrToCachedType&, const CachedType&>::type::value,
+        Return>::type
+    operator()(const PtrToCachedType& ptr) const
     {
-        return this->operator() ( *ptr );
+        return this->operator()(*ptr);
     }
 
-    Return operator() ( const CachedType& v ) const
+    Return operator()(const CachedType& v) const
     {
         return (v.*MemberFunctionPtr)();
     }
 
-    Return operator() ( const reference_wrapper< CachedType >& v_ref ) const
+    Return operator()(const reference_wrapper<CachedType>& v_ref) const
     {
-        return this->operator() ( v_ref.get() );
+        return this->operator()(v_ref.get());
     }
 
-    Return operator() ( const reference_wrapper< const CachedType >& v_ref ) const
+    Return operator()(const reference_wrapper<const CachedType>& v_ref) const
     {
-        return this->operator() ( v_ref.get() );
+        return this->operator()(v_ref.get());
     }
-
 };
-
-
 
 } // namespace cache
 } // namespace zi
-
 
 #endif

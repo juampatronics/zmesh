@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_REF_HPP
-#define ZI_REF_HPP 1
+#    define ZI_REF_HPP 1
 
-#include <zi/bits/ref.hpp>
+#    include <zi/bits/ref.hpp>
 
 #endif
-

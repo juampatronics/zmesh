@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_LOGGING_HPP
-#define ZI_LOGGING_HPP 1
+#    define ZI_LOGGING_HPP 1
 
-#include <zi/zlog/zlog.hpp>
+#    include <zi/zlog/zlog.hpp>
 
 #endif
-

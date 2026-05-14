@@ -17,31 +17,35 @@
 //
 
 #ifndef ZI_ZARGS_DETAIL_STRING_UTILS_HPP
-#define ZI_ZARGS_DETAIL_STRING_UTILS_HPP 1
+#    define ZI_ZARGS_DETAIL_STRING_UTILS_HPP 1
 
-#include <string>
-#include <cstddef>
-#include <cstdlib>
+#    include <cstddef>
+#    include <cstdlib>
+#    include <string>
 
-namespace zi {
-namespace zargs_ {
-namespace detail {
+namespace zi
+{
+namespace zargs_
+{
+namespace detail
+{
 
-inline std::string to_lower( const std::string& s )
+inline std::string to_lower(const std::string& s)
 {
     std::size_t len = s.size();
     std::string ret = s;
 
-    for ( std::size_t i = 0; i < len; ++i )
+    for (std::size_t i = 0; i < len; ++i)
     {
-        ret[i] = static_cast< char >( std::tolower( s[i] ) );
+        ret[i] = static_cast<char>(std::tolower(s[i]));
     }
 
     return ret;
 }
 
-template< class Container >
-inline void explode( Container &ret, const std::string& source, char splitter = ' ' )
+template <class Container>
+inline void explode(Container& ret, const std::string& source,
+                    char splitter = ' ')
 {
     std::size_t startpos;
     std::size_t pos  = 0;
@@ -55,11 +59,11 @@ inline void explode( Container &ret, const std::string& source, char splitter = 
     while (pos != npos && pos < length)
     {
         startpos = pos;
-        pos = src.find_first_of(splitter, pos);
+        pos      = src.find_first_of(splitter, pos);
 
         if (pos != 0)
         {
-            tmp = source.substr(startpos, pos-startpos);
+            tmp = source.substr(startpos, pos - startpos);
             ret.push_back(tmp);
             if (pos != npos)
             {
@@ -73,16 +77,16 @@ inline void explode( Container &ret, const std::string& source, char splitter = 
     }
 }
 
-inline bool begins_with( const std::string &b, const std::string &s )
+inline bool begins_with(const std::string& b, const std::string& s)
 {
-    if ( s.size() < b.size() )
+    if (s.size() < b.size())
     {
         return false;
     }
-    return ( b == s.substr( 0, b.size() ) );
+    return (b == s.substr(0, b.size()));
 }
 
-inline std::string strip_quotes( const std::string& s )
+inline std::string strip_quotes(const std::string& s)
 {
     std::size_t len = s.size();
 
@@ -91,16 +95,15 @@ inline std::string strip_quotes( const std::string& s )
         return s;
     }
 
-    if ( ( s[0] == '"'  && s[ len - 1 ] == '"' ) ||
-         ( s[0] == '\'' && s[ len - 1 ] == '\'') )
+    if ((s[0] == '"' && s[len - 1] == '"') ||
+        (s[0] == '\'' && s[len - 1] == '\''))
     {
-        std::string ret( s.begin() + 1, s.end() - 1 );
+        std::string ret(s.begin() + 1, s.end() - 1);
         return ret;
     }
 
     return s;
 }
-
 
 } // namespace detail
 } // namespace zargs_

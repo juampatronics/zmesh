@@ -17,37 +17,39 @@
 //
 
 #ifndef ZI_CONCURRENCY_PTHREAD_MUTEX_TYPES_HPP
-#define ZI_CONCURRENCY_PTHREAD_MUTEX_TYPES_HPP 1
+#    define ZI_CONCURRENCY_PTHREAD_MUTEX_TYPES_HPP 1
 
-#include <zi/concurrency/pthread/mutex_tpl.hpp>
+#    include <zi/concurrency/pthread/mutex_tpl.hpp>
 
-namespace zi {
-namespace concurrency_ {
+namespace zi
+{
+namespace concurrency_
+{
 
-typedef mutex_tpl< mutex_default_tag >   mutex_default;
-typedef mutex_tpl< mutex_adaptive_tag >  mutex_adaptive;
-typedef mutex_tpl< mutex_recursive_tag > mutex_recursive;
+typedef mutex_tpl<mutex_default_tag>   mutex_default;
+typedef mutex_tpl<mutex_adaptive_tag>  mutex_adaptive;
+typedef mutex_tpl<mutex_recursive_tag> mutex_recursive;
 
-template< class Mutex >
+template <class Mutex>
 struct is_native_mutex_type
 {
     static const bool value = false;
 };
 
-template<>
-struct is_native_mutex_type< mutex_default >
+template <>
+struct is_native_mutex_type<mutex_default>
 {
     static const bool value = true;
 };
 
-template<>
-struct is_native_mutex_type< mutex_adaptive >
+template <>
+struct is_native_mutex_type<mutex_adaptive>
 {
     static const bool value = true;
 };
 
-template<>
-struct is_native_mutex_type< mutex_recursive >
+template <>
+struct is_native_mutex_type<mutex_recursive>
 {
     static const bool value = true;
 };

@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_SINGLETON_HPP
-#define ZI_SINGLETON_HPP 1
+#    define ZI_SINGLETON_HPP 1
 
-#include <zi/utility/singleton.hpp>
+#    include <zi/utility/singleton.hpp>
 
 #endif
-

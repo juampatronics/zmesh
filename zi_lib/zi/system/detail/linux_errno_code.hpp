@@ -17,15 +17,18 @@
 //
 
 #ifndef ZI_SYSTEM_DETAIL_LINUX_ERRNO_CODE_HPP
-#define ZI_SYSTEM_DETAIL_LINUX_ERRNO_CODE_HPP 1
+#    define ZI_SYSTEM_DETAIL_LINUX_ERRNO_CODE_HPP 1
 
-#include <zi/config/config.hpp>
+#    include <zi/config/config.hpp>
 
-#if defined( ZI_OS_LINUX )
+#    if defined(ZI_OS_LINUX)
 
-namespace zi {
-namespace system {
-namespace linux_errno {
+namespace zi
+{
+namespace system
+{
+namespace linux_errno
+{
 
 enum linux_errno_type
 {
@@ -87,6 +90,6 @@ enum linux_errno_type
 } // namespace system
 } // namespace zi
 
-#endif // defined( ZI_OS_LINUX )
+#    endif // defined( ZI_OS_LINUX )
 
 #endif

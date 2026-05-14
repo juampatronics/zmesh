@@ -17,27 +17,33 @@
 //
 
 #ifndef ZI_UTILITY_VALUE_ITERATOR_HPP
-#define ZI_UTILITY_VALUE_ITERATOR_HPP 1
+#    define ZI_UTILITY_VALUE_ITERATOR_HPP 1
 
-#include <iterator>
-#include <cstddef>
+#    include <cstddef>
+#    include <iterator>
 
-#include <zi/bits/type_traits.hpp>
-#include <zi/utility/static_if.hpp>
+#    include <zi/bits/type_traits.hpp>
+#    include <zi/utility/static_if.hpp>
 
-namespace zi {
+namespace zi
+{
 
-template< class Iterator >
-struct value_iterator: Iterator
+template <class Iterator>
+struct value_iterator : Iterator
 {
 public:
-    typedef typename std::iterator_traits< Iterator >::iterator_category       iterator_category;
-    typedef typename std::iterator_traits< Iterator >::difference_type         difference_type  ;
-    typedef typename std::iterator_traits< Iterator >::value_type::second_type value_type       ;
-    typedef typename std::iterator_traits< Iterator >::pointer                 base_pointer     ;
-    typedef typename std::iterator_traits< Iterator >::reference               base_reference   ;
-    typedef typename if_< is_const< base_pointer >::value, const value_type*, value_type* >::type pointer;
-    typedef typename if_< is_const< base_reference >::value, const value_type&, value_type& >::type reference;
+    typedef typename std::iterator_traits<Iterator>::iterator_category
+        iterator_category;
+    typedef typename std::iterator_traits<Iterator>::difference_type
+        difference_type;
+    typedef typename std::iterator_traits<Iterator>::value_type::second_type
+                                                               value_type;
+    typedef typename std::iterator_traits<Iterator>::pointer   base_pointer;
+    typedef typename std::iterator_traits<Iterator>::reference base_reference;
+    typedef typename if_<is_const<base_pointer>::value, const value_type*,
+                         value_type*>::type                    pointer;
+    typedef typename if_<is_const<base_reference>::value, const value_type&,
+                         value_type&>::type                    reference;
 
 protected:
     Iterator iterator_;

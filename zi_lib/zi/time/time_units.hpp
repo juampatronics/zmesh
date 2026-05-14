@@ -17,16 +17,18 @@
 //
 
 #ifndef ZI_TIME_TIME_UNITS_HPP
-#define ZI_TIME_TIME_UNITS_HPP 1
+#    define ZI_TIME_TIME_UNITS_HPP 1
 
-#include <zi/time/config.hpp>
-#include <zi/bits/cstdint.hpp>
+#    include <zi/bits/cstdint.hpp>
+#    include <zi/time/config.hpp>
 
-namespace zi {
+namespace zi
+{
 
-namespace time_ {
+namespace time_
+{
 
-template< int64_t Factor >
+template <int64_t Factor>
 struct units_tpl
 {
     static const int64_t factor = Factor;
@@ -34,18 +36,18 @@ struct units_tpl
 
 } // namespace time_
 
-typedef time_::units_tpl< 1LL >              in_nsecs;
-typedef time_::units_tpl< 1LL >              in_nanoseconds;
-typedef time_::units_tpl< 1000LL >           in_usecs;
-typedef time_::units_tpl< 1000LL >           in_microseconds;
-typedef time_::units_tpl< 1000000LL >        in_msecs;
-typedef time_::units_tpl< 1000000LL >        in_milliseconds;
-typedef time_::units_tpl< 1000000000LL >     in_secs;
-typedef time_::units_tpl< 1000000000LL >     in_seconds;
-typedef time_::units_tpl< 60000000000LL >    in_mins;
-typedef time_::units_tpl< 60000000000LL >    in_minutes;
-typedef time_::units_tpl< 3600000000000LL >  in_hours;
-typedef time_::units_tpl< 86400000000000LL > in_days;
+typedef time_::units_tpl<1LL>              in_nsecs;
+typedef time_::units_tpl<1LL>              in_nanoseconds;
+typedef time_::units_tpl<1000LL>           in_usecs;
+typedef time_::units_tpl<1000LL>           in_microseconds;
+typedef time_::units_tpl<1000000LL>        in_msecs;
+typedef time_::units_tpl<1000000LL>        in_milliseconds;
+typedef time_::units_tpl<1000000000LL>     in_secs;
+typedef time_::units_tpl<1000000000LL>     in_seconds;
+typedef time_::units_tpl<60000000000LL>    in_mins;
+typedef time_::units_tpl<60000000000LL>    in_minutes;
+typedef time_::units_tpl<3600000000000LL>  in_hours;
+typedef time_::units_tpl<86400000000000LL> in_days;
 
 } // namespace zi
 

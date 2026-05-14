@@ -17,9 +17,8 @@
 //
 
 #ifndef ZI_MEM_FN_HPP
-#define ZI_MEM_FN_HPP 1
+#    define ZI_MEM_FN_HPP 1
 
-#include <zi/bits/mem_fn.hpp>
+#    include <zi/bits/mem_fn.hpp>
 
 #endif
-

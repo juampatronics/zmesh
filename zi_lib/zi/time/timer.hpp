@@ -17,36 +17,38 @@
 //
 
 #ifndef ZI_TIME_TIMER_HPP
-#define ZI_TIME_TIMER_HPP 1
+#    define ZI_TIME_TIMER_HPP 1
 
-#include <zi/time/config.hpp>
-#include <zi/time/wall_timer.hpp>
-#include <zi/time/process_timer.hpp>
-#include <zi/bits/cstdint.hpp>
+#    include <zi/bits/cstdint.hpp>
+#    include <zi/time/config.hpp>
+#    include <zi/time/process_timer.hpp>
+#    include <zi/time/wall_timer.hpp>
 
-#include <ctime>
+#    include <ctime>
 
-namespace zi {
+namespace zi
+{
 
 class timer
 {
 public:
-    typedef wall_timer    wall   ;
+    typedef wall_timer    wall;
     typedef process_timer process;
 
-
 private:
-    wall_timer    wall_   ;
+    wall_timer    wall_;
     process_timer process_;
 
 public:
-
-    template< class T > struct tv
+    template <class T>
+    struct tv
     {
         T wall, process;
     };
 
-    timer(): wall_(), process_()
+    timer()
+        : wall_()
+        , process_()
     {
         restart();
     }
@@ -63,24 +65,26 @@ public:
         process_.reset();
     }
 
-    template< class T > inline void lap( ::zi::timer::tv< T > &v )
+    template <class T>
+    inline void lap(::zi::timer::tv<T>& v)
     {
-        v.wall    = wall_.template lap< T >();
-        v.process = process_.template lap< T >();
+        v.wall    = wall_.template lap<T>();
+        v.process = process_.template lap<T>();
     }
 
-    template< class T > inline void elapsed( ::zi::timer::tv< T > &v )
+    template <class T>
+    inline void elapsed(::zi::timer::tv<T>& v)
     {
-        v.wall    = wall_.template elapsed< T >();
-        v.process = process_.template elapsed< T >();
+        v.wall    = wall_.template elapsed<T>();
+        v.process = process_.template elapsed<T>();
     }
 
-    template< class T > inline void lap_elapsed( ::zi::timer::tv< T > &v )
+    template <class T>
+    inline void lap_elapsed(::zi::timer::tv<T>& v)
     {
-        v.wall    = wall_.template lap_elapsed< T >();
-        v.process = process_.template lap_elapsed< T >();
+        v.wall    = wall_.template lap_elapsed<T>();
+        v.process = process_.template lap_elapsed<T>();
     }
-
 };
 
 } // namespace zi

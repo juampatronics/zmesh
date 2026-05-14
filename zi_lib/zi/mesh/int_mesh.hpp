@@ -17,78 +17,79 @@
 //
 
 #ifndef ZI_MESH_INT_MESH_HPP
-#define ZI_MESH_INT_MESH_HPP 1
+#    define ZI_MESH_INT_MESH_HPP 1
 
-#include <deque>
-#include <vector>
-#include <zi/mesh/marching_cubes.hpp>
-#include <zi/mesh/quadratic_simplifier.hpp>
+#    include <deque>
+#    include <vector>
+#    include <zi/mesh/marching_cubes.hpp>
+#    include <zi/mesh/quadratic_simplifier.hpp>
 // #include <boost/shared_ptr.hpp>
 
-namespace zi {
-namespace mesh {
+namespace zi
+{
+namespace mesh
+{
 
 template <typename PositionType, typename LabelType>
 class int_mesh
 {
 private:
-    typedef marching_cubes<PositionType, LabelType>  marcher_t ;
+    typedef marching_cubes<PositionType, LabelType> marcher_t;
 
 public:
     typedef vl::vec<PositionType, 3> triangle_t;
 
 private:
-    std::vector< triangle_t > v_;
+    std::vector<triangle_t> v_;
 
 public:
-    std::vector< triangle_t >& data()
-    {
-        return v_;
-    }
+    std::vector<triangle_t>& data() { return v_; }
 
-    const std::vector< triangle_t >& data() const
-    {
-        return v_;
-    }
+    const std::vector<triangle_t>& data() const { return v_; }
 
-    void clear()
-    {
-        v_.clear();
-    }
+    void clear() { v_.clear(); }
 
-    void add(const std::deque< triangle_t >& v, PositionType x=0, PositionType y=0, PositionType z=0)
+    void add(const std::deque<triangle_t>& v, PositionType x = 0,
+             PositionType y = 0, PositionType z = 0)
     {
-        PositionType off = static_cast<PositionType>(marcher_t::pack_coords(x*2,y*2,z*2));
-        for ( std::size_t i = 0; i < v.size(); ++i )
+        PositionType off = static_cast<PositionType>(
+            marcher_t::pack_coords(x * 2, y * 2, z * 2));
+        for (std::size_t i = 0; i < v.size(); ++i)
         {
             v_.push_back(v[i] + off);
         }
     }
 
-    void add(const std::vector< triangle_t >& v, PositionType x=0, PositionType y=0, PositionType z=0)
+    void add(const std::vector<triangle_t>& v, PositionType x = 0,
+             PositionType y = 0, PositionType z = 0)
     {
-        PositionType off = static_cast<PositionType>(marcher_t::pack_coords(x*2,y*2,z*2));
-        for ( std::size_t i = 0; i < v.size(); ++i )
+        PositionType off = static_cast<PositionType>(
+            marcher_t::pack_coords(x * 2, y * 2, z * 2));
+        for (std::size_t i = 0; i < v.size(); ++i)
         {
             v_.push_back(v[i] + off);
         }
     }
 
-    void add( const triangle_t * v, std::size_t size, PositionType x=0, PositionType y=0, PositionType z=0)
+    void add(const triangle_t* v, std::size_t size, PositionType x = 0,
+             PositionType y = 0, PositionType z = 0)
     {
-        PositionType off = static_cast<PositionType>(marcher_t::pack_coords(x*2,y*2,z*2));
-        for ( std::size_t i = 0; i < size; ++i )
+        PositionType off = static_cast<PositionType>(
+            marcher_t::pack_coords(x * 2, y * 2, z * 2));
+        for (std::size_t i = 0; i < size; ++i)
         {
-            v_.push_back(v[i]+off);
+            v_.push_back(v[i] + off);
         }
     }
 
-    void add( const int_mesh& v, PositionType x=0, PositionType y=0, PositionType z=0)
+    void add(const int_mesh& v, PositionType x = 0, PositionType y = 0,
+             PositionType z = 0)
     {
         add(v.data(), x, y, z);
     }
 
-    // void add( boost::shared_ptr<int_mesh> v, PositionType x=0, PositionType y=0, PositionType z=0)
+    // void add( boost::shared_ptr<int_mesh> v, PositionType x=0, PositionType
+    // y=0, PositionType z=0)
     // {
     //     if ( v )
     //     {
@@ -96,72 +97,66 @@ public:
     //     }
     // }
 
-    std::size_t size() const
-    {
-        return v_.size();
-    }
+    std::size_t size() const { return v_.size(); }
 
-    std::size_t mem_size() const
-    {
-        return v_.capacity() * sizeof(triangle_t);
-    }
+    std::size_t mem_size() const { return v_.capacity() * sizeof(triangle_t); }
 
     void print() const
     {
-        for ( std::size_t i = 0; i < v_.size(); ++i )
+        for (std::size_t i = 0; i < v_.size(); ++i)
         {
             std::cout << (v_[i][1] & 0x1FFFFF) << "\n";
         }
     }
 
-    template< class T > std::size_t
-    fill_simplifier( ::zi::mesh::simplifier< T >& ret,
-                     const T& xtrans = T( 0 ),
-                     const T& ytrans = T( 0 ),
-                     const T& ztrans = T( 0 ),
-                     const T& xscale = T( 1 ),
-                     const T& yscale = T( 1 ),
-                     const T& zscale = T( 1 ) ) const
+    template <class T>
+    std::size_t fill_simplifier(::zi::mesh::simplifier<T>& ret,
+                                const T& xtrans = T(0), const T& ytrans = T(0),
+                                const T& ztrans = T(0), const T& xscale = T(1),
+                                const T& yscale = T(1),
+                                const T& zscale = T(1)) const
     {
-        uint32_t idx = 0;
-        unordered_map< PositionType, uint32_t > pts;
+        uint32_t                              idx = 0;
+        unordered_map<PositionType, uint32_t> pts;
 
-        const std::vector< triangle_t >& data = v_;
+        const std::vector<triangle_t>& data = v_;
         pts.reserve(3 * data.size());
 
-        FOR_EACH( it, data )
+        FOR_EACH(it, data)
         {
-            if ( !pts.count( it->at(0) ) )
+            if (!pts.count(it->at(0)))
             {
-                pts.insert( std::make_pair( it->at(0), idx++ ) );
+                pts.insert(std::make_pair(it->at(0), idx++));
             }
-            if ( !pts.count( it->at(1) ) )
+            if (!pts.count(it->at(1)))
             {
-                pts.insert( std::make_pair( it->at(1), idx++ ) );
+                pts.insert(std::make_pair(it->at(1), idx++));
             }
-            if ( !pts.count( it->at(2) ) )
+            if (!pts.count(it->at(2)))
             {
-                pts.insert( std::make_pair( it->at(2), idx++ ) );
+                pts.insert(std::make_pair(it->at(2), idx++));
             }
         }
 
-        ret.resize( idx );
+        ret.resize(idx);
 
-        FOR_EACH( it, pts )
+        FOR_EACH(it, pts)
         {
-            ret.point( it->second ) = vl::vec< T, 3 >
-                ( marching_cubes<PositionType, LabelType>::template unpack_x< T >( it->first, xtrans, xscale ),
-                  marching_cubes<PositionType, LabelType>::template unpack_y< T >( it->first, ytrans, yscale ),
-                  marching_cubes<PositionType, LabelType>::template unpack_z< T >( it->first, ztrans, zscale ) );
+            ret.point(it->second) = vl::vec<T, 3>(
+                marching_cubes<PositionType, LabelType>::template unpack_x<T>(
+                    it->first, xtrans, xscale),
+                marching_cubes<PositionType, LabelType>::template unpack_y<T>(
+                    it->first, ytrans, yscale),
+                marching_cubes<PositionType, LabelType>::template unpack_z<T>(
+                    it->first, ztrans, zscale));
         }
 
-        FOR_EACH( it, data )
+        FOR_EACH(it, data)
         {
-            ret.add_face( pts[ it->at(0) ], pts[ it->at(1) ], pts[ it->at(2) ] );
+            ret.add_face(pts[it->at(0)], pts[it->at(1)], pts[it->at(2)]);
         }
 
         return idx;
-
     }
 };
 

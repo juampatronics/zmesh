@@ -17,71 +17,64 @@
 //
 
 #ifndef ZI_CONCURRENCY_PTHREAD_EVENT_HPP
-#define ZI_CONCURRENCY_PTHREAD_EVENT_HPP 1
+#    define ZI_CONCURRENCY_PTHREAD_EVENT_HPP 1
 
-#include <zi/concurrency/config.hpp>
-#include <zi/concurrency/pthread/mutex_types.hpp>
+#    include <zi/concurrency/config.hpp>
+#    include <zi/concurrency/pthread/mutex_types.hpp>
 
-#include <zi/utility/non_copyable.hpp>
-#include <zi/utility/assert.hpp>
+#    include <zi/utility/assert.hpp>
+#    include <zi/utility/non_copyable.hpp>
 
-#include <pthread.h>
+#    include <pthread.h>
 
+namespace zi
+{
+namespace concurrency_
+{
 
-namespace zi {
-namespace concurrency_ {
-
-
-class event: non_copyable
+class event : non_copyable
 {
 private:
-    mutable bool           signalled_ ;
-    mutable pthread_cond_t cv_        ;
+    mutable bool           signalled_;
+    mutable pthread_cond_t cv_;
 
 public:
-    event(): signalled_( false )
+    event()
+        : signalled_(false)
     {
-        ZI_VERIFY_0( pthread_cond_init( &cv_, NULL ) );
+        ZI_VERIFY_0(pthread_cond_init(&cv_, NULL));
     }
 
-    ~event()
-    {
-        ZI_VERIFY_0( pthread_cond_destroy( &cv_ ) );
-    }
+    ~event() { ZI_VERIFY_0(pthread_cond_destroy(&cv_)); }
 
-    template< class MutexTag >
-    void wait( const mutex_tpl< MutexTag > &mutex ) const
+    template <class MutexTag>
+    void wait(const mutex_tpl<MutexTag>& mutex) const
     {
-        while ( !signalled_ )
+        while (!signalled_)
         {
-            ZI_VERIFY_0( pthread_cond_wait( &cv_, &mutex.mutex_ ) );
+            ZI_VERIFY_0(pthread_cond_wait(&cv_, &mutex.mutex_));
         }
     }
 
-    template< class Mutex >
-    void wait( const mutex_guard< Mutex > &g ) const
+    template <class Mutex>
+    void wait(const mutex_guard<Mutex>& g) const
     {
-        while ( !signalled_ )
+        while (!signalled_)
         {
-            ZI_VERIFY_0( pthread_cond_wait( &cv_, &g.m_.mutex_ ) );
+            ZI_VERIFY_0(pthread_cond_wait(&cv_, &g.m_.mutex_));
         }
     }
 
     void signal() const
     {
         signalled_ = true;
-        ZI_VERIFY_0( pthread_cond_signal( &cv_ ) );
+        ZI_VERIFY_0(pthread_cond_signal(&cv_));
     }
 
-    void clear() const
-    {
-        signalled_ = false;
-    }
+    void clear() const { signalled_ = false; }
 };
-
 
 } // namespace concurrency_
 } // namespace zi
-
 
 #endif
